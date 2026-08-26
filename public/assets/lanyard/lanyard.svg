@@ -1,0 +1,15 @@
+<svg width="1024" height="250" viewBox="0 0 1024 250" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="250" fill="#080B11"/>
+  <!-- Stitch lines on band edges -->
+  <line x1="0" y1="18" x2="1024" y2="18" stroke="#1E293B" stroke-width="4" stroke-dasharray="14 10"/>
+  <line x1="0" y1="232" x2="1024" y2="232" stroke="#1E293B" stroke-width="4" stroke-dasharray="14 10"/>
+
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" letter-spacing="3" text-anchor="middle" dominant-baseline="central">
+    <!-- Segment repeating pattern -->
+    <text x="140" y="125" fill="#38BDF8">&lt;/&gt;</text>
+    <text x="360" y="125" fill="#FFFFFF">BAGAS ADITYA</text>
+    <text x="540" y="125" fill="#38BDF8">✦</text>
+    <text x="740" y="125" fill="#94A3B8">WEB DEVELOPER</text>
+    <text x="940" y="125" fill="#38BDF8">✦</text>
+  </g>
+</svg>
