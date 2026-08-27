@@ -145,3 +145,26 @@ body {
 .animate-marquee-right {
   animation: marqueeRight 28s linear infinite;
 }
+
+/* Aceternity Meteors Animation - Moving strictly along rotation axis */
+@keyframes meteor {
+  0% {
+    transform: rotate(140deg) translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(140deg) translateX(1100px);
+    opacity: 0;
+  }
+}
+
+.animate-meteor {
+  animation: meteor 5s linear infinite;
+}
+

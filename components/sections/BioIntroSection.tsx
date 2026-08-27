@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "motion/react";
 import { Sparkle, MapPin, Compass, Code, Terminal } from "@phosphor-icons/react";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
+import { Meteors } from "@/components/ui/meteors";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -92,6 +93,13 @@ export default function BioIntroSection() {
       id="about"
       className="relative w-full bg-[#0E0F12] text-white pt-24 pb-0 z-20"
     >
+      {/* ── Background Meteors effect across the entire section (Calm & Subtle) ── */}
+      <Meteors number={16} />
+
+      {/* Subtle ambient lighting flares */}
+      <div className="absolute top-20 left-10 w-[500px] h-[500px] bg-[#FACC15]/[0.025] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-24 right-10 w-[500px] h-[500px] bg-[#38BDF8]/[0.025] rounded-full blur-3xl pointer-events-none" />
+
       {/* ── 1. Dynamic Scroll-Triggered Convex Dome Curve Transition (Top) ── */}
       <motion.div
         style={{ height: curveHeight }}
@@ -169,33 +177,45 @@ export default function BioIntroSection() {
 
           {/* Bio Description from CV (Crisp Luxury Typography) */}
           <div className="lg:col-span-7 space-y-6 text-zinc-300 font-mono text-sm sm:text-base leading-relaxed text-left">
+            {/* Card 1: Academic & Engineering Foundation */}
             <FadeBlurIn delay={0.3}>
-              <div className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#FACC15] uppercase tracking-wider">
-                  <Terminal size={15} weight="bold" />
-                  <span>Academic &amp; Engineering Foundation</span>
+              <div className="relative w-full group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FACC15]/20 via-amber-500/10 to-transparent rounded-2xl blur-xl transition-opacity duration-500 opacity-60 group-hover:opacity-100" />
+                <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-[#12141A]/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:border-[#FACC15]/30">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#FACC15] uppercase tracking-wider mb-3">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]">
+                      <Terminal size={16} weight="bold" />
+                    </div>
+                    <span>Academic &amp; Engineering Foundation</span>
+                  </div>
+                  <p className="relative z-10 text-zinc-300 leading-relaxed">
+                    Currently pursuing a Bachelor&apos;s Degree in Informatics Engineering at{" "}
+                    <strong className="text-white font-semibold">STMIK Widya Cipta Dharma</strong>. My core expertise lies at the intersection of aesthetic design precision, responsive architecture, and robust frontend engineering.
+                  </p>
                 </div>
-                <p>
-                  Currently pursuing a Bachelor&apos;s Degree in Informatics Engineering at{" "}
-                  <strong className="text-white font-semibold">STMIK Widya Cipta Dharma</strong>. My core expertise lies at the intersection of aesthetic design precision, responsive architecture, and robust frontend engineering.
-                </p>
               </div>
             </FadeBlurIn>
 
+            {/* Card 2: Production Impact & Deliverables */}
             <FadeBlurIn delay={0.4}>
-              <div className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#38BDF8] uppercase tracking-wider">
-                  <Code size={15} weight="bold" />
-                  <span>Production Impact &amp; Deliverables</span>
+              <div className="relative w-full group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#38BDF8]/20 via-blue-500/10 to-transparent rounded-2xl blur-xl transition-opacity duration-500 opacity-60 group-hover:opacity-100" />
+                <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-[#12141A]/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:border-[#38BDF8]/30">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#38BDF8] uppercase tracking-wider mb-3">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#38BDF8]/20 bg-[#38BDF8]/10 text-[#38BDF8]">
+                      <Code size={16} weight="bold" />
+                    </div>
+                    <span>Production Impact &amp; Deliverables</span>
+                  </div>
+                  <p className="relative z-10 text-zinc-300 leading-relaxed">
+                    I specialize in transforming intricate Figma designs into semantic, reusable components using{" "}
+                    <strong className="text-white font-semibold">Tailwind CSS</strong>,{" "}
+                    <strong className="text-white font-semibold">Next.js</strong>, and{" "}
+                    <strong className="text-white font-semibold">Blade Templating</strong>. My work includes delivering mission-critical web platforms officially implemented by regional government institutions, such as{" "}
+                    <em className="text-white font-medium not-italic underline decoration-white/20">Bapelitbangda Mahakam Ulu</em> and{" "}
+                    <em className="text-white font-medium not-italic underline decoration-white/20">Inspektorat Kabupaten Mahakam Ulu</em>.
+                  </p>
                 </div>
-                <p>
-                  I specialize in transforming intricate Figma designs into semantic, reusable components using{" "}
-                  <strong className="text-white font-semibold">Tailwind CSS</strong>,{" "}
-                  <strong className="text-white font-semibold">Next.js</strong>, and{" "}
-                  <strong className="text-white font-semibold">Blade Templating</strong>. My work includes delivering mission-critical web platforms officially implemented by regional government institutions, such as{" "}
-                  <em className="text-white font-medium not-italic underline decoration-white/20">Bapelitbangda Mahakam Ulu</em> and{" "}
-                  <em className="text-white font-medium not-italic underline decoration-white/20">Inspektorat Kabupaten Mahakam Ulu</em>.
-                </p>
               </div>
             </FadeBlurIn>
 
