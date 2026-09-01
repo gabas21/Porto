@@ -1,21 +1,24 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Preloader from "@/components/animations/Preloader";
 import Navbar from "@/components/Navbar";
 import SideSocialDock from "@/components/layout/SideSocialDock";
 import Hero from "@/components/Hero";
-import BioIntroSection from "@/components/sections/BioIntroSection";
-import ServicesGrid from "@/components/sections/ServicesGrid";
-import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
-import TechArsenal from "@/components/sections/TechArsenal";
-import WorksHoverList from "@/components/sections/WorksHoverList";
 import MarqueeRibbon from "@/components/sections/MarqueeRibbon";
 import Footer from "@/components/layout/Footer";
-import CommandPalette from "@/components/ui/CommandPalette";
-import ResumePreviewModal from "@/components/modals/ResumePreviewModal";
-import SelfDestructOverlay from "@/components/effects/SelfDestructOverlay";
-import AITwinFloatingButton from "@/components/ai-twin/AITwinFloatingButton";
+
+// Lazy-load komponen berat — hanya dimuat saat dibutuhkan
+const BioIntroSection = dynamic(() => import("@/components/sections/BioIntroSection"), { ssr: false });
+const ServicesGrid = dynamic(() => import("@/components/sections/ServicesGrid"), { ssr: false });
+const WorksHoverList = dynamic(() => import("@/components/sections/WorksHoverList"), { ssr: false });
+const TechArsenal = dynamic(() => import("@/components/sections/TechArsenal"), { ssr: false });
+const ExperienceTimeline = dynamic(() => import("@/components/sections/ExperienceTimeline"), { ssr: false });
+const CommandPalette = dynamic(() => import("@/components/ui/CommandPalette"), { ssr: false });
+const ResumePreviewModal = dynamic(() => import("@/components/modals/ResumePreviewModal"), { ssr: false });
+const SelfDestructOverlay = dynamic(() => import("@/components/effects/SelfDestructOverlay"), { ssr: false });
+const AITwinFloatingButton = dynamic(() => import("@/components/ai-twin/AITwinFloatingButton"), { ssr: false });
 
 export default function Home() {
 

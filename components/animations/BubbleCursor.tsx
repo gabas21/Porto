@@ -94,6 +94,16 @@ export default function BubbleCursor({
       return;
     }
 
+    // Nonaktifkan di perangkat lemah (RAM < 4GB atau CPU < 4 core)
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const memory = nav.deviceMemory ?? 8;
+    const cores = navigator.hardwareConcurrency ?? 4;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced || memory < 4 || cores < 4) {
+      setIsTouchDevice(true); // reuse flag untuk skip render
+      return;
+    }
+
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;

@@ -5,9 +5,28 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+/** Deteksi perangkat lemah berdasarkan CPU core & memori */
+function isLowEndDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  // Gunakan scroll native jika: layar sentuh, RAM rendah, atau CPU sedikit
+  const nav = navigator as Navigator & {
+    deviceMemory?: number;
+    hardwareConcurrency?: number;
+  };
+  const memory = nav.deviceMemory ?? 8;
+  const cores = nav.hardwareConcurrency ?? 4;
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isTouch = window.matchMedia("(hover: none)").matches;
+  return prefersReduced || isTouch || memory < 4 || cores < 4;
+}
+
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    // Gunakan scroll native untuk perangkat lemah — tidak ada CPU overhead
+    if (isLowEndDevice()) return;
+
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
