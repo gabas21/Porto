@@ -8,7 +8,9 @@ import {
   useVelocity,
   useTransform,
   AnimatePresence,
+  type Variants,
 } from "motion/react";
+
 
 /**
  * BubbleCursor Component
@@ -147,7 +149,7 @@ export default function BubbleCursor({
   // ── 4. VARIAN ANIMASI BUBBLE ───────────────────────────────────
   const currentAnimateState = isClicking ? "clicking" : isHovered ? "hover" : "default";
 
-  const bubbleVariants = {
+  const bubbleVariants: Variants = {
     // 1. Posisi normal melayang (Soft Glass Orb tanpa garis & tanpa bulatan)
     default: {
       scale: 1,
@@ -204,6 +206,7 @@ export default function BubbleCursor({
       },
     },
   };
+
 
   return (
     <>
