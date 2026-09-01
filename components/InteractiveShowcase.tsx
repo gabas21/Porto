@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import FadeBlurIn from "./reactbits/FadeBlurIn";
 import ClickSpark from "./reactbits/ClickSpark";
+import { soundFx } from "@/lib/audio-fx";
 
 export default function InteractiveShowcase() {
   const [activeTab, setActiveTab] = useState<"qr" | "ai" | "responsive">("qr");
@@ -39,10 +40,12 @@ export default function InteractiveShowcase() {
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
 
   const handleSimulateScan = () => {
+    soundFx.playClick();
     setScanning(true);
     setScannedResult(null);
 
     setTimeout(() => {
+      soundFx.playSuccess();
       setScanning(false);
       setScannedResult({
         id: "QR-MHU-2024-8842",
@@ -57,6 +60,7 @@ export default function InteractiveShowcase() {
   const handleSimulateAI = () => {
     if (!promptInput.trim() || isGenerating) return;
 
+    soundFx.playClick();
     setIsGenerating(true);
     setStreamedText("");
     setWebhookStatus("idle");
@@ -71,6 +75,7 @@ export default function InteractiveShowcase() {
         currentIndex += 3;
       } else {
         clearInterval(interval);
+        soundFx.playSuccess();
         setIsGenerating(false);
         setWebhookStatus("sent");
       }

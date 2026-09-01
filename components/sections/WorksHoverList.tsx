@@ -5,20 +5,119 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { projects, Project } from "@/data/projects";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
+import StrokeText from "@/components/reactbits/StrokeText";
 import ProjectDeepDive from "@/components/ProjectDeepDive";
-import { Sparkle, ArrowUpRight, Eye } from "@phosphor-icons/react";
+import YellowCurtainTransition from "@/components/animations/YellowCurtainTransition";
+import { soundFx } from "@/lib/audio-fx";
+import {
+  Sparkle,
+  ArrowUpRight,
+  Eye,
+  SquaresFour,
+  ListDashes,
+  GithubLogo,
+  Globe,
+  Lock,
+  X,
+} from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+type CategoryFilter = "All" | "Government" | "AI & WebApp" | "Corporate";
+type ViewMode = "grid" | "list";
+
 export default function WorksHoverList() {
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("All");
+  const [activeTechFilter, setActiveTechFilter] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [curtainActive, setCurtainActive] = useState(false);
+  const [curtainProject, setCurtainProject] = useState<Project | null>(null);
+
+  const handleOpenProject = (project: Project) => {
+    soundFx.playSweep();
+    setCurtainProject(project);
+    setCurtainActive(true);
+    setTimeout(() => {
+      setSelectedProject(project);
+      setTimeout(() => {
+        setCurtainActive(false);
+      }, 350);
+    }, 450);
+  };
+
+  const handleCloseProject = () => {
+    soundFx.playClick();
+    setCurtainProject(selectedProject);
+    setCurtainActive(true);
+    setTimeout(() => {
+      setSelectedProject(null);
+      setTimeout(() => {
+        setCurtainActive(false);
+        setCurtainProject(null);
+      }, 350);
+    }, 450);
+  };
+
+  // Event listener untuk filter teknologi dari TechArsenal atau CommandPalette
+  useEffect(() => {
+    const handleFilterTech = (e: Event) => {
+      const custom = e as CustomEvent<{ tech: string }>;
+      if (custom.detail?.tech) {
+        setActiveTechFilter(custom.detail.tech);
+        setSelectedCategory("All");
+      }
+    };
+
+    const handleOpenProjModal = (e: Event) => {
+      const custom = e as CustomEvent<{ projectId: string }>;
+      const target = projects.find((p) => p.id === custom.detail.projectId);
+      if (target) {
+        handleOpenProject(target);
+      }
+    };
+
+    window.addEventListener("filter-works-by-tech", handleFilterTech);
+    window.addEventListener("open-project-modal", handleOpenProjModal);
+    return () => {
+      window.removeEventListener("filter-works-by-tech", handleFilterTech);
+      window.removeEventListener("open-project-modal", handleOpenProjModal);
+    };
+  }, []);
+
   const sectionRef = useRef<HTMLElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
 
-  // ── GSAP Scroll-Triggered Dual-Wrapper Parallax Curtain Entrance ────────────
+  const categories: CategoryFilter[] = ["All", "Government", "AI & WebApp", "Corporate"];
+
+  const filteredProjects = projects.filter((p) => {
+    const matchCategory = selectedCategory === "All" || p.category === selectedCategory;
+    const matchTech =
+      !activeTechFilter ||
+      p.techStack.some(
+        (t) =>
+          t.toLowerCase().includes(activeTechFilter.toLowerCase()) ||
+          activeTechFilter.toLowerCase().includes(t.toLowerCase())
+      );
+    return matchCategory && matchTech;
+  });
+
+  // Lock background scroll when modal is active
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
+
+  // ── GSAP Scroll-Triggered Curtain Entrance ────────────
   useEffect(() => {
     if (typeof window === "undefined" || !sectionRef.current) return;
     gsap.registerPlugin(ScrollTrigger);
@@ -27,7 +126,6 @@ export default function WorksHoverList() {
       const outer = outerRef.current;
       const inner = innerRef.current;
       const bg = bgRef.current;
-      const rows = sectionRef.current?.querySelectorAll(".project-row-item");
 
       if (!outer || !inner || !bg) return;
 
@@ -36,24 +134,13 @@ export default function WorksHoverList() {
         defaults: { duration: 1.1, ease: "power2.out" },
       });
 
-      // Dual-wrapper counter-moving curtain wipe
-      tl.fromTo(outer, { yPercent: 30 }, { yPercent: 0 }, 0)
-        .fromTo(inner, { yPercent: -30 }, { yPercent: 0 }, 0)
-        .fromTo(bg, { yPercent: 8 }, { yPercent: 0 }, 0);
-
-      // Staggered reveal for rows
-      if (rows && rows.length > 0) {
-        tl.fromTo(
-          rows,
-          { autoAlpha: 0, y: 35 },
-          { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08, ease: "power2.out" },
-          0.2
-        );
-      }
+      tl.fromTo(outer, { yPercent: 20 }, { yPercent: 0 }, 0)
+        .fromTo(inner, { yPercent: -20 }, { yPercent: 0 }, 0)
+        .fromTo(bg, { yPercent: 5 }, { yPercent: 0 }, 0);
 
       ScrollTrigger.create({
         trigger: sectionRef.current,
-        start: "top 82%",
+        start: "top 85%",
         onEnter: () => tl.play(),
         onLeaveBack: () => tl.reverse(),
       });
@@ -69,120 +156,382 @@ export default function WorksHoverList() {
         id="works"
         className="relative w-full bg-[var(--surface-card)] border-t border-[var(--border-subtle)] transition-colors duration-300 overflow-hidden"
       >
-        {/* Outer Wrapper (Moves down/up) */}
+        {/* Outer Wrapper */}
         <div ref={outerRef} className="w-full h-full overflow-hidden">
-          {/* Inner Wrapper (Counter-moves in opposite direction) */}
+          {/* Inner Wrapper */}
           <div ref={innerRef} className="w-full h-full overflow-hidden">
-            {/* Parallax Content Canvas */}
-            <div ref={bgRef} className="w-full h-full py-16 sm:py-24 md:py-28 px-4 sm:px-6 md:px-16">
-              <div className="max-w-6xl mx-auto space-y-10 sm:space-y-16 text-left">
-                {/* ── Section Header ── */}
-                <FadeBlurIn>
-                  <div className="space-y-2.5 sm:space-y-3">
-                    <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
-                      <Sparkle size={14} weight="fill" />
-                      <span>Selected Works &bull; Production Impact</span>
+            {/* Parallax Canvas */}
+            <div ref={bgRef} className="w-full h-full py-16 sm:py-24 md:py-28 px-4 sm:px-6 md:px-12 lg:px-16">
+              <div className="max-w-7xl mx-auto space-y-10 sm:space-y-14 text-left">
+                {/* ── Section Header & Filter Toolbar ── */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-[var(--border-subtle)]">
+                  <FadeBlurIn>
+                    <div className="space-y-2.5">
+                      <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
+                        <Sparkle size={14} weight="fill" />
+                        <span>Selected Works &bull; Production Impact</span>
+                      </div>
+                      {/* Mobile View: Dynamic Kinetic StrokeText */}
+                      <div className="sm:hidden w-full max-w-full">
+                        <StrokeText
+                          text="Featured Projects."
+                          strokeColor="var(--text-primary)"
+                          fillColor="var(--text-primary)"
+                          strokeWidth={1.0}
+                          drawDuration={1.2}
+                          fillDelay={0.12}
+                          stagger={0.03}
+                          ease="power2.out"
+                          trigger="scroll"
+                          fillMode="wipe"
+                          fontSize={34}
+                          fontWeight={700}
+                          letterSpacing={-1}
+                        />
+                      </div>
+
+                      {/* Desktop View: Standard Display Typography */}
+                      <h2 className="hidden sm:block text-3xl sm:text-5xl md:text-6xl font-bold text-[var(--text-primary)] tracking-tight">
+                        Featured Projects<span className="text-[#FACC15]">.</span>
+                      </h2>
                     </div>
-                    <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-[var(--text-primary)] tracking-tight">
-                      Featured Projects<span className="text-[#FACC15]">.</span>
-                    </h2>
-                  </div>
-                </FadeBlurIn>
+                  </FadeBlurIn>
 
-                {/* ── Interactive Project Rows ── */}
-                <div className="divide-y divide-[var(--border-subtle)]">
-                  {projects.map((project) => (
-                    <div
-                      key={project.id}
-                      onMouseEnter={() => setActiveImage(project.image)}
-                      onMouseLeave={() => setActiveImage(null)}
-                      onClick={() => setSelectedProject(project)}
-                      data-cursor-hover
-                      data-cursor-text="VIEW"
-                      className="project-row-item group relative flex flex-col md:flex-row md:items-center justify-between py-6 sm:py-8 md:py-10 transition-all duration-300 hover:px-4 sm:hover:px-6 hover:bg-[var(--surface-card-hover)] rounded-2xl cursor-pointer"
-                    >
-                      <div className="space-y-2 max-w-2xl">
-                        <div className="flex items-center gap-2 md:hidden pb-1">
-                          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--accent)] bg-[var(--accent)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent)]/20">
-                            {project.category}
-                          </span>
-                          <span className="text-[11px] font-mono text-[var(--text-secondary)]">
-                            {project.timeline}
-                          </span>
+                    {/* Filter & View Switcher Controls */}
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* Active Tech Filter Tag if selected from TechArsenal */}
+                      {activeTechFilter && (
+                        <div
+                          data-testid="active-tech-filter-tag"
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30 text-xs font-mono"
+                        >
+                          <span>Tech: {activeTechFilter}</span>
+                          <button
+                            onClick={() => {
+                              soundFx.playClick();
+                              setActiveTechFilter(null);
+                            }}
+                            className="p-0.5 hover:text-white rounded-full hover:bg-[var(--accent)]/20 transition-colors"
+                            title="Hapus filter teknologi"
+                          >
+                            <X size={12} weight="bold" />
+                          </button>
                         </div>
+                      )}
 
-                        <h3 className="text-xl sm:text-2xl md:text-4xl font-bold uppercase tracking-tight text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
-                          {project.title}
-                        </h3>
+                      {/* Category Filter Pills */}
+                      <div className="flex items-center p-1 rounded-full bg-[var(--bg-main)] border border-[var(--border-subtle)] overflow-x-auto max-w-full">
+                        {categories.map((cat) => {
+                          const isActive = selectedCategory === cat && !activeTechFilter;
+                          return (
+                            <button
+                              key={cat}
+                              onClick={() => {
+                                soundFx.playClick();
+                                setSelectedCategory(cat);
+                                setActiveTechFilter(null);
+                              }}
+                              className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-mono transition-colors cursor-pointer whitespace-nowrap ${
+                                isActive
+                                  ? "text-[var(--accent-fg)] font-semibold"
+                                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                              }`}
+                            >
+                              {isActive && (
+                                <motion.div
+                                  layoutId="activeCategoryPill"
+                                  className="absolute inset-0 rounded-full bg-[var(--accent)] shadow-sm"
+                                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                />
+                              )}
+                              <span className="relative z-10">{cat}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                        {/* Mobile preview image strip */}
-                        <div className="md:hidden relative w-full h-44 sm:h-52 rounded-xl overflow-hidden my-2.5 border border-[var(--border-subtle)] bg-[#14161C] shadow-md">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 400px"
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                          <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-white text-[11px] font-mono flex items-center gap-1.5 border border-white/10">
-                            <Eye size={12} weight="bold" />
-                            <span>View Case Study</span>
+                      {/* View Switcher (Grid vs List) */}
+                      <div className="hidden sm:flex items-center p-1 rounded-xl bg-[var(--bg-main)] border border-[var(--border-subtle)]">
+                        <button
+                          onClick={() => {
+                            soundFx.playClick();
+                            setViewMode("grid");
+                          }}
+                          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                            viewMode === "grid"
+                              ? "bg-[var(--surface-card)] text-[var(--accent)] shadow-sm"
+                              : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                          }`}
+                          title="Bento Grid View"
+                          aria-label="Bento Grid View"
+                        >
+                          <SquaresFour size={18} weight={viewMode === "grid" ? "fill" : "regular"} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            soundFx.playClick();
+                            setViewMode("list");
+                          }}
+                          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                            viewMode === "list"
+                              ? "bg-[var(--surface-card)] text-[var(--accent)] shadow-sm"
+                              : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                          }`}
+                          title="Editorial List View"
+                          aria-label="Editorial List View"
+                        >
+                          <ListDashes size={18} weight={viewMode === "list" ? "bold" : "regular"} />
+                        </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Main Content: Bento Grid or Editorial List ── */}
+                <AnimatePresence mode="wait">
+                  {viewMode === "grid" ? (
+                    /* ── BENTO 2.0 SHOWCASE GRID ── */
+                    <motion.div
+                      key={`grid-${selectedCategory}`}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -15 }}
+                      transition={{ duration: 0.3 }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
+                    >
+                      {filteredProjects.map((project, idx) => (
+                        <div
+                          key={project.id}
+                          data-testid="project-card"
+                          onClick={() => handleOpenProject(project)}
+                          className={`group cursor-pointer flex flex-col justify-between space-y-5 transition-all duration-300 ${
+                            idx === 0 && filteredProjects.length % 2 !== 0 ? "md:col-span-2" : ""
+                          }`}
+                        >
+                          <div className="space-y-4">
+                            {/* Clean Modern Browser Mockup Frame (Direct, No Outer Card) */}
+                            <div className="rounded-2xl overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-card)]/40 hover:border-[var(--accent)]/50 transition-all duration-300 shadow-sm hover:shadow-xl">
+                              {/* Chrome Bar */}
+                              <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--surface-card)]/80">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                                  <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                                  <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+                                </div>
+                                <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--text-secondary)]">
+                                  <Lock size={10} weight="fill" className="text-emerald-500" />
+                                  <span className="truncate max-w-[160px] sm:max-w-[220px]">
+                                    {project.liveUrl ? project.liveUrl.replace(/^https?:\/\//, '') : project.category}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] font-mono text-[var(--text-secondary)]">
+                                  {project.timeline}
+                                </span>
+                              </div>
+
+                              {/* Project Preview Image */}
+                              <div className="relative w-full aspect-[16/10] overflow-hidden bg-[var(--bg-main)]">
+                                <Image
+                                  src={project.image}
+                                  alt={project.title}
+                                  fill
+                                  priority={idx === 0}
+                                  loading={idx <= 1 ? "eager" : "lazy"}
+                                  sizes="(max-width: 768px) 100vw, 600px"
+                                  className="object-cover object-top group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                                  <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-white text-[11px] font-mono flex items-center gap-1.5 border border-white/20">
+                                    <Eye size={12} weight="bold" />
+                                    <span>Kajian STAR</span>
+                                  </span>
+
+                                  {project.liveUrl && (
+                                    <a
+                                      href={project.liveUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="px-3 py-1 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] text-[11px] font-mono font-semibold flex items-center gap-1 shadow-lg hover:opacity-90 transition-opacity"
+                                    >
+                                      <Globe size={12} weight="bold" />
+                                      <span>Buka Web Asli</span>
+                                      <ArrowUpRight size={12} weight="bold" />
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Title & Quick Action Icons Only (Clean & Minimalist) */}
+                            <div className="flex items-center justify-between gap-3 pt-2 text-left">
+                              <div className="space-y-0.5 min-w-0">
+                                <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors leading-snug line-clamp-1">
+                                  {project.title}
+                                </h3>
+                                <div className="flex items-center gap-2 text-[11px] font-mono text-[var(--text-secondary)]">
+                                  <span>{project.category}</span>
+                                  <span>•</span>
+                                  <span>{project.timeline}</span>
+                                </div>
+                              </div>
+
+                              {/* Only Quick Action Icons */}
+                              <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                                {project.liveUrl && (
+                                  <a
+                                    href={project.liveUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 rounded-xl bg-[var(--surface-card)] hover:bg-[var(--accent)] hover:text-[var(--accent-fg)] border border-[var(--border-subtle)] text-[var(--text-primary)] transition-all shadow-sm active:scale-95 cursor-pointer"
+                                    title="Buka Website Live"
+                                  >
+                                    <Globe size={16} weight="bold" />
+                                  </a>
+                                )}
+
+                                {project.githubUrl && (
+                                  <a
+                                    href={project.githubUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 rounded-xl bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all shadow-sm active:scale-95 cursor-pointer"
+                                    title="Source Code GitHub"
+                                  >
+                                    <GithubLogo size={16} weight="fill" />
+                                  </a>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenProject(project)}
+                                  className="p-2 rounded-xl bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all shadow-sm active:scale-95 cursor-pointer"
+                                  title="Lihat Detail Proyek & Studi Kasus"
+                                >
+                                  <ArrowUpRight size={16} weight="bold" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
+                      ))}
+                    </motion.div>
+                  ) : (
+                    /* ── EDITORIAL MINIMALIST LIST VIEW ── */
+                    <motion.div
+                      key={`list-${selectedCategory}`}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -15 }}
+                      transition={{ duration: 0.3 }}
+                      className="divide-y divide-[var(--border-subtle)]"
+                    >
+                      {filteredProjects.map((project) => (
+                        <div
+                          key={project.id}
+                          onMouseEnter={() => setActiveImage(project.image)}
+                          onMouseLeave={() => setActiveImage(null)}
+                          onClick={() => handleOpenProject(project)}
+                          className="project-row-item group relative flex flex-col md:flex-row md:items-center justify-between py-6 sm:py-8 transition-all duration-300 hover:px-4 sm:hover:px-6 hover:bg-[var(--surface-card-hover)] rounded-2xl cursor-pointer"
+                        >
+                          <div className="space-y-2 max-w-2xl text-left">
+                            <div className="flex items-center gap-2 pb-1">
+                              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--accent)] bg-[var(--accent)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent)]/20">
+                                {project.category}
+                              </span>
+                              <span className="text-[11px] font-mono text-[var(--text-secondary)]">
+                                {project.timeline}
+                              </span>
+                            </div>
 
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                          {project.techStack.map((tech, i) => (
-                            <span key={i} className="text-[11px] sm:text-xs font-mono text-[var(--text-secondary)]">
-                              #{tech}
-                            </span>
-                          ))}
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-tight text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                              {project.title}
+                            </h3>
+
+                            {/* Mobile preview image strip */}
+                            <div className="md:hidden relative w-full h-44 sm:h-52 rounded-xl overflow-hidden my-2.5 border border-[var(--border-subtle)] bg-[var(--bg-main)]">
+                              <Image
+                                src={project.image}
+                                alt={project.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 400px"
+                                className="object-cover object-top"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                              <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-white text-[11px] font-mono flex items-center gap-1.5 border border-white/10">
+                                <Eye size={12} weight="bold" />
+                                <span>View Case Study</span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                              {project.techStack.map((tech, i) => (
+                                <span key={i} className="text-[11px] sm:text-xs font-mono text-[var(--text-secondary)]">
+                                  #{tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="hidden md:flex items-center gap-2 text-sm font-mono text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors shrink-0">
+                            <span>Read Case Study</span>
+                            <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="hidden md:flex items-center gap-2 text-sm font-mono text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors shrink-0">
-                        <span>{project.category}</span>
-                        <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Desktop Floating Hover Preview Box */}
+        {/* Desktop Floating Hover Preview Box for List View */}
         <AnimatePresence>
-          {activeImage && (
+          {activeImage && viewMode === "list" && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0.85 }}
               transition={{ duration: 0.2 }}
-              className="pointer-events-none fixed top-1/2 right-24 z-50 h-64 w-96 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl hidden lg:block border border-[var(--border-subtle)] bg-[var(--bg-main)]"
+              className="pointer-events-none fixed top-1/2 right-20 z-50 h-64 w-96 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl hidden lg:block border border-[var(--border-subtle)] bg-[var(--bg-main)]"
             >
               <Image
                 src={activeImage}
                 alt="Project preview"
                 fill
                 sizes="384px"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </motion.div>
           )}
         </AnimatePresence>
       </section>
 
+      {/* Cinematic Yellow Curtain Page Transition */}
+      <YellowCurtainTransition
+        isActive={curtainActive}
+        project={curtainProject}
+      />
+
       {/* Fullscreen Case Study Deep Dive Modal */}
-      {selectedProject && (
-        <div className="fixed inset-0 z-[999] overflow-y-auto bg-[var(--bg-main)]">
-          <ProjectDeepDive
-            project={selectedProject}
-            onBack={() => setSelectedProject(null)}
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.25 }}
+            data-lenis-prevent="true"
+            className="fixed inset-0 z-[999] h-screen h-[100dvh] overflow-y-auto overflow-x-hidden bg-[var(--bg-main)] overscroll-contain"
+          >
+            <ProjectDeepDive
+              project={selectedProject}
+              onBack={handleCloseProject}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

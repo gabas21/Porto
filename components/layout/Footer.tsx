@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
+import SelfDestructTrigger from "@/components/effects/SelfDestructTrigger";
 
 export default function Footer() {
   const [witaTime, setWitaTime] = useState<string>("");
@@ -33,9 +34,10 @@ export default function Footer() {
             <p className="text-[var(--text-primary)] mb-3 uppercase font-bold tracking-wider">Navigation</p>
             <ul className="space-y-2">
               <li><a href="#about" className="hover:text-[var(--accent)] transition-colors">About</a></li>
-              <li><a href="#experience" className="hover:text-[var(--accent)] transition-colors">Experience</a></li>
-              <li><a href="#skills" className="hover:text-[var(--accent)] transition-colors">Skills</a></li>
+              <li><a href="#services" className="hover:text-[var(--accent)] transition-colors">Services</a></li>
               <li><a href="#works" className="hover:text-[var(--accent)] transition-colors">Works</a></li>
+              <li><a href="#skills" className="hover:text-[var(--accent)] transition-colors">Skills</a></li>
+              <li><a href="#experience" className="hover:text-[var(--accent)] transition-colors">Experience</a></li>
             </ul>
           </div>
 
@@ -75,6 +77,9 @@ export default function Footer() {
           <span>Designed &amp; Coded by Bagas Aditya Anugrah Ramadhan</span>
           <span>&copy; {new Date().getFullYear()} &bull; Samarinda, Indonesia</span>
         </div>
+
+        {/* 💥 Forbidden Self-Destruct Protocol Module 💣 */}
+        <SelfDestructTrigger />
       </div>
     </footer>
   );

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { journeys } from "@/data/journey";
 import { Clock, Briefcase, GraduationCap } from "@phosphor-icons/react";
+import StrokeText from "@/components/reactbits/StrokeText";
 
 // ─── Color Tokens (Clean Solid Line, Zero Glow) ────────────────────────────────
 const LINE_COLOR = "#FACC15"; // Clean solid yellow
@@ -190,7 +191,27 @@ export default function ExperienceTimeline() {
               <span>Journey &amp; Experience</span>
             </div>
 
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
+            {/* Mobile View: Dynamic Kinetic StrokeText */}
+            <div className="sm:hidden w-full max-w-full">
+              <StrokeText
+                text="Explore my journey."
+                strokeColor="var(--text-primary)"
+                fillColor="var(--text-primary)"
+                strokeWidth={1.0}
+                drawDuration={1.2}
+                fillDelay={0.12}
+                stagger={0.03}
+                ease="power2.out"
+                trigger="scroll"
+                fillMode="wipe"
+                fontSize={32}
+                fontWeight={700}
+                letterSpacing={-1}
+              />
+            </div>
+
+            {/* Desktop View: Standard Display Typography */}
+            <h2 className="hidden sm:block text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
               Explore my journey<span className="text-[#FACC15]">.</span>
             </h2>
           </div>

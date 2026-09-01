@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Project } from "@/data/projects";
 import { X, ArrowUpRight, GithubLogo, CheckCircle, Cpu, Stack } from "@phosphor-icons/react";
+import { soundFx } from "@/lib/audio-fx";
 
 interface ProjectModalProps {
   project: Project | null;
@@ -12,12 +13,17 @@ interface ProjectModalProps {
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   if (!project) return null;
 
+  const handleClose = () => {
+    soundFx.playClick();
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div data-lenis-prevent="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
       {/* Click outside to close backdrop */}
       <div
         className="fixed inset-0"
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
@@ -34,8 +40,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
 
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg bg-[#0B0E14] border border-white/10 text-[#8B92A3] hover:text-[#E7E9EE] hover:border-white/20 transition-colors"
+            onClick={handleClose}
+            className="p-1.5 rounded-lg bg-[#0B0E14] border border-white/10 text-[#8B92A3] hover:text-[#E7E9EE] hover:border-white/20 transition-colors cursor-pointer"
             aria-label="Tutup modal"
           >
             <X size={18} weight="bold" />
@@ -43,7 +49,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="p-6 sm:p-8 space-y-8 max-h-[80vh] overflow-y-auto">
+        <div
+          data-lenis-prevent="true"
+          className="p-6 sm:p-8 space-y-8 max-h-[80vh] overflow-y-auto overscroll-contain no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {/* Main Image Mockup */}
           <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-[#0B0E14]">
             <Image

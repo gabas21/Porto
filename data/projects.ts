@@ -6,8 +6,10 @@ export interface Project {
   description: string;
   techStack: string[];
   image: string;
+  gallery?: string[];
   liveUrl?: string;
   githubUrl?: string;
+  sandboxUrl?: string;
   keyFeatures: string[];
   role: string;
   timeline: string;
@@ -20,13 +22,59 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'akkreatif-agency',
+    title: 'AK Kreatif — Digital Agency & Software House Ecosystem',
+    category: 'Corporate',
+    tagline: 'Enterprise Digital Agency Hub & Multi-Category Portfolio System',
+    description: 'Platform resmi agensi digital dan startup teknologi Kalimantan Timur yang menyelaraskan arsitektur web modern, sistem showcase portofolio multi-kategori, dan interaktivitas visual berkelas.',
+    techStack: ['Laravel 11', 'Inertia.js', 'React 19', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Vite'],
+    image: '/projects/akkreatif/1-home.jpg',
+    gallery: [
+      '/projects/akkreatif/1-home.jpg',
+      '/projects/akkreatif/2-about.jpg',
+      '/projects/akkreatif/3-services.jpg',
+      '/projects/akkreatif/4-webapp.jpg',
+      '/projects/akkreatif/5-portfolio.jpg',
+      '/projects/akkreatif/6-contact.jpg'
+    ],
+    role: 'Lead Frontend & Web Architecture Developer',
+    timeline: '2024 - Present',
+    keyFeatures: [
+      'Arsitektur web agensi performa tinggi berbasis Laravel 11, Inertia.js, React 19, dan Tailwind CSS',
+      'Sistem showcase dan filtering portofolio interaktif untuk 43+ aplikasi web pemerintah dan korporat',
+      'Integrasi micro-animations GSAP, responsive layout, dan optimasi aset prefetching'
+    ],
+    liveUrl: 'https://www.akkreatif.com',
+    situation: 'AK Kreatif (Anak Kalimantan Kreatif) membutuhkan portal resmi representatif untuk memamerkan puluhan karya aplikasi web instansi pemerintah daerah, layanan desain, dan solusi teknologi informasi.',
+    action: 'Merancang arsitektur monolit modern dengan Laravel & Inertia.js React, membangun sistem showcase portofolio interaktif dengan filter instan, dan menerapkan optimasi performa serta asset prefetching.',
+    impact: 'Menjadi etalase digital utama agensi yang dipercaya instansi pemerintah dan BUMD, dengan performa pemuatan super cepat dan visual elegan.',
+    metrics: [
+      { label: 'Total Karya', value: '98+ Proyek' },
+      { label: 'Web Apps', value: '43 Systems' },
+      { label: 'Lighthouse Perf', value: '99/100' }
+    ],
+    architecturePoints: [
+      'Integrasi full-stack monolit Laravel 11 + Inertia.js React 19 tanpa overhead REST boilerplate',
+      'Dynamic multi-category portfolio indexing dengan filter interaktif berbasis state',
+      'Optimasi asset preloading dan SEO metadata komprehensif'
+    ]
+  },
+  {
     id: 'bapelitbangda-mahulu',
     title: 'Sistem Informasi Perencanaan Bapelitbangda Mahakam Ulu',
     category: 'Government',
     tagline: 'Enterprise Public Sector Planning & Administration System',
     description: 'Dashboard perencanaan resmi yang diadopsi dan digunakan secara aktif oleh pemerintah daerah Kabupaten Mahakam Ulu untuk tata kelola administrasi perencanaan.',
     techStack: ['Laravel Blade', 'Tailwind CSS', 'JavaScript', 'Figma', 'MySQL'],
-    image: '/projects/bapelitbangda.jpg',
+    image: '/projects/bappelitbangda/1.webp',
+    gallery: [
+      '/projects/bappelitbangda/1.webp',
+      '/projects/bappelitbangda/2.webp',
+      '/projects/bappelitbangda/3.webp',
+      '/projects/bappelitbangda/4.webp',
+      '/projects/bappelitbangda/5.webp',
+      '/projects/bappelitbangda/6.webp'
+    ],
     role: 'Frontend Developer',
     timeline: '2023 - 2024',
     keyFeatures: [
@@ -34,6 +82,7 @@ export const projects: Project[] = [
       'Mengonversi alur birokrasi pemerintahan menjadi antarmuka intuitif untuk validasi dokumen lintas bidang',
       'Tabel data interaktif dengan penyaringan multi-kategori, pencarian real-time, dan status badge dokumen'
     ],
+    liveUrl: 'https://bappelitbangdamahulu.akkreatif.my.id',
     githubUrl: 'https://github.com/gabas21/bapelitbangda_mahuluNew',
     situation: 'Instansi Bapelitbangda Mahakam Ulu membutuhkan digitalisasi tata kelola dokumen perencanaan dan validasi usulan program Musrenbang yang sebelumnya manual dan rawan inkonsistensi data antar bidang.',
     action: 'Merancang sistem desain antarmuka Figma dan mengonversinya ke template Blade modular dengan Tailwind CSS, menerapkan dynamic state management dan tabel data interaktif dengan fitur live search.',
@@ -51,33 +100,34 @@ export const projects: Project[] = [
   },
   {
     id: 'motion-ai',
-    title: 'Motion — AI-Powered Task & Automation Platform',
+    title: 'Motion — AI Task & LLM Agent Pipeline Platform',
     category: 'AI & WebApp',
-    tagline: 'Autonomous LLM Agent Pipeline & Telegram Automation',
-    description: 'Platform antarmuka cerdas terintegrasi prompt & response LLM via API OpenRouter serta integrasi bot Telegram dua arah.',
-    techStack: ['Next.js', 'React.js', 'Golang', 'Supabase', 'REST API', 'Tailwind CSS'],
+    tagline: 'Fullstack Next.js 14, Golang Microservice & AI Automation Hub',
+    description: 'Platform otomasi AI multi-service terintegrasi antarmuka Next.js 14, backend Golang berkecepatan tinggi, dan integrasi Telegram Bot & OpenRouter LLM.',
+    techStack: ['Next.js 14', 'React.js', 'Golang', 'TypeScript', 'Tailwind CSS', 'Docker', 'REST API'],
     image: '/projects/motion-ai.jpg',
-    role: 'Frontend Developer',
-    timeline: '2024',
+    role: 'Full Stack / Frontend Developer',
+    timeline: '2024 - 2025',
     keyFeatures: [
-      'Mengembangkan antarmuka web modern berbasis Next.js dan Tailwind CSS dengan struktur tata letak modular',
-      'Mengimplementasikan alur interaksi cerdas untuk prompt & response LLM via OpenRouter API & Telegram Bot',
-      'Dynamic state management, navigasi dinamis, dan feedback visual real-time (loading skeleton, status badge)'
+      'Frontend Next.js 14 modern dengan tata letak modular, Tailwind CSS, dan dynamic state management',
+      'Integrasi backend Golang microservice dengan arsitektur Docker Compose multi-container',
+      'Alur eksekusi prompt & response LLM real-time dengan feedback visual streaming dan integrasi bot'
     ],
-    githubUrl: 'https://github.com/gabas21/motion-ai-automation',
-    liveUrl: 'https://motion-ai-preview.vercel.app',
-    situation: 'Pengguna memerlukan platform otomasi berbasis AI yang dapat mengeksekusi instruksi rumit melalui prompt teks dan otomatis meneruskan hasil analisis ke kanal Telegram secara real-time.',
-    action: 'Membangun arsitektur frontend modern berbasis Next.js dengan state management dinamis, integrasi API OpenRouter untuk respon LLM instan, serta feedback visual interaktif.',
-    impact: 'Menghadirkan pengalaman otomasi task cerdas dengan latency streaming rendah dan integrasi bot Telegram yang seamless.',
+    githubUrl: 'https://github.com/gabas21/motion',
+    liveUrl: 'https://motion-liard-seven.vercel.app',
+    sandboxUrl: 'https://stackblitz.com/github/gabas21/motion/tree/main/frontend',
+    situation: 'Dibutuhkan platform otomasi cerdas yang menggabungkan kecepatan pemrosesan data backend Golang dengan antarmuka frontend reaktif Next.js untuk mengeksekusi pipeline instruksi AI.',
+    action: 'Membangun arsitektur frontend modular berbasis Next.js 14, menghubungkannya ke REST API Golang, dan mengonfigurasi multi-container Docker untuk pengujian lokal & cloud sandbox.',
+    impact: 'Menghadirkan platform AI yang siap dijalankan baik di cloud Vercel maupun live interactive sandbox di browser.',
     metrics: [
-      { label: 'Streaming TTFB', value: '< 180ms' },
-      { label: 'Workflow Success', value: '99.8%' },
-      { label: 'Lighthouse Score', value: '99/100' }
+      { label: 'Latency Streaming', value: '< 150ms' },
+      { label: 'Arsitektur Service', value: 'Go + Next.js' },
+      { label: 'Deploy Status', value: 'Live Vercel' }
     ],
     architecturePoints: [
-      'Integrasi RESTful API OpenRouter & webhook bot Telegram',
-      'Dynamic state management dengan loading skeleton dan feedback status badge',
-      'Struktur tata letak modular berbasis Next.js App Router dan Tailwind CSS'
+      'Frontend Next.js 14 App Router teroptimasi dengan TypeScript & Tailwind',
+      'Backend Golang performa tinggi untuk pemrosesan data & integrasi LLM',
+      'Orkestrasi multi-service lengkap dengan Docker Compose & Sandbox container'
     ]
   },
   {
@@ -87,7 +137,15 @@ export const projects: Project[] = [
     tagline: 'Enterprise Corporate Energy & ESG Portal',
     description: 'Portal korporat resmi BUMD sektor migas dengan fokus pada pendekatan mobile-first design, visualisasi data analitik, dan optimasi pemuatan web.',
     techStack: ['Laravel Blade', 'Tailwind CSS', 'JavaScript', 'REST API'],
-    image: '/projects/pt-mgr-migas.jpg',
+    image: '/projects/mgrm/1.webp',
+    gallery: [
+      '/projects/mgrm/1.webp',
+      '/projects/mgrm/2.webp',
+      '/projects/mgrm/3.webp',
+      '/projects/mgrm/4.webp',
+      '/projects/mgrm/5.webp',
+      '/projects/mgrm/6.webp'
+    ],
     role: 'Frontend Developer',
     timeline: '2024',
     keyFeatures: [
@@ -95,7 +153,7 @@ export const projects: Project[] = [
       'Komponen UI interaktif untuk visualisasi data analitik dan feed konten dinamis melalui RESTful API',
       'Optimasi rendering halaman dan asset bundling guna meningkatkan performa kecepatan pemuatan web'
     ],
-    liveUrl: 'https://mgr-migas.id',
+    liveUrl: 'https://mgrmkukar.akkreatif.my.id',
     githubUrl: 'https://github.com/gabas21/pt-mgr-migas-portal',
     situation: 'BUMD sektor energi membutuhkan portal profil perusahaan yang modern, responsif, dan mampu menampilkan data korporat serta publikasi informasi secara cepat.',
     action: 'Merancang arsitektur mobile-first dengan Tailwind CSS dan Laravel Blade, mengintegrasikan feed konten dinamis via REST API, dan mengoptimalkan asset bundling.',
@@ -149,7 +207,15 @@ export const projects: Project[] = [
     tagline: 'Public Service & Community Reporting Information System',
     description: 'Portal layanan publik resmi dan formulir pengaduan masyarakat yang ramah aksesibilitas untuk Inspektorat Daerah Kabupaten Mahakam Ulu.',
     techStack: ['Laravel Blade', 'Tailwind CSS', 'Figma', 'JavaScript'],
-    image: '/projects/bapelitbangda.jpg',
+    image: '/projects/inspektorat/1.webp',
+    gallery: [
+      '/projects/inspektorat/1.webp',
+      '/projects/inspektorat/2.webp',
+      '/projects/inspektorat/3.webp',
+      '/projects/inspektorat/4.webp',
+      '/projects/inspektorat/5.webp',
+      '/projects/inspektorat/6.webp'
+    ],
     role: 'Frontend Developer',
     timeline: '2024',
     keyFeatures: [
@@ -157,6 +223,7 @@ export const projects: Project[] = [
       'Tata letak informasi layanan publik dan formulir pengaduan masyarakat ramah aksesibilitas',
       'Desain antarmuka pemerintah yang terstruktur dan bersih sesuai standar instansi'
     ],
+    liveUrl: 'https://inspektoratmahulu.akkreatif.my.id',
     githubUrl: 'https://github.com/gabas21/inspektorat_mahakam_ulu_new',
     situation: 'Inspektorat Kabupaten Mahakam Ulu membutuhkan portal resmi untuk menyajikan informasi pengawasan daerah dan kanal pengaduan masyarakat yang transparan dan mudah diakses.',
     action: 'Menerjemahkan rancangan prototipe Figma menjadi antarmuka Blade modular dengan Tailwind CSS, memastikan kepatuhan semantik HTML5 dan aksesibilitas publik.',

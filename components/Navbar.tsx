@@ -2,17 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Sun, Moon } from "@phosphor-icons/react";
+import { ArrowUpRight, SpeakerHigh, SpeakerSlash, Command, FileText } from "@phosphor-icons/react";
 import { Menu } from "lucide-react";
 import { motion, useScroll, useSpring } from "motion/react";
 import GlassSurface from "./reactbits/GlassSurface";
 import FullscreenMenu from "./layout/FullscreenMenu";
+import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
+import { soundFx } from "@/lib/audio-fx";
 
-export default function Navbar() {
+interface NavbarProps {
+  onOpenCV?: () => void;
+  onOpenCommandPalette?: () => void;
+}
+
+export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [isMuted, setIsMuted] = useState(false);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -22,15 +30,56 @@ export default function Navbar() {
   });
 
   useEffect(() => {
+    setIsMuted(soundFx.getIsMuted());
+    const handleSoundToggle = (e: Event) => {
+      const custom = e as CustomEvent<{ isMuted: boolean }>;
+      setIsMuted(custom.detail.isMuted);
+    };
+    window.addEventListener("porto-sound-toggle", handleSoundToggle);
+    return () => window.removeEventListener("porto-sound-toggle", handleSoundToggle);
+  }, []);
+
+  const toggleSound = () => {
+    const nextMuted = soundFx.toggleMute();
+    setIsMuted(nextMuted);
+  };
+
+  const openCmdPalette = () => {
+    soundFx.playSweep();
+    if (onOpenCommandPalette) {
+      onOpenCommandPalette();
+    } else {
+      window.dispatchEvent(new CustomEvent("open-command-palette"));
+    }
+  };
+
+  const openCV = () => {
+    soundFx.playSweep();
+    if (onOpenCV) {
+      onOpenCV();
+    } else {
+      window.dispatchEvent(new CustomEvent("open-cv-modal"));
+    }
+  };
+
+  useEffect(() => {
     const savedTheme = (localStorage.getItem("theme") as "dark" | "light") || "dark";
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
+    document.documentElement.classList.toggle("dark", savedTheme === "dark");
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
 
-      const sections = ["about", "experience", "skills", "works", "contact"];
-      const scrollPos = window.scrollY + 140;
+      // When at the top (Hero Section), no section pill should be active
+      if (window.scrollY < 220) {
+        setActiveSection("");
+        return;
+      }
+
+      const sections = ["about", "services", "works", "skills", "experience", "contact"];
+      const scrollPos = window.scrollY + 160;
+      let found = false;
 
       for (const section of sections) {
         const el = document.getElementById(section);
@@ -39,28 +88,33 @@ export default function Navbar() {
           const height = el.offsetHeight;
           if (scrollPos >= top && scrollPos < top + height) {
             setActiveSection(section);
+            found = true;
             break;
           }
         }
       }
+
+      if (!found) {
+        setActiveSection("");
+      }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    handleScroll();
 
-  const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    document.documentElement.setAttribute("data-theme", nextTheme);
-  };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("reset-nav-state", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("reset-nav-state", handleScroll);
+    };
+  }, []);
 
   const navLinks = [
     { name: "About", href: "#about" },
-    { name: "Experience", href: "#experience" },
-    { name: "Skills", href: "#skills" },
+    { name: "Services", href: "#services" },
     { name: "Works", href: "#works" },
+    { name: "Skills", href: "#skills" },
+    { name: "Experience", href: "#experience" },
   ];
 
   return (
@@ -85,7 +139,7 @@ export default function Navbar() {
             mass: 0.8,
           }}
           className={`pointer-events-auto w-full transition-all duration-300 ${
-            scrolled ? "max-w-[860px]" : "max-w-[1240px]"
+            scrolled ? "max-w-[1040px]" : "max-w-[1240px]"
           }`}
         >
           {scrolled ? (
@@ -106,82 +160,104 @@ export default function Navbar() {
               mixBlendMode="difference"
               className="py-1.5 px-3 sm:px-4"
             >
-              {/* Brand Logo */}
-              <Link
-                href="/"
-                className="group flex items-center gap-1.5 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-2"
-              >
-                <span className="text-sm sm:text-base uppercase tracking-tighter font-display">
-                  Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
-                </span>
-              </Link>
-
-              {/* Desktop Nav Items */}
-              <nav className="hidden md:flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 shadow-inner backdrop-blur-md">
-                {navLinks.map((link) => {
-                  const isActive = activeSection === link.href.substring(1);
-                  return (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      className={`relative text-xs font-mono font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 ${
-                        isActive
-                          ? "text-black font-semibold"
-                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.span
-                          layoutId="active-nav-indicator"
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                          className="absolute inset-0 rounded-full bg-[var(--accent)] shadow-[0_2px_12px_rgba(191,255,4,0.4)] -z-10"
-                        />
-                      )}
-                      {link.name}
-                    </a>
-                  );
-                })}
-              </nav>
-
-              {/* Actions */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={toggleTheme}
-                  className="p-2 sm:p-2.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-                  title={`Switch to ${theme === "dark" ? "Light Mode" : "Dark Mode"}`}
-                  aria-label="Toggle Theme"
+              <div className="w-full flex items-center justify-between gap-3 sm:gap-4 px-1">
+                {/* Brand Logo */}
+                <Link
+                  href="/"
+                  className="group flex items-center gap-1.5 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-2 shrink-0"
                 >
-                  {theme === "dark" ? (
-                    <Moon size={14} weight="fill" className="text-sky-400" />
-                  ) : (
-                    <Sun size={14} weight="bold" className="text-amber-500" />
-                  )}
-                </button>
+                  <span className="text-sm sm:text-base uppercase tracking-tighter font-display">
+                    Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
+                  </span>
+                </Link>
 
-                <a
-                  href="mailto:bagasa020@gmail.com"
-                  className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(191,255,4,0.3)] hover:opacity-95 cursor-pointer"
-                >
-                  <span>Contact</span>
-                  <ArrowUpRight size={12} weight="bold" />
-                </a>
+                {/* Desktop Nav Items */}
+                <nav className="hidden md:flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 shadow-inner backdrop-blur-md">
+                  {navLinks.map((link) => {
+                    const isActive = activeSection === link.href.substring(1);
+                    return (
+                      <a
+                        key={link.name}
+                        href={link.href}
+                        className={`relative text-xs font-mono font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+                          isActive
+                            ? "text-black font-semibold"
+                            : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.span
+                            layoutId="active-nav-indicator"
+                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                            className="absolute inset-0 rounded-full bg-[var(--accent)] shadow-[0_2px_12px_rgba(250,204,21,0.4)] -z-10"
+                          />
+                        )}
+                        {link.name}
+                      </a>
+                    );
+                  })}
+                </nav>
 
-                <button
-                  onClick={() => setMenuOpen(true)}
-                  className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm"
-                  aria-label="Toggle Fullscreen Menu"
-                >
-                  <Menu size={15} />
-                </button>
+                {/* Actions */}
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  {/* Command Palette Trigger */}
+                  <button
+                    onClick={openCmdPalette}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                    title="Buka Command Menu (Ctrl+K / ⌘K)"
+                    aria-label="Command Menu"
+                  >
+                    <Command size={14} className="text-[var(--accent)]" />
+                    <span className="text-[10px] font-mono font-semibold hidden md:inline">⌘K</span>
+                  </button>
+
+                  {/* Audio FX Toggle */}
+                  <button
+                    onClick={toggleSound}
+                    className="p-2 sm:p-2.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center"
+                    title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
+                    aria-label="Toggle Sound Effects"
+                  >
+                    {isMuted ? (
+                      <SpeakerSlash size={14} className="text-rose-400" />
+                    ) : (
+                      <SpeakerHigh size={14} className="text-[var(--accent)]" />
+                    )}
+                  </button>
+
+                  <AnimatedThemeToggler
+                    variant="circle"
+                    duration={500}
+                    theme={theme}
+                    onThemeChange={(newTheme) => setTheme(newTheme)}
+                    className="p-2 sm:p-2.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center"
+                  />
+
+                  <a
+                    href="mailto:bagasa020@gmail.com"
+                    className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer"
+                  >
+                    <span>Contact</span>
+                    <ArrowUpRight size={12} weight="bold" />
+                  </a>
+
+                  <button
+                    onClick={() => setMenuOpen(true)}
+                    className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm"
+                    aria-label="Toggle Fullscreen Menu"
+                  >
+                    <Menu size={15} />
+                  </button>
+                </div>
               </div>
             </GlassSurface>
           ) : (
             /* ── Top Full-Width Hero Navbar State ── */
-            <header className="w-full flex items-center justify-between py-3 px-2 sm:px-4 bg-transparent">
+            <header className="w-full flex items-center justify-between gap-4 py-3 px-3 sm:px-6 bg-transparent">
               {/* Brand Logo */}
               <Link
                 href="/"
-                className="group flex items-center gap-2 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-2"
+                className="group flex items-center gap-2 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
               >
                 <span className="text-lg sm:text-xl uppercase tracking-tighter font-display">
                   Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
@@ -189,7 +265,7 @@ export default function Navbar() {
               </Link>
 
               {/* Desktop Navigation Floating Pill */}
-              <nav className="hidden md:flex items-center gap-1 bg-[var(--surface-card)]/90 border border-[var(--border-subtle)] rounded-full px-4 py-1.5 shadow-sm backdrop-blur-md">
+              <nav className="hidden md:flex items-center gap-1 bg-white/90 dark:bg-[var(--surface-card)]/90 border border-black/[0.08] dark:border-[var(--border-subtle)] rounded-full px-4 py-1.5 shadow-sm backdrop-blur-md">
                 {navLinks.map((link) => {
                   const isActive = activeSection === link.href.substring(1);
                   return (
@@ -198,7 +274,7 @@ export default function Navbar() {
                       href={link.href}
                       className={`text-xs font-mono font-medium px-4 py-1.5 rounded-full transition-all duration-150 ${
                         isActive
-                          ? "bg-[var(--accent)] text-black font-semibold shadow-sm"
+                          ? "bg-[#F0F0F2] text-black border border-black/5 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold"
                           : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                       }`}
                     >
@@ -209,30 +285,50 @@ export default function Navbar() {
               </nav>
 
               {/* Theme Switcher, Contact & Menu CTA */}
-              <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                {/* Command Palette Trigger */}
                 <button
-                  onClick={toggleTheme}
-                  className="p-2.5 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
-                  title={`Switch to ${theme === "dark" ? "Light Mode" : "Dark Mode"}`}
-                  aria-label="Toggle Theme"
+                  onClick={openCmdPalette}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+                  title="Buka Command Menu (Ctrl+K / ⌘K)"
+                  aria-label="Command Menu"
                 >
-                  {theme === "dark" ? (
-                    <Moon size={15} weight="fill" className="text-sky-400" />
+                  <Command size={14} className="text-[var(--accent)]" />
+                  <span className="text-[11px] font-mono font-semibold hidden sm:inline">⌘K</span>
+                </button>
+
+                {/* Audio FX Toggle */}
+                <button
+                  onClick={toggleSound}
+                  className="p-2.5 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center"
+                  title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
+                  aria-label="Toggle Sound Effects"
+                >
+                  {isMuted ? (
+                    <SpeakerSlash size={15} className="text-rose-400" />
                   ) : (
-                    <Sun size={15} weight="bold" className="text-amber-500" />
+                    <SpeakerHigh size={15} className="text-[var(--accent)]" />
                   )}
                 </button>
 
+                <AnimatedThemeToggler
+                  variant="circle"
+                  duration={500}
+                  theme={theme}
+                  onThemeChange={(newTheme) => setTheme(newTheme)}
+                  className="p-2.5 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center"
+                />
+
                 <a
                   href="mailto:bagasa020@gmail.com"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all active:scale-[0.98] shadow-sm hover:opacity-90 cursor-pointer"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
                 >
                   <span>Contact ↗</span>
                 </a>
 
                 <button
                   onClick={() => setMenuOpen(true)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm"
                   aria-label="Toggle Fullscreen Menu"
                 >
                   <Menu size={16} />

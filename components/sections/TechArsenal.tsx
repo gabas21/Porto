@@ -3,7 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Sparkle, Cpu, Layout, Database, Wrench, SquaresFour, ArrowLeft, ArrowRight, CheckCircle, Compass } from "@phosphor-icons/react";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
+import StrokeText from "@/components/reactbits/StrokeText";
 import gsap from "gsap";
+import { soundFx } from "@/lib/audio-fx";
 import {
   NextjsLogo,
   ReactLogo,
@@ -192,6 +194,15 @@ export default function TechArsenal() {
   const handlePrev = () => gotoCategory(activeIndex - 1, -1);
   const handleNext = () => gotoCategory(activeIndex + 1, 1);
 
+  const handleTechClick = (techName: string) => {
+    soundFx.playClick();
+    const worksEl = document.getElementById("works");
+    if (worksEl) {
+      worksEl.scrollIntoView({ behavior: "smooth" });
+    }
+    window.dispatchEvent(new CustomEvent("filter-works-by-tech", { detail: { tech: techName } }));
+  };
+
   return (
     <section
       id="skills"
@@ -206,7 +217,27 @@ export default function TechArsenal() {
                 <Sparkle size={14} weight="fill" />
                 <span>Capabilities &amp; Tech Arsenal</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
+              {/* Mobile View: Dynamic Kinetic StrokeText */}
+              <div className="sm:hidden w-full max-w-full">
+                <StrokeText
+                  text="Technology Arsenal."
+                  strokeColor="var(--text-primary)"
+                  fillColor="var(--text-primary)"
+                  strokeWidth={1.0}
+                  drawDuration={1.2}
+                  fillDelay={0.12}
+                  stagger={0.03}
+                  ease="power2.out"
+                  trigger="scroll"
+                  fillMode="wipe"
+                  fontSize={32}
+                  fontWeight={700}
+                  letterSpacing={-1}
+                />
+              </div>
+
+              {/* Desktop View: Standard Display Typography */}
+              <h2 className="hidden sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
                 Technology Arsenal<span className="text-[#FACC15]">.</span>
               </h2>
             </div>
@@ -388,11 +419,14 @@ export default function TechArsenal() {
                           {items.map((item) => (
                             <div
                               key={item.name}
-                              className="tech-card-item group relative p-3 sm:p-3.5 lg:p-4 rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--accent)]/50 bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] transition-all duration-300 flex items-center justify-between gap-3 shadow-sm hover:shadow-md cursor-default select-none"
+                              data-testid={`tech-card-${item.name.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                              onClick={() => handleTechClick(item.name)}
+                              title={`Lihat proyek yang menggunakan ${item.name}`}
+                              className="tech-card-item group relative p-3 sm:p-3.5 lg:p-4 rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--accent)]/50 bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] transition-all duration-300 flex items-center justify-between gap-3 shadow-sm hover:shadow-md cursor-pointer select-none active:scale-[0.98]"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                {/* High-Contrast Brand Logo Tile */}
-                                <div className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white dark:bg-[#151922] border border-black/10 dark:border-white/10 flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                                {/* High-Contrast Solid Black Brand Logo Tile */}
+                                <div className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#0D0F14] border border-black/20 dark:border-white/10 flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:border-[var(--accent)]/50 transition-all duration-300">
                                   {item.icon}
                                 </div>
 

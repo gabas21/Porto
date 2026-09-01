@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    optimizePackageImports: [
+      "@phosphor-icons/react",
+      "motion",
+      "gsap",
+      "three",
+      "@react-three/fiber",
+      "@react-three/drei",
+    ],
+  },
 };
 
 export default nextConfig;

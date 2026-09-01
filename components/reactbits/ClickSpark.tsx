@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { soundFx } from "@/lib/audio-fx";
 
 interface Spark {
   id: number;
@@ -27,6 +28,7 @@ export default function ClickSpark({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
+      soundFx.playClick();
       const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;

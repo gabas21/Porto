@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 'use client';
 
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
+import { soundFx } from '@/lib/audio-fx';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -109,19 +110,20 @@ function renderFrontBadge(
     ctx.clip();
 
     // Scale to cover upper-body nicely focusing on the head & suit
-    const scale = Math.max(photoW / photoImg.width, photoH / photoImg.height) * 1.05;
+    const scale = Math.max(photoW / photoImg.width, photoH / photoImg.height) * 1.15;
     const dw = photoImg.width * scale;
     const dh = photoImg.height * scale;
     const dx = photoX + (photoW - dw) / 2;
-    const dy = photoY; // Align to top for face focus
+    // Geser posisi vertikal foto ke atas agar kepala pas di tengah-atas bingkai dan jas/dasi terlihat
+    const dy = photoY - dh * 0.14;
     ctx.drawImage(photoImg, dx, dy, dw, dh);
 
     // Subtle bottom shadow gradient on photo
-    const pGrad = ctx.createLinearGradient(photoX, photoY + photoH * 0.65, photoX, photoY + photoH);
+    const pGrad = ctx.createLinearGradient(photoX, photoY + photoH * 0.72, photoX, photoY + photoH);
     pGrad.addColorStop(0, 'rgba(10,11,14,0)');
-    pGrad.addColorStop(1, 'rgba(10,11,14,0.9)');
+    pGrad.addColorStop(1, 'rgba(10,11,14,0.75)');
     ctx.fillStyle = pGrad;
-    ctx.fillRect(photoX, photoY + photoH * 0.65, photoW, photoH * 0.35);
+    ctx.fillRect(photoX, photoY + photoH * 0.72, photoW, photoH * 0.28);
 
     ctx.restore();
   }
@@ -284,21 +286,41 @@ export default function Lanyard({
   className = 'relative z-0 w-full h-full flex justify-center items-center',
 }: LanyardProps) {
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth < 1024 : false));
+  const [isInView, setIsInView] = useState(true);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Performance Optimization: Pause physics & WebGL render loop when scrolled out of view
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(wrapperRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const actualGroupX = isMobile ? 0 : groupX;
+  const responsivePosition: [number, number, number] = isMobile
+    ? [0, 0, 13.2]
+    : position;
+  const responsiveAnchorY = isMobile ? 4.3 : anchorY;
 
   return (
-    <div className={className}>
+    <div ref={wrapperRef} className={className}>
       <Canvas
-        camera={{ position: position, fov: fov }}
-        dpr={[1, isMobile ? 1.5 : 2]}
-        gl={{ alpha: transparent, antialias: true }}
+        frameloop={isInView ? 'always' : 'never'}
+        camera={{ position: responsivePosition, fov: isMobile ? 22 : fov }}
+        dpr={[1, 1.5]}
+        gl={{ alpha: transparent, antialias: true, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI * 1.1} />
@@ -311,7 +333,7 @@ export default function Lanyard({
               imageFit={imageFit}
               lanyardImage={lanyardImage}
               lanyardWidth={lanyardWidth}
-              anchorY={anchorY}
+              anchorY={responsiveAnchorY}
               groupX={actualGroupX}
             />
           </Physics>
@@ -390,9 +412,9 @@ function Band({
 
   const segmentProps = {
     type: 'dynamic' as const,
-    canSleep: true,
+    canSleep: false,        // Harus false agar segmen tidak freeze saat scene pertama load
     colliders: false as const,
-    angularDamping: 4,
+    angularDamping: 2,
     linearDamping: 4,
   };
 
@@ -453,6 +475,8 @@ function Band({
   }, [frontTex, materials]);
 
   const curve = useMemo(() => {
+    // 4 titik: j3 (= attachment point clip) → j2 → j1 → fixed anchor
+    // j3 secara fisika sudah terikat di posisi klip kartu via sphericalJoint
     const c = new THREE.CatmullRomCurve3([
       new THREE.Vector3(),
       new THREE.Vector3(),
@@ -466,14 +490,81 @@ function Band({
   const [dragged, drag] = useState<any>(false);
   const [hovered, hover] = useState(false);
 
-  // Balanced rope segments so strap top is off-screen while card is large and centered
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 0.8]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 0.8]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.8]);
+  // Rope segments: panjang 1 unit (sesuai referensi)
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  // Spherical joint: Y offset harus = -groupOffset + scale * h_clip_in_model
+  // h_clip = (1.45_ref + 1.2_ref) / 2.25_ref = 1.178. Dengan scale 2.85 & offset -1.45:
+  // joint_Y = -1.45 + 2.85 * 1.178 = 1.907  → tali benar-benar menempel pada klip fisik
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.95, 0],
+    [0, 1.907, 0],
   ]);
+
+  const triggerDropAnimation = useCallback(() => {
+    if (!card.current || !j1.current || !j2.current || !j3.current || !fixed.current) return;
+
+    try {
+      const fixTrans = fixed.current.translation();
+      if (!fixTrans || isNaN(fixTrans.x)) return;
+
+      const fx = fixTrans.x;
+      const fy = fixTrans.y;
+      const fz = fixTrans.z || 0;
+
+      // Wake up all rigid bodies in the physics engine
+      [fixed, j1, j2, j3, card].forEach((ref) => ref.current?.wakeUp());
+
+      // Lift rope segments and card up and slightly to the right/forward
+      // When gravity acts, it produces a realistic elastic drop & swing motion
+      j1.current.setTranslation({ x: fx + 0.6, y: fy - 0.5, z: fz + 0.3 }, true);
+      j1.current.setLinvel({ x: -0.4, y: -0.8, z: -0.1 }, true);
+
+      j2.current.setTranslation({ x: fx + 1.2, y: fy - 1.1, z: fz + 0.6 }, true);
+      j2.current.setLinvel({ x: -0.8, y: -1.6, z: -0.2 }, true);
+
+      j3.current.setTranslation({ x: fx + 1.8, y: fy - 1.7, z: fz + 0.9 }, true);
+      j3.current.setLinvel({ x: -1.2, y: -2.4, z: -0.4 }, true);
+
+      card.current.setTranslation({ x: fx + 2.4, y: fy - 2.4, z: fz + 1.3 }, true);
+      card.current.setLinvel({ x: -2.2, y: -3.8, z: -0.6 }, true);
+      card.current.setAngvel({ x: 0.2, y: 1.5, z: -0.8 }, true);
+
+      // Reset lerped positions so the mesh curve doesn't have an initial visual glitch
+      if (j1.current) j1.current.lerped = new THREE.Vector3(fx + 0.6, fy - 0.5, fz + 0.3);
+      if (j2.current) j2.current.lerped = new THREE.Vector3(fx + 1.2, fy - 1.1, fz + 0.6);
+
+      soundFx.playLanyardDrop();
+    } catch {
+      // Ignore if called before physics graph is fully initialized
+    }
+  }, []);
+
+  useEffect(() => {
+    let triggered = false;
+
+    const handleCurtainLift = () => {
+      setTimeout(() => {
+        triggerDropAnimation();
+        triggered = true;
+      }, 100);
+    };
+
+    window.addEventListener('preloader-curtain-lift', handleCurtainLift);
+
+    // Initial timeout fallback in case preloader is disabled or already completed
+    const timer = setTimeout(() => {
+      if (!triggered) {
+        triggerDropAnimation();
+      }
+    }, 600);
+
+    return () => {
+      window.removeEventListener('preloader-curtain-lift', handleCurtainLift);
+      clearTimeout(timer);
+    };
+  }, [triggerDropAnimation]);
 
   useEffect(() => {
     if (hovered) {
@@ -495,32 +586,56 @@ function Band({
       });
     }
 
-    if (fixed.current) {
-      // Smooth subtle natural breathing sway
-      [j1, j2].forEach((ref) => {
-        if (!ref.current) return;
-        if (!ref.current.lerped)
-          ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        const clampedDistance = Math.max(
-          0.1,
-          Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
-        );
-        ref.current.lerped.lerp(
-          ref.current.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
-      });
+    if (fixed.current && j1.current && j2.current && j3.current && card.current && band.current) {
+      try {
+        const fixTrans = fixed.current.translation();
+        const j1Trans = j1.current.translation();
+        const j2Trans = j2.current.translation();
+        const j3Trans = j3.current.translation();
 
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
+        if (fixTrans && j1Trans && j2Trans && j3Trans && !isNaN(fixTrans.x) && !isNaN(j1Trans.x)) {
+          // j1 dan j2 di-lerp untuk smooth sway; j3 pakai translation langsung
+          // (j3 adalah attachment point fisik, harus akurat posisinya)
+          [j1, j2].forEach((ref) => {
+            if (!ref.current) return;
+            const trans = ref.current.translation();
+            if (!trans || isNaN(trans.x)) return;
+            if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(trans);
+            const clampedDistance = Math.max(
+              0.1,
+              Math.min(1, ref.current.lerped.distanceTo(trans))
+            );
+            ref.current.lerped.lerp(
+              trans,
+              delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
+            );
+          });
 
-      band.current.geometry.setPoints(curve.getPoints(32));
+          if (j2.current.lerped && j1.current.lerped) {
+            // points[0] = j3.translation() langsung — j3 secara fisika ADA di posisi klip
+            // karena sphericalJoint mengikatnya ke [0, 1.907, 0] di card local space
+            curve.points[0].copy(j3.current.translation());
+            curve.points[1].copy(j2.current.lerped);
+            curve.points[2].copy(j1.current.lerped);
+            curve.points[3].copy(fixTrans);
 
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+            const pts = curve.getPoints(32);
+            if (
+              pts.length > 0 &&
+              !isNaN(pts[0].x) &&
+              band.current?.geometry?.setPoints
+            ) {
+              band.current.geometry.setPoints(pts);
+            }
+          }
+
+          ang.copy(card.current.angvel());
+          rot.copy(card.current.rotation());
+          card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+        }
+      } catch {
+        // Silently catch transient frame init errors during hydration
+      }
     }
   });
 
@@ -530,33 +645,36 @@ function Band({
     <>
       <group position={[groupX, anchorY, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.2, -0.8, 0]} ref={j1} {...segmentProps}>
+        {/* Segmen rope posisi awal terangkat untuk drop fisika dinamis */}
+        <RigidBody position={[0.6, -0.5, 0.3]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[0.4, -1.6, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[1.2, -1.1, 0.6]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[0.6, -2.4, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[1.8, -1.7, 0.9]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
         <RigidBody
-          position={[0.8, -3.8, 0]}
+          position={[2.4, -2.4, 1.3]}
           ref={card}
           {...segmentProps}
           type={dragged ? 'kinematicPosition' : 'dynamic'}
         >
-          <CuboidCollider args={[1.0, 1.42, 0.01]} />
+          <CuboidCollider args={[0.9, 1.35, 0.01]} />
           <group
-            scale={2.85}
-            position={[0, -1.2, -0.05]}
+            scale={isMobile ? 2.2 : 2.85}
+            position={[0, -1.45, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e: any) => {
               e.target.releasePointerCapture(e.pointerId);
               drag(false);
+              soundFx.playLanyardRelease();
             }}
             onPointerDown={(e: any) => {
               e.target.setPointerCapture(e.pointerId);
+              soundFx.playLanyardGrab();
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
@@ -587,11 +705,11 @@ function Band({
         <meshLineGeometry />
         <meshLineMaterial
           color="white"
-          depthTest={true}
+          depthTest={false}
           resolution={isMobile ? [800, 1200] : [1400, 1400]}
           useMap={1}
           map={texture}
-          repeat={[1, 1]}
+          repeat={[-4, 1]}
           lineWidth={lanyardWidth}
         />
       </mesh>

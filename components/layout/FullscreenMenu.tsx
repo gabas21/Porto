@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { X, ArrowUpRight } from "lucide-react";
+import { soundFx } from "@/lib/audio-fx";
 
 interface MenuProps {
   isOpen: boolean;
@@ -13,14 +14,20 @@ interface MenuProps {
 const navLinks = [
   { num: "01", title: "Home", href: "/", tag: "Return to Top & Overview" },
   { num: "02", title: "About", href: "#about", tag: "Engineering Story & Philosophy" },
-  { num: "03", title: "Experience", href: "#experience", tag: "Career Timeline & Production Roles" },
-  { num: "04", title: "Skills", href: "#skills", tag: "Technical Arsenal & Tools" },
-  { num: "05", title: "Works", href: "#works", tag: "Selected Projects & Case Studies" },
-  { num: "06", title: "Contact", href: "mailto:bagasa020@gmail.com", tag: "Get in Touch & Inquiries" },
+  { num: "03", title: "Services", href: "#services", tag: "Core Pillars & What I Bring" },
+  { num: "04", title: "Works", href: "#works", tag: "Selected Projects & Case Studies" },
+  { num: "05", title: "Skills", href: "#skills", tag: "Technical Arsenal & Tools" },
+  { num: "06", title: "Experience", href: "#experience", tag: "Career Timeline & Production Roles" },
+  { num: "07", title: "Contact", href: "mailto:bagasa020@gmail.com", tag: "Get in Touch & Inquiries" },
 ];
 
 export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const handleClose = () => {
+    soundFx.playClick();
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -49,7 +56,7 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
               </div>
 
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="group flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
                 aria-label="Close menu"
               >
@@ -71,12 +78,15 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.04 + idx * 0.035 }}
-                    onMouseEnter={() => setHoveredIdx(idx)}
+                    onMouseEnter={() => {
+                      soundFx.playHover();
+                      setHoveredIdx(idx);
+                    }}
                     className="relative"
                   >
                     <Link
                       href={link.href}
-                      onClick={onClose}
+                      onClick={handleClose}
                       className="group relative z-10 flex items-center justify-between py-2.5 sm:py-3.5 px-4 sm:px-5 rounded-2xl transition-all duration-300"
                     >
                       {/* Left: Number + Title + Subtitle */}

@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import { Project } from "@/data/projects";
-import { ArrowUpRight, GithubLogo, CheckCircle, BookOpen } from "@phosphor-icons/react";
+import { ArrowUpRight, GithubLogo, CheckCircle, BookOpen, Globe, Lock } from "@phosphor-icons/react";
 import TiltCard from "./reactbits/TiltCard";
-import Spotlight from "./reactbits/Spotlight";
-import ClickSpark from "./reactbits/ClickSpark";
+import { soundFx } from "@/lib/audio-fx";
 
 interface ProjectCardProps {
   project: Project;
@@ -13,54 +12,70 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) {
-  return (
-    <TiltCard maxTilt={5} className="h-full">
-      <article className="group double-bezel flex flex-col justify-between h-full relative overflow-hidden transition-all duration-200">
-        {/* Spotlight dynamic cursor glow inside the card */}
-        <Spotlight size={300} color="rgba(56, 189, 248, 0.07)" />
+  const handleClick = () => {
+    soundFx.playClick();
+    onOpenModal(project);
+  };
 
+  return (
+    <TiltCard maxTilt={4} className="h-full">
+      <article className="group double-bezel flex flex-col justify-between h-full relative overflow-hidden transition-all duration-300">
         <div className="double-bezel-inner p-5 sm:p-6 flex flex-col justify-between h-full space-y-5 relative z-10">
-          {/* Top: 16:9 High-Res Image Mockup */}
+
+
+          {/* Top: High-Res Image Mockup Frame */}
           <div className="space-y-4">
             <div
-              onClick={() => onOpenModal(project)}
-              className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/[0.08] bg-[#0B0E14] cursor-pointer group-hover:border-[#38BDF8]/40 transition-colors"
+              onClick={handleClick}
+              className="relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-main)] cursor-pointer group-hover:border-[var(--accent)]/40 transition-colors"
             >
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
-              />
-
-              {/* Category tag overlay */}
-              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-[#0B0E14]/90 backdrop-blur-sm border border-white/10 text-[11px] font-mono text-[#38BDF8]">
-                {project.category}
+              {/* Chrome bar */}
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--surface-card)]/70">
+                <div className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-[#FF5F56]" />
+                  <span className="w-2 h-2 rounded-full bg-[#FFBD2E]" />
+                  <span className="w-2 h-2 rounded-full bg-[#27C93F]" />
+                </div>
+                <span className="text-[10px] font-mono text-[var(--text-secondary)]">{project.timeline}</span>
               </div>
 
-              {/* Quick click hint */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="px-3.5 py-1.5 rounded-full bg-[#0B0E14]/90 text-xs font-mono text-[#E7E9EE] border border-white/20 flex items-center gap-1.5 shadow-lg">
-                  <BookOpen size={14} weight="bold" className="text-[#38BDF8]" />
-                  <span>Baca Studi Kasus (STAR)</span>
-                </span>
+              <div className="relative w-full h-[calc(100%-25px)]">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
+                />
+
+                {/* Category tag overlay */}
+                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md bg-[var(--bg-main)]/90 backdrop-blur-sm border border-[var(--border-subtle)] text-[10px] font-mono text-[var(--accent)]">
+                  {project.category}
+                </div>
+
+                {/* Quick click hint */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="px-3 py-1.5 rounded-full bg-black/80 text-xs font-mono text-white border border-white/20 flex items-center gap-1.5 shadow-lg">
+                    <BookOpen size={14} weight="bold" />
+                    <span>Baca Studi Kasus (STAR)</span>
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Header & Badges */}
-            <div className="space-y-2">
+            <div className="space-y-2 text-left">
               <div className="flex flex-wrap gap-1.5">
                 {project.techStack.slice(0, 3).map((tech) => (
                   <span
                     key={tech}
-                    className="px-2 py-0.5 rounded bg-[#0B0E14] border border-white/[0.06] text-[10px] font-mono text-[#8B92A3]"
+                    className="px-2 py-0.5 rounded bg-[var(--bg-main)] border border-[var(--border-subtle)] text-[10px] font-mono text-[var(--text-secondary)]"
                   >
-                    {tech}
+                    #{tech}
                   </span>
                 ))}
                 {project.techStack.length > 3 && (
-                  <span className="px-1.5 py-0.5 rounded bg-white/[0.02] text-[10px] font-mono text-[#8B92A3]">
+                  <span className="px-1.5 py-0.5 rounded bg-[var(--bg-main)] text-[10px] font-mono text-[var(--text-secondary)]">
                     +{project.techStack.length - 3}
                   </span>
                 )}
@@ -68,32 +83,32 @@ export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) 
 
               <h3
                 onClick={() => onOpenModal(project)}
-                className="text-lg sm:text-xl font-bold text-[#E7E9EE] group-hover:text-[#38BDF8] transition-colors cursor-pointer"
+                className="text-lg sm:text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors cursor-pointer leading-snug"
               >
                 {project.title}
               </h3>
 
-              {/* Problem / Description */}
-              <p className="text-xs sm:text-sm text-[#8B92A3] leading-relaxed line-clamp-2">
+              {/* Description */}
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-2">
                 {project.description}
               </p>
             </div>
 
             {/* Key Contributions & Results */}
-            <div className="space-y-2 pt-2 border-t border-white/[0.04]">
-              <div className="text-[11px] font-mono text-[#8B92A3] uppercase tracking-wider">
+            <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)] text-left">
+              <div className="text-[11px] font-mono text-[var(--text-secondary)] uppercase tracking-wider">
                 Kontribusi &amp; Hasil Utama:
               </div>
               <ul className="space-y-1.5">
-                {project.keyFeatures.map((feat, idx) => (
+                {project.keyFeatures.slice(0, 2).map((feat, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start gap-2 text-xs text-[#E7E9EE]/90 leading-relaxed"
+                    className="flex items-start gap-2 text-xs text-[var(--text-primary)]/90 leading-relaxed font-sans"
                   >
                     <CheckCircle
                       size={14}
                       weight="fill"
-                      className="text-[#38BDF8] shrink-0 mt-0.5"
+                      className="text-[var(--accent)] shrink-0 mt-0.5"
                     />
                     <span>{feat}</span>
                   </li>
@@ -103,16 +118,14 @@ export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) 
           </div>
 
           {/* Bottom: Action Buttons */}
-          <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between gap-3">
-            <ClickSpark sparkColor="#38BDF8" sparkCount={6}>
-              <button
-                onClick={() => onOpenModal(project)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#38BDF8]/10 hover:bg-[#38BDF8] border border-[#38BDF8]/20 hover:border-[#38BDF8] text-[#38BDF8] hover:text-[#0B0E14] text-xs font-semibold transition-all duration-150 active:scale-[0.98] cursor-pointer"
-              >
-                <BookOpen size={14} weight="bold" />
-                <span>Case Study</span>
-              </button>
-            </ClickSpark>
+          <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between gap-3">
+            <button
+              onClick={() => onOpenModal(project)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[var(--accent)] text-[var(--accent-fg)] text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer shadow-sm hover:opacity-90"
+            >
+              <BookOpen size={14} weight="bold" />
+              <span>Case Study</span>
+            </button>
 
             <div className="flex items-center gap-2">
               {project.liveUrl && (
@@ -120,10 +133,10 @@ export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) 
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-[#0B0E14] hover:bg-white/[0.06] border border-white/[0.08] text-[#8B92A3] hover:text-[#38BDF8] transition-colors"
+                  className="p-2 rounded-lg bg-[var(--bg-main)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                   title="Buka Live Demo"
                 >
-                  <ArrowUpRight size={16} weight="bold" />
+                  <Globe size={16} weight="bold" />
                 </a>
               )}
 
@@ -132,7 +145,7 @@ export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-[#0B0E14] hover:bg-white/[0.06] border border-white/[0.08] text-[#8B92A3] hover:text-[#38BDF8] transition-colors"
+                  className="p-2 rounded-lg bg-[var(--bg-main)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                   title="Lihat Source Code di GitHub"
                 >
                   <GithubLogo size={16} weight="fill" />
@@ -145,3 +158,5 @@ export default function ProjectCard({ project, onOpenModal }: ProjectCardProps) 
     </TiltCard>
   );
 }
+
+

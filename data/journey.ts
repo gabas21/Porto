@@ -53,19 +53,18 @@ export const journeys: JourneyItem[] = [
     skills: ['Teknik Informatika', 'Software Engineering', 'UI/UX Design', 'Web Architecture', 'Database Systems']
   },
   {
-    period: '2024 – 2026',
-    role: 'Sertifikasi Kompetensi & Pelatihan Profesional',
-    organization: 'Google Developers, Dicoding, freeCodeCamp, Coursera',
-    location: 'Online / Global',
+    period: '2026',
+    role: 'Sertifikasi & Pelatihan Profesional',
+    organization: 'HackerRank & Dicoding Indonesia',
+    location: 'Indonesia / Global',
     type: 'Certification',
-    description: 'Menyelesaikan berbagai sertifikasi resmi industri dalam bidang Generative AI, Cloud Tech, Front-End Web, dan Version Control.',
+    description: 'Memperoleh sertifikasi kompetensi industri resmi dalam Rekayasa Perangkat Lunak, JavaScript, Cloud Computing, dan Kecerdasan Buatan (Gen AI).',
     highlights: [
-      'Building & Modernizing Applications with Generative AI / Cloud Tech — Google Developers (2026)',
-      'Pengembang Web Modern / Front-End Web — Dicoding Indonesia (2025)',
-      'Responsive Web Design Certification — freeCodeCamp (2024)',
-      'Version Control with Git & GitHub — Coursera / Dicoding (2024)',
-      'UI/UX Design with Figma for Frontend Developers — Great Learning / BWA (2024)'
+      'Software Engineer Certificate – HackerRank (2026)',
+      'JavaScript (Basic) Certificate – HackerRank (2026)',
+      'Belajar Dasar Cloud dan Gen AI di AWS – Dicoding Indonesia (2026)',
+      'Memulai Pemrograman dengan Python – Dicoding Indonesia (2026)'
     ],
-    skills: ['Generative AI', 'Cloud Tech', 'Responsive Web Design', 'Git & GitHub', 'Figma UI/UX']
+    skills: ['Software Engineering', 'JavaScript', 'AWS Cloud', 'Generative AI', 'Python']
   }
 ];

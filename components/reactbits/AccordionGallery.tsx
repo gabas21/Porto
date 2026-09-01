@@ -12,6 +12,7 @@ import {
   Sparkle,
 } from "@phosphor-icons/react";
 import ClickSpark from "./ClickSpark";
+import { soundFx } from "@/lib/audio-fx";
 
 export interface AccordionGalleryItem {
   image: string;
@@ -56,6 +57,13 @@ export default function AccordionGallery({
   );
 
   const handleInteraction = (index: number) => {
+    if (index !== activeIndex) {
+      if (trigger === "hover") {
+        soundFx.playHover();
+      } else {
+        soundFx.playClick();
+      }
+    }
     setActiveIndex(index);
   };
 
