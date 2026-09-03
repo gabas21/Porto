@@ -110,10 +110,16 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      data-theme="dark"
+      data-theme="light"
+      suppressHydrationWarning
       className={`${outfit.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} scroll-smooth antialiased`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem("theme");var t=s==="dark"?"dark":"light";document.documentElement.setAttribute("data-theme",t);if(t==="dark"){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

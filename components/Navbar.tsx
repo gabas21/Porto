@@ -19,7 +19,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const [isMuted, setIsMuted] = useState(false);
 
   const { scrollYProgress } = useScroll();
@@ -63,7 +63,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
   };
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem("theme") as "dark" | "light") || "dark";
+    const savedTheme = (localStorage.getItem("theme") as "dark" | "light") || "light";
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
     document.documentElement.classList.toggle("dark", savedTheme === "dark");

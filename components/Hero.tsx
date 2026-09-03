@@ -28,7 +28,7 @@ const Lanyard = dynamic(() => import("@/components/Lanyard"), {
 
 export default function Hero() {
   const [copied, setCopied] = React.useState(false);
-  const [isDark, setIsDark] = React.useState(true);
+  const [isDark, setIsDark] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
   const email = "bagasa020@gmail.com";
 

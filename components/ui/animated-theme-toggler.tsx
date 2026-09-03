@@ -159,7 +159,7 @@ export const AnimatedThemeToggler = ({
 }: AnimatedThemeTogglerProps) => {
   const shape = variant ?? "circle";
   const isControlled = theme !== undefined;
-  const [internalIsDark, setInternalIsDark] = useState(true);
+  const [internalIsDark, setInternalIsDark] = useState(false);
   const isDark = isControlled ? theme === "dark" : internalIsDark;
   const buttonRef = useRef<HTMLButtonElement>(null);
   const isTransitioningRef = useRef(false);
