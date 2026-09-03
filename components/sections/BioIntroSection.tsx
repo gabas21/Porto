@@ -129,38 +129,38 @@ export default function BioIntroSection() {
       {/* ── 2. Content Container ── */}
       <motion.div
         style={{ y: contentY }}
-        className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 space-y-12 pb-16"
+        className="relative z-10 max-w-6xl 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto px-6 md:px-12 3xl:px-20 space-y-12 3xl:space-y-16 pb-6 sm:pb-8"
       >
         {/* Editorial Heading Block */}
         <FadeBlurIn>
-          <div className="space-y-4 max-w-4xl">
+          <div className="space-y-4 max-w-4xl 3xl:max-w-5xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono uppercase tracking-widest text-[#FACC15] backdrop-blur-md shadow-sm">
               <Sparkle size={14} weight="fill" />
               <span>About Me &bull; Profile Story</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] tracking-tight text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold leading-[1.15] tracking-tight text-white font-display">
               I&apos;m Bagas &mdash; a Frontend Developer
             </h2>
 
-            <p className="text-xl sm:text-2xl md:text-3xl font-normal text-zinc-400 leading-relaxed max-w-3xl">
-              based in Samarinda, dedicated to turning digital concepts into tangible, pixel-perfect reality<span className="text-[#FACC15]">.</span>
+            <p className="text-xl sm:text-2xl md:text-3xl 3xl:text-4xl font-normal text-zinc-400 leading-relaxed max-w-3xl 3xl:max-w-4xl font-sans">
+              based in Samarinda, dedicated to turning digital concepts into tangible, <span className="font-serif italic font-normal text-[#FACC15]">pixel-perfect</span> reality<span className="text-[#FACC15]">.</span>
             </p>
           </div>
         </FadeBlurIn>
 
         {/* Narrative & Visual Story Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 3xl:gap-16 items-stretch">
           {/* LEFT: Profile Photo Card (Luxury Obsidian Bezel + Liquid Glass HUD) */}
           <div className="lg:col-span-5 relative flex justify-center items-center">
             <FadeBlurIn delay={0.15} className="w-full h-full flex justify-center items-center">
-              <div className="relative w-full max-w-[320px] sm:max-w-[350px] group">
+              <div className="relative w-full max-w-[320px] sm:max-w-[350px] 3xl:max-w-[420px] group">
                 
                 {/* ── Ambient Backlight Glow (Subtle Dual-Tone Halo) ── */}
                 <div className="absolute -inset-2 rounded-[2rem] bg-gradient-to-tr from-[#FACC15]/20 via-[#38BDF8]/15 to-transparent blur-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 pointer-events-none" />
 
                 {/* ── Outer Precision Bezel Container ── */}
-                <div className="relative w-full aspect-[4/5] sm:h-[450px] rounded-[1.75rem] p-1.5 bg-gradient-to-b from-white/[0.14] via-white/[0.04] to-white/[0.08] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.95)] transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                <div className="relative w-full aspect-[4/5] sm:h-[450px] 3xl:h-[520px] rounded-[1.75rem] p-1.5 bg-gradient-to-b from-white/[0.14] via-white/[0.04] to-white/[0.08] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.95)] transition-transform duration-500 ease-out group-hover:-translate-y-1">
                   
                   {/* Inner Photo Display Container */}
                   <div className="relative w-full h-full rounded-[1.35rem] overflow-hidden bg-[#0A0C10]">
@@ -194,10 +194,10 @@ export default function BioIntroSection() {
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                         </span>
-                        <span className="text-[10px] font-mono text-zinc-200 font-semibold tracking-wider">VERIFIED // ID</span>
+                        <span className="text-xs font-mono text-zinc-200 font-semibold tracking-wider">VERIFIED // ID</span>
                       </div>
 
-                      <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono text-zinc-400">
+                      <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-xs font-mono text-zinc-400">
                         <span>WITA // SAMARINDA</span>
                       </div>
                     </div>
@@ -218,16 +218,16 @@ export default function BioIntroSection() {
                       <div className="flex items-center justify-between gap-3">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-[#FACC15]">
+                            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FACC15]">
                               DEV ACCESS PASS
                             </span>
-                            <span className="text-zinc-600 text-[9px]">•</span>
-                            <span className="text-[9px] font-mono text-zinc-400">2026</span>
+                            <span className="text-zinc-600 text-xs">•</span>
+                            <span className="text-xs font-mono text-zinc-400">2026</span>
                           </div>
-                          <p className="text-sm font-bold text-white tracking-tight leading-tight">
+                          <p className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight font-display">
                             Bagas Aditya
                           </p>
-                          <p className="text-[10px] font-mono text-zinc-400 flex items-center gap-1">
+                          <p className="text-xs font-mono text-zinc-400 flex items-center gap-1">
                             <Compass size={11} className="text-[#38BDF8] shrink-0" />
                             <span>Samarinda, Kalimantan Timur</span>
                           </p>
@@ -259,21 +259,21 @@ export default function BioIntroSection() {
                     <span>ACADEMIC &amp; FOUNDATION</span>
                   </div>
 
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[10px] font-mono text-zinc-400 font-medium">
+                  <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-mono text-zinc-400 font-medium">
                     2022 &mdash; Present
                   </span>
                 </div>
 
                 {/* Primary Entity Highlight */}
                 <div className="space-y-2">
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg 3xl:text-xl font-bold text-white tracking-tight flex items-center gap-2 font-display">
                     <span>STMIK Widya Cipta Dharma</span>
                     <span className="text-xs px-2 py-0.5 rounded bg-[#FACC15]/10 text-[#FACC15] font-mono font-normal border border-[#FACC15]/20">
                       S1 Informatika
                     </span>
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-zinc-300 font-mono leading-relaxed">
+                  <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-[65ch]">
                     Fokus pada rekayasa antarmuka modern, arsitektur frontend modular, semantic design system, dan integrasi API performa tinggi untuk sistem instansi dan web aplikasi.
                   </p>
                 </div>
@@ -287,7 +287,7 @@ export default function BioIntroSection() {
                   ].map((pill) => (
                     <span
                       key={pill}
-                      className="px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-[11px] font-mono text-zinc-300 group-hover:border-white/10 transition-colors"
+                      className="px-3 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-zinc-300 group-hover:border-white/10 transition-colors"
                     >
                       {pill}
                     </span>
@@ -308,7 +308,7 @@ export default function BioIntroSection() {
                     <span>PRODUCTION DELIVERABLES</span>
                   </div>
 
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-mono text-emerald-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs font-mono text-emerald-400 font-semibold">
                     <CheckCircle size={11} weight="fill" />
                     <span>Gov. Verified</span>
                   </span>
@@ -319,9 +319,9 @@ export default function BioIntroSection() {
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-[#38BDF8]/30 transition-colors">
                     <div className="flex items-center justify-between text-xs font-bold text-white mb-1">
                       <span>BAPPELITBANGDA</span>
-                      <span className="text-[10px] font-mono text-[#FACC15]">Mahakam Ulu</span>
+                      <span className="text-xs font-mono text-[#FACC15]">Mahakam Ulu</span>
                     </div>
-                    <p className="text-[11px] font-mono text-zinc-400 leading-snug">
+                    <p className="text-xs font-mono text-zinc-400 leading-snug">
                       Portal resmi perencanaan &amp; data pembangunan daerah.
                     </p>
                   </div>
@@ -329,9 +329,9 @@ export default function BioIntroSection() {
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-[#38BDF8]/30 transition-colors">
                     <div className="flex items-center justify-between text-xs font-bold text-white mb-1">
                       <span>INSPEKTORAT</span>
-                      <span className="text-[10px] font-mono text-[#38BDF8]">Kab. Mahulu</span>
+                      <span className="text-xs font-mono text-[#38BDF8]">Kab. Mahulu</span>
                     </div>
-                    <p className="text-[11px] font-mono text-zinc-400 leading-snug">
+                    <p className="text-xs font-mono text-zinc-400 leading-snug">
                       Platform portal pengawasan &amp; sistem layanan audit internal.
                     </p>
                   </div>
@@ -339,14 +339,14 @@ export default function BioIntroSection() {
 
                 {/* Tech Stack Strip */}
                 <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">
                     Core Arsenal:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {["Tailwind CSS", "Next.js", "Laravel Blade", "TypeScript"].map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/10 text-[10px] font-mono text-zinc-300 font-medium"
+                        className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 font-medium"
                       >
                         {t}
                       </span>
@@ -368,7 +368,7 @@ export default function BioIntroSection() {
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 2278 400"
-          className="w-full h-28 sm:h-36 md:h-48 lg:h-56 block text-[var(--bg-main)] fill-current overflow-visible"
+          className="w-full h-14 sm:h-18 md:h-24 lg:h-28 block text-[var(--bg-main)] fill-current overflow-visible"
           aria-hidden
         >
           <path

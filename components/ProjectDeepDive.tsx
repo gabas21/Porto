@@ -46,15 +46,16 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
     setActiveSlide((prev) => (prev < gallery.length - 1 ? prev + 1 : 0));
   }, [gallery.length]);
 
-  // Keyboard navigation
+  // Keyboard navigation & Escape emergency exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleBack();
       if (e.key === "ArrowLeft") prevSlide();
       if (e.key === "ArrowRight") nextSlide();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [prevSlide, nextSlide]);
+  }, [handleBack, prevSlide, nextSlide]);
 
   const currentImage = gallery[activeSlide] || project.image;
   return (
@@ -64,7 +65,8 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">
           <button
             onClick={handleBack}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-primary)] hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm active:scale-[0.98]"
+            data-testid="deep-dive-back-btn"
+            className="inline-flex items-center gap-2 px-4 py-2 min-h-[38px] rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-primary)] hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             <ArrowLeft size={16} weight="bold" />
             <span>Kembali ke Portofolio</span>
@@ -86,10 +88,6 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         <FadeBlurIn>
           <div className="space-y-5 text-left">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[var(--accent)] bg-[var(--accent)]/10 px-3 py-1 rounded-full border border-[var(--accent)]/20">
-                <Sparkle size={14} weight="fill" />
-                <span>{project.role}</span>
-              </div>
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-tight">
                 {project.title}
               </h1>

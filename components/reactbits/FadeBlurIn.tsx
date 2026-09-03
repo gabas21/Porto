@@ -29,19 +29,16 @@ export default function FadeBlurIn({
       initial={{
         opacity: 0,
         y: yOffset,
-        filter: `blur(${blur}px)`,
       }}
       animate={
         isInView
           ? {
               opacity: 1,
               y: 0,
-              filter: "blur(0px)",
             }
           : {
               opacity: 0,
               y: yOffset,
-              filter: `blur(${blur}px)`,
             }
       }
       transition={{

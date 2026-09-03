@@ -49,12 +49,29 @@ const useDarkMode = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
+    const checkTheme = () => {
+      const isHtmlDark =
+        document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark';
+      setIsDark(isHtmlDark);
+    };
 
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme']
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = () => checkTheme();
     mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handler);
+    };
   }, []);
 
   return isDark;
@@ -72,10 +89,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   displace = 0,
   backgroundOpacity = 0,
   saturation = 1,
-  distortionScale = -180,
+  distortionScale = -35,
   redOffset = 0,
-  greenOffset = 10,
-  blueOffset = 20,
+  greenOffset = 2,
+  blueOffset = 4,
   xChannel = 'R',
   yChannel = 'G',
   mixBlendMode = 'difference',
@@ -223,69 +240,40 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     if (svgSupported) {
       return {
         ...baseStyles,
-        background: isDarkMode ? `hsl(0 0% 0% / ${backgroundOpacity})` : `hsl(0 0% 100% / ${backgroundOpacity})`,
+        background: isDarkMode
+          ? (backgroundOpacity > 0 ? `hsl(0 0% 12% / ${backgroundOpacity})` : 'rgba(18, 20, 28, 0.65)')
+          : (backgroundOpacity > 0 ? `hsl(0 0% 100% / ${backgroundOpacity})` : 'rgba(255, 255, 255, 0.45)'),
         backdropFilter: `url(#${filterId}) saturate(${saturation})`,
+        border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.16)' : '1px solid rgba(0, 0, 0, 0.08)',
         boxShadow: isDarkMode
-          ? `0 0 2px 1px color-mix(in oklch, white, transparent 65%) inset,
-             0 0 10px 4px color-mix(in oklch, white, transparent 85%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`
-          : `0 0 2px 1px color-mix(in oklch, black, transparent 85%) inset,
-             0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`
+          ? `inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+             0 16px 40px 0 rgba(0, 0, 0, 0.7),
+             0 2px 10px 0 rgba(0, 0, 0, 0.4)`
+          : `inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+             0 12px 36px 0 rgba(0, 0, 0, 0.1),
+             0 2px 8px 0 rgba(0, 0, 0, 0.04)`
       };
     } else {
       if (isDarkMode) {
-        if (!backdropFilterSupported) {
-          return {
-            ...baseStyles,
-            background: 'rgba(0, 0, 0, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`
-          };
-        } else {
-          return {
-            ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(12px) saturate(1.8) brightness(1.2)',
-            WebkitBackdropFilter: 'blur(12px) saturate(1.8) brightness(1.2)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`
-          };
-        }
+        return {
+          ...baseStyles,
+          background: 'rgba(18, 20, 28, 0.75)',
+          backdropFilter: 'blur(20px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+          border: '1px solid rgba(255, 255, 255, 0.16)',
+          boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                      0 16px 40px 0 rgba(0, 0, 0, 0.7)`
+        };
       } else {
-        if (!backdropFilterSupported) {
-          return {
-            ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`
-          };
-        } else {
-          return {
-            ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.2),
-                        0 2px 16px 0 rgba(31, 38, 135, 0.1),
-                        inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.2)`
-          };
-        }
+        return {
+          ...baseStyles,
+          background: 'rgba(255, 255, 255, 0.65)',
+          backdropFilter: 'blur(20px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+          border: '1px solid rgba(0, 0, 0, 0.08)',
+          boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+                      0 12px 36px 0 rgba(0, 0, 0, 0.1)`
+        };
       }
     }
   };

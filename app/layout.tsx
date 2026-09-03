@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Outfit, Space_Grotesk } from "next/font/google";
+import { Outfit, Space_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import BubbleCursor from "@/components/animations/BubbleCursor";
 
 const outfit = Outfit({
-
-
   variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
@@ -15,6 +13,14 @@ const outfit = Outfit({
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -105,7 +111,7 @@ export default function RootLayout({
     <html
       lang="id"
       data-theme="dark"
-      className={`${outfit.variable} ${spaceGrotesk.variable} scroll-smooth antialiased`}
+      className={`${outfit.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} scroll-smooth antialiased`}
     >
       <head>
         <script

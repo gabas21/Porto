@@ -72,3 +72,4 @@ desktop.ini
 repomix-output.*
 *.tmp
 *.temp
+scripts/ui_audit_report.json

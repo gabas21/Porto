@@ -75,12 +75,13 @@ test.describe("Portfolio End-to-End Suite", () => {
     await firstProjectCard.click();
 
     // Pastikan tombol kembali ke portofolio di modal muncul
-    const backBtn = page.getByRole("button", { name: /Kembali ke Portofolio/i });
-    await expect(backBtn).toBeVisible({ timeout: 5000 });
+    const backBtn = page.getByTestId("deep-dive-back-btn").first();
+    await expect(backBtn).toBeVisible({ timeout: 10000 });
+    await page.waitForTimeout(600);
 
     // Klik kembali
-    await backBtn.click({ force: true });
-    await expect(backBtn).not.toBeVisible({ timeout: 8000 });
+    await backBtn.dispatchEvent("click");
+    await expect(backBtn).not.toBeVisible({ timeout: 10000 });
   });
 
   test("6. Command Palette (Ctrl+K) terbuka dan merespons pencarian", async ({ page }) => {

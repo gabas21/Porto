@@ -63,9 +63,12 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
   const handleDownload = () => {
     soundFx.playClick();
     const link = document.createElement("a");
-    link.href = "/cv.pdf";
+    link.href = encodeURI("/CV Bagas Aditya Anugrah Ramadhan  (1).pdf");
     link.download = "CV_Bagas_Aditya_Anugrah_Ramadhan_Frontend_Developer.pdf";
+    link.target = "_blank";
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   if (!isOpen) return null;
@@ -351,7 +354,7 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 sm:px-8 sm:py-4 border-t border-[var(--border-subtle)] bg-[var(--bg-main)]/95 backdrop-blur-md shrink-0 z-20">
           <button
             onClick={handleCopySummary}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] text-xs font-mono text-[var(--text-primary)] flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            className="w-full sm:w-auto min-h-[44px] px-5 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] text-xs font-mono text-[var(--text-primary)] flex items-center justify-center gap-2 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             {copied ? (
               <>
@@ -369,9 +372,9 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={handleDownload}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--accent)] hover:opacity-90 text-black font-semibold text-xs sm:text-sm font-mono flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-xl bg-[var(--accent)] hover:opacity-90 text-black font-semibold text-xs sm:text-sm font-mono flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
             >
-              <DownloadSimple size={16} weight="bold" />
+              <DownloadSimple size={18} weight="bold" />
               <span>Download CV (PDF)</span>
             </button>
           </div>

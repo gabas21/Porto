@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { journeys } from "@/data/journey";
-import { Clock, Briefcase, GraduationCap } from "@phosphor-icons/react";
+import { Briefcase, GraduationCap } from "@phosphor-icons/react";
 import StrokeText from "@/components/reactbits/StrokeText";
 
 // ─── Color Tokens (Clean Solid Line, Zero Glow) ────────────────────────────────
@@ -79,7 +79,7 @@ function ExperienceEntry({ item, index, count, pathProgress }: EntryProps) {
       }`}
     >
       {/* Mobile Node Dot on the left rail */}
-      <div className="md:hidden absolute -left-[17px] top-8 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--bg-main)] bg-[#FACC15] text-black shadow-md">
+      <div className="md:hidden absolute -left-[17px] top-8 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--bg-main)] bg-[var(--accent)] text-black shadow-md">
         {isEdu ? <GraduationCap size={12} weight="bold" /> : <Briefcase size={12} weight="bold" />}
       </div>
 
@@ -91,38 +91,40 @@ function ExperienceEntry({ item, index, count, pathProgress }: EntryProps) {
       >
         {/* Pure Clean Editorial Typography */}
         <div className="space-y-3 sm:space-y-4 pt-2 md:pt-14 text-left">
-          {/* Main Organization / Title */}
-          <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12]">
+          {/* Main Organization / Title (Tier 1 Display) */}
+          <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12] font-display">
             {item.organization}
           </h3>
 
           {/* Role & Position */}
-          <div className="text-base sm:text-lg md:text-2xl font-medium text-[var(--text-secondary)]">
+          <div className="text-base sm:text-lg md:text-xl font-medium text-[var(--accent)] font-display">
             {item.role}
           </div>
 
-          {/* Description */}
-          <p className="text-xs sm:text-sm md:text-base text-[var(--text-secondary)]/85 font-normal leading-relaxed max-w-xl">
+          {/* Description (Tier 2 Ergonomic Reading Flow) */}
+          <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed max-w-[65ch]">
             {item.description}
           </p>
 
           {/* Key Deliverables & Highlights */}
-          <ul className="space-y-2 pt-1 max-w-xl">
+          <ul className="space-y-2 pt-1 max-w-[65ch]">
             {item.highlights.map((highlight, hIdx) => (
               <li
                 key={hIdx}
-                className="text-xs sm:text-sm text-[var(--text-primary)]/85 flex items-start gap-2.5 leading-relaxed"
+                className="text-xs sm:text-sm text-[var(--text-primary)] font-sans flex items-start gap-2.5 leading-relaxed"
               >
-                <span className="text-[#FACC15] font-bold shrink-0 mt-0.5">›</span>
+                <span className="text-[var(--accent)] font-bold shrink-0 mt-0.5">›</span>
                 <span>{highlight}</span>
               </li>
             ))}
           </ul>
 
-          {/* Date / Period in Monospace Accent */}
+          {/* Date / Period in Monospace Unified Accent Badge (Tier 3) */}
           <div className="pt-2">
-            <span className="inline-block text-[11px] sm:text-xs font-mono tracking-wider text-[#FACC15] uppercase font-semibold bg-[#FACC15]/10 border border-[#FACC15]/20 px-3 py-1 rounded-full">
-              {item.period} &bull; {item.location}
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-secondary)] shadow-sm backdrop-blur-sm hover:border-[var(--accent)]/40 transition-colors">
+              <span className="text-[var(--accent)] font-semibold">{item.period}</span>
+              <span className="opacity-30 text-[var(--text-secondary)]">&bull;</span>
+              <span className="uppercase tracking-wider font-medium text-[var(--text-secondary)]">{item.location}</span>
             </span>
           </div>
         </div>
@@ -168,7 +170,7 @@ export default function ExperienceTimeline() {
             {/* Solid Clean Main Stroke */}
             <motion.path
               d={pathD}
-              stroke={LINE_COLOR}
+              stroke="var(--accent)"
               strokeWidth="18"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -184,13 +186,8 @@ export default function ExperienceTimeline() {
         <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/5 pointer-events-none -translate-x-1/2" aria-hidden />
 
         {/* Section Header */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 pt-16 pb-8 text-left">
+        <div className="relative z-10 max-w-7xl 3xl:max-w-[1700px] 4xl:max-w-[2000px] mx-auto px-6 md:px-16 3xl:px-24 pt-16 pb-8 text-left">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#FACC15]">
-              <Clock size={14} weight="bold" />
-              <span>Journey &amp; Experience</span>
-            </div>
-
             {/* Mobile View: Dynamic Kinetic StrokeText */}
             <div className="sm:hidden w-full max-w-full">
               <StrokeText
@@ -211,18 +208,18 @@ export default function ExperienceTimeline() {
             </div>
 
             {/* Desktop View: Standard Display Typography */}
-            <h2 className="hidden sm:block text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
-              Explore my journey<span className="text-[#FACC15]">.</span>
+            <h2 className="hidden sm:block text-3xl sm:text-5xl lg:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold tracking-tight text-[var(--text-primary)]">
+              Explore my journey<span className="text-[var(--accent)]">.</span>
             </h2>
           </div>
         </div>
 
         {/* Timeline Entries Container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16">
+        <div className="relative z-10 max-w-7xl 3xl:max-w-[1700px] 4xl:max-w-[2000px] mx-auto px-6 md:px-16 3xl:px-24">
           {/* Mobile Vertical Linear Guide Rail */}
           <div className="md:hidden absolute left-7 sm:left-9 top-4 bottom-12 w-0.5 bg-[var(--border-subtle)]" aria-hidden>
             <motion.div
-              className="absolute top-0 left-0 w-full origin-top bg-[#FACC15]"
+              className="absolute top-0 left-0 w-full origin-top bg-[var(--accent)]"
               style={{
                 scaleY: pathProgress,
                 height: "100%",

@@ -32,31 +32,47 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     const curtain = curtainRef.current;
     if (!curtain) return;
 
-    // Honor prefers-reduced-motion
+    // Honor prefers-reduced-motion or repeat visits in same session
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      finish();
+    const alreadyVisited = typeof window !== "undefined" && sessionStorage.getItem("porto_preloader_seen") === "true";
+
+    if (reducedMotion || alreadyVisited) {
+      // Jika sudah pernah melihat preloader di sesi ini, angkat tirai instan
+      gsap.to(curtain, {
+        yPercent: -102,
+        duration: 0.35,
+        ease: "power3.inOut",
+        onStart: () => {
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
+          }
+        },
+        onComplete: finish,
+      });
       return;
     }
 
-    // Safety fallback: 5 detik max
+    // Tandai sudah melihat preloader
+    sessionStorage.setItem("porto_preloader_seen", "true");
+
+    // Safety fallback: 3 detik max
     const safetyTimer = setTimeout(() => {
       gsap.to(curtain, {
-        yPercent: -100,
-        duration: 0.5,
+        yPercent: -102,
+        duration: 0.4,
         ease: "power3.inOut",
         overwrite: true,
         onComplete: finish,
       });
-    }, 5000);
+    }, 3000);
 
     const ctx = gsap.context(() => {
-      // Urutan animasi yg termotivasi secara naratif:
-      // 1. Dot accent pulse in  →  sinyal hidup / pembukaan identitas
-      // 2. Teks greeting fade in  →  sapaan budaya regional
-      // 3. Progress line tumbuh  →  komunikasi "loading berlangsung"
-      // 4. Salam bergantian  →  perjalanan nusantara ke tujuan portfolio
-      // 5. Tirai slide-up belah vertikal  →  "layar teater terbuka"
+      // Urutan animasi dinamis & responsif (~1.3s - 1.4s total):
+      // 1. Dot pulse cepat
+      // 2. Teks greeting masuk
+      // 3. Progress line tumbuh cepat
+      // 4. Siklus salam nusantara yang dinamis & ringkas
+      // 5. Tirai terbuka dengan kurva expo halus
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -69,36 +85,36 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
       tl.fromTo(
         dotRef.current,
         { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }
+        { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(2)" }
       );
 
       // Phase 2: Teks pertama masuk dari bawah
       tl.fromTo(
         [textRef.current, originRef.current],
-        { opacity: 0, y: 14, filter: "blur(6px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "power3.out", stagger: 0.07 },
-        "-=0.1"
+        { opacity: 0, y: 10, filter: "blur(4px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.25, ease: "power3.out", stagger: 0.04 },
+        "-=0.05"
       );
 
-      // Phase 3: Progress line tumbuh (komunikasi "loading")
+      // Phase 3: Progress line tumbuh cepat
       tl.fromTo(
         progressLineRef.current,
         { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 0.35, ease: "power2.inOut", transformOrigin: "left center" },
-        "-=0.1"
+        { scaleX: 1, opacity: 1, duration: 0.2, ease: "power2.inOut", transformOrigin: "left center" },
+        "-=0.08"
       );
 
-      // Diam sebentar pada salam pertama
-      tl.to({}, { duration: 0.25 });
+      // Diam sangat sebentar pada salam pertama
+      tl.to({}, { duration: 0.12 });
 
-      // Fungsi transisi salam yang halus — blur out → text swap → blur in
-      const transitionGreeting = (idx: number, gap = 0.15) => {
+      // Transisi salam nusantara yang cepat, tajam & bersih
+      const transitionGreeting = (idx: number, gap = 0.08) => {
         tl.to({}, { duration: gap });
         tl.to([textRef.current, originRef.current], {
           opacity: 0,
-          y: -10,
-          filter: "blur(4px)",
-          duration: 0.18,
+          y: -8,
+          filter: "blur(3px)",
+          duration: 0.12,
           ease: "power2.in",
           onComplete: () => {
             if (textRef.current) textRef.current.textContent = greetings[idx].text;
@@ -107,38 +123,37 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
         });
         tl.fromTo(
           [textRef.current, originRef.current],
-          { opacity: 0, y: 12, filter: "blur(6px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.28, ease: "power3.out", stagger: 0.06 }
+          { opacity: 0, y: 8, filter: "blur(3px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.16, ease: "power3.out", stagger: 0.03 }
         );
       };
 
       transitionGreeting(1);
       transitionGreeting(2);
-      transitionGreeting(3, 0.2);
+      transitionGreeting(3, 0.1);
 
       // Skip hint fade in saat salam terakhir tampil
       tl.fromTo(
         skipHintRef.current,
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
-        "-=0.2"
+        { opacity: 0, y: 4 },
+        { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" },
+        "-=0.1"
       );
 
-      // Diam sebentar di "Selamat Datang"
-      tl.to({}, { duration: 0.35 });
+      // Diam sejenak di "Selamat Datang"
+      tl.to({}, { duration: 0.2 });
 
-      // Phase 5: Tirai naik — split curtain effect
-      // Elemen utama (curtain) slide up, sementara konten fade out lebih cepat
+      // Phase 5: Tirai naik — split curtain effect cepat & mewah
       tl.to(
         [textRef.current, originRef.current, dotRef.current, progressLineRef.current, skipHintRef.current],
-        { opacity: 0, y: -8, duration: 0.25, ease: "power2.in", stagger: 0.03 }
+        { opacity: 0, y: -6, duration: 0.18, ease: "power2.in", stagger: 0.02 }
       );
 
       tl.to(
         curtain,
         {
-          yPercent: -102, // sedikit lebih dari 100 agar tidak ada garis sisa
-          duration: 0.9,
+          yPercent: -102,
+          duration: 0.55,
           ease: "expo.inOut",
           onStart: () => {
             if (typeof window !== "undefined") {
@@ -146,7 +161,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
             }
           },
         },
-        "-=0.08"
+        "-=0.06"
       );
     }, curtain);
 

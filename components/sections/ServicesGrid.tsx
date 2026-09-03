@@ -8,7 +8,6 @@ import {
   Layout,
   PlugsConnected,
   CheckCircle,
-  ArrowUpRight,
   Sparkle,
   CaretRight,
   ChatCircleText,
@@ -118,30 +117,30 @@ export default function ServicesGrid() {
   return (
     <section
       id="services"
-      className="relative w-full bg-[var(--bg-main)] py-16 sm:py-24 md:py-28 px-4 sm:px-6 md:px-12 max-w-[1240px] mx-auto overflow-hidden text-left transition-colors duration-300"
+      className="relative w-full bg-[var(--bg-main)] pt-4 sm:pt-6 md:pt-8 pb-16 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 3xl:px-20 4xl:px-32 max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto overflow-hidden text-left transition-colors duration-300"
     >
       {/* Section Header */}
-      <FadeBlurIn className="max-w-3xl space-y-3 mb-10 sm:mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[var(--accent)] font-semibold shadow-sm">
+      <FadeBlurIn className="max-w-3xl 3xl:max-w-5xl space-y-3 mb-10 sm:mb-14 3xl:mb-16">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
           What I Bring to the Table
         </div>
 
-        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12] font-display">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl 3xl:text-6xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12] font-display">
           Crafting High-Performance{" "}
           <span className="text-[var(--accent)] font-serif italic font-normal">Digital Experiences</span> with Substance.
         </h2>
 
-        <p className="text-xs sm:text-sm md:text-base text-[var(--text-secondary)] font-mono leading-relaxed max-w-[65ch]">
-          Semua pilar layanan arsitektur frontend dalam satu tampilan terpadu &mdash; arahkan kursor atau klik untuk menjelajahi kapabilitas teknis.
+        <p className="text-sm sm:text-base 3xl:text-lg text-[var(--text-secondary)] font-sans leading-relaxed max-w-[65ch]">
+          Semua pilar layanan arsitektur frontend dalam satu tampilan terpadu.
         </p>
       </FadeBlurIn>
 
       {/* ── Option 1: Interactive Split-Tabs Layout (Zero-Scroll Showcase) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 3xl:gap-12 items-stretch">
         
         {/* LEFT: 4 Service Selector Tabs (Full Visibility in 1 Viewport) */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-2.5 sm:gap-3">
+        <div className="lg:col-span-5 3xl:col-span-4 flex flex-col justify-between gap-2.5 sm:gap-3 3xl:gap-4">
           {services.map((service, idx) => {
             const isSelected = activeIdx === idx;
             const Icon = service.icon;
@@ -186,11 +185,11 @@ export default function ServicesGrid() {
                   {/* Title & Highlight */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold text-[var(--accent)]">
+                      <span className="text-xs font-mono font-bold text-[var(--accent)]">
                         // {service.number}
                       </span>
-                      <span className="text-[10px] font-mono text-[var(--text-secondary)] opacity-60">•</span>
-                      <span className="text-[10px] font-mono text-[var(--text-secondary)] truncate">
+                      <span className="text-xs font-mono text-[var(--text-secondary)] opacity-60">•</span>
+                      <span className="text-xs font-mono text-[var(--text-secondary)] truncate">
                         {service.highlight}
                       </span>
                     </div>
@@ -223,7 +222,7 @@ export default function ServicesGrid() {
         </div>
 
         {/* RIGHT: Dynamic Spotlight Stage (Instant Detailed Showcase) */}
-        <div className="lg:col-span-7 relative min-h-[420px] sm:min-h-[460px]">
+        <div className="lg:col-span-7 3xl:col-span-8 relative min-h-[420px] sm:min-h-[460px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeService.number}
@@ -252,7 +251,7 @@ export default function ServicesGrid() {
                         CAPABILITY STAGE // {activeService.number}
                       </span>
                       <span className="h-3 w-px bg-[var(--border-subtle)]" />
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-semibold">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-semibold">
                         <Sparkle size={11} style={{ color: activeService.accentColor }} weight="fill" />
                         {activeService.highlight}
                       </span>
@@ -282,14 +281,14 @@ export default function ServicesGrid() {
                     </p>
                   </div>
 
-                  {/* Description */}
-                  <p className="mt-3.5 text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed font-sans">
+                  {/* Description (Ergonomic Reading Flow - Tier 2) */}
+                  <p className="mt-3.5 text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed font-sans max-w-[65ch]">
                     {activeService.description}
                   </p>
 
                   {/* Key Deliverables Grid (2-Columns for Compact Clarity) */}
                   <div className="mt-6 pt-5 border-t border-[var(--border-subtle)] space-y-3">
-                    <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--text-secondary)] font-bold">
+                    <p className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] font-semibold">
                       Key Deliverables &amp; Output:
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -314,13 +313,13 @@ export default function ServicesGrid() {
                 {/* Bottom Row: Technologies + Quick Action */}
                 <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase tracking-wider mr-1">
+                    <span className="text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider mr-1">
                       Stack:
                     </span>
                     {activeService.technologies.map((tech, tIdx) => (
                       <span
                         key={tIdx}
-                        className="px-2.5 py-0.5 rounded-md text-[10px] font-mono bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)]"
+                        className="px-2.5 py-1 rounded-md text-xs font-mono bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)]"
                       >
                         {tech}
                       </span>
@@ -344,28 +343,6 @@ export default function ServicesGrid() {
         </div>
 
       </div>
-
-      {/* Bottom Collaboration Callout Strip */}
-      <FadeBlurIn delay={0.3} className="mt-10 sm:mt-14">
-        <div className="rounded-[1.75rem] p-6 sm:p-7 bg-[var(--surface-card)] border border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left shadow-sm transition-colors duration-300">
-          <div className="space-y-1">
-            <h4 className="text-sm sm:text-base font-bold text-[var(--text-primary)] font-display">
-              Punya ide proyek atau kebutuhan pengembangan spesifik?
-            </h4>
-            <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-mono">
-              Tersedia untuk proyek freelance, full-time remote, maupun konsultasi arsitektur frontend.
-            </p>
-          </div>
-
-          <a
-            href="mailto:bagasa020@gmail.com"
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 sm:py-3 rounded-full bg-[var(--accent)] text-black font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
-          >
-            <span>Mulai Kolaborasi</span>
-            <ArrowUpRight size={14} weight="bold" />
-          </a>
-        </div>
-      </FadeBlurIn>
     </section>
   );
 }

@@ -139,7 +139,9 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
             mass: 0.8,
           }}
           className={`pointer-events-auto w-full transition-all duration-300 ${
-            scrolled ? "max-w-[1040px]" : "max-w-[1240px]"
+            scrolled
+              ? "max-w-[1040px] 3xl:max-w-[1400px] 4xl:max-w-[1680px]"
+              : "max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[2000px]"
           }`}
         >
           {scrolled ? (
@@ -150,39 +152,39 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
               borderRadius={9999}
               borderWidth={0.06}
               brightness={50}
-              opacity={0.93}
-              blur={11}
+              opacity={0.94}
+              blur={12}
               displace={0}
-              distortionScale={-160}
+              distortionScale={-35}
               redOffset={0}
-              greenOffset={10}
-              blueOffset={20}
+              greenOffset={2}
+              blueOffset={4}
               mixBlendMode="difference"
               className="py-1.5 px-3 sm:px-4"
             >
               <div className="w-full flex items-center justify-between gap-3 sm:gap-4 px-1">
-                {/* Brand Logo */}
+                {/* Brand Logo - High Contrast (Black in Light, Crisp White in Dark) */}
                 <Link
                   href="/"
-                  className="group flex items-center gap-1.5 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-2 shrink-0"
+                  className="group flex items-center gap-1.5 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-2 shrink-0"
                 >
                   <span className="text-sm sm:text-base uppercase tracking-tighter font-display">
                     Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
                   </span>
                 </Link>
 
-                {/* Desktop Nav Items */}
-                <nav className="hidden md:flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 shadow-inner backdrop-blur-md">
+                {/* Desktop Nav Items - Crisp High-Contrast Badges */}
+                <nav className="hidden md:flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.06] dark:border-white/15 rounded-full p-1 shadow-inner backdrop-blur-md">
                   {navLinks.map((link) => {
                     const isActive = activeSection === link.href.substring(1);
                     return (
                       <a
                         key={link.name}
                         href={link.href}
-                        className={`relative text-xs font-mono font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+                        className={`relative text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                           isActive
                             ? "text-black font-semibold"
-                            : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                            : "text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white"
                         }`}
                       >
                         {isActive && (
@@ -203,25 +205,25 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   {/* Command Palette Trigger */}
                   <button
                     onClick={openCmdPalette}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                    className="flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     title="Buka Command Menu (Ctrl+K / ⌘K)"
                     aria-label="Command Menu"
                   >
                     <Command size={14} className="text-[var(--accent)]" />
-                    <span className="text-[10px] font-mono font-semibold hidden md:inline">⌘K</span>
+                    <span className="text-xs font-mono font-semibold hidden md:inline">⌘K</span>
                   </button>
 
                   {/* Audio FX Toggle */}
                   <button
                     onClick={toggleSound}
-                    className="p-2 sm:p-2.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center"
+                    className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
                     aria-label="Toggle Sound Effects"
                   >
                     {isMuted ? (
-                      <SpeakerSlash size={14} className="text-rose-400" />
+                      <SpeakerSlash size={16} className="text-rose-400" />
                     ) : (
-                      <SpeakerHigh size={14} className="text-[var(--accent)]" />
+                      <SpeakerHigh size={16} className="text-[var(--accent)]" />
                     )}
                   </button>
 
@@ -230,23 +232,26 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     duration={500}
                     theme={theme}
                     onThemeChange={(newTheme) => setTheme(newTheme)}
-                    className="p-2 sm:p-2.5 rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center"
+                    className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   />
 
-                  <a
-                    href="mailto:bagasa020@gmail.com"
-                    className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer"
+                  <button
+                    onClick={() => {
+                      soundFx.playSweep();
+                      window.dispatchEvent(new CustomEvent("open-contact-modal"));
+                    }}
+                    className="hidden sm:inline-flex items-center gap-1.5 px-4.5 py-2 min-h-[38px] rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                   >
                     <span>Contact</span>
-                    <ArrowUpRight size={12} weight="bold" />
-                  </a>
+                    <ArrowUpRight size={13} weight="bold" />
+                  </button>
 
                   <button
                     onClick={() => setMenuOpen(true)}
-                    className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full bg-black/[0.03] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/10 text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm"
+                    className="flex h-10 w-10 min-w-[40px] min-h-[40px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     aria-label="Toggle Fullscreen Menu"
                   >
-                    <Menu size={15} />
+                    <Menu size={17} />
                   </button>
                 </div>
               </div>
@@ -254,10 +259,10 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
           ) : (
             /* ── Top Full-Width Hero Navbar State ── */
             <header className="w-full flex items-center justify-between gap-4 py-3 px-3 sm:px-6 bg-transparent">
-              {/* Brand Logo */}
+              {/* Brand Logo - Crisp White in Dark Mode */}
               <Link
                 href="/"
-                className="group flex items-center gap-2 font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
+                className="group flex items-center gap-2 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
               >
                 <span className="text-lg sm:text-xl uppercase tracking-tighter font-display">
                   Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
@@ -265,17 +270,17 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
               </Link>
 
               {/* Desktop Navigation Floating Pill */}
-              <nav className="hidden md:flex items-center gap-1 bg-white/90 dark:bg-[var(--surface-card)]/90 border border-black/[0.08] dark:border-[var(--border-subtle)] rounded-full px-4 py-1.5 shadow-sm backdrop-blur-md">
+              <nav className="hidden md:flex items-center gap-1 bg-white/90 dark:bg-[var(--surface-card)]/90 border border-black/[0.08] dark:border-white/15 rounded-full px-3 py-1 shadow-sm backdrop-blur-md">
                 {navLinks.map((link) => {
                   const isActive = activeSection === link.href.substring(1);
                   return (
                     <a
                       key={link.name}
                       href={link.href}
-                      className={`text-xs font-mono font-medium px-4 py-1.5 rounded-full transition-all duration-150 ${
+                      className={`text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                         isActive
                           ? "bg-[#F0F0F2] text-black border border-black/5 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold"
-                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                          : "text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white"
                       }`}
                     >
                       {link.name}
@@ -289,25 +294,25 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                 {/* Command Palette Trigger */}
                 <button
                   onClick={openCmdPalette}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+                  className="flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   title="Buka Command Menu (Ctrl+K / ⌘K)"
                   aria-label="Command Menu"
                 >
                   <Command size={14} className="text-[var(--accent)]" />
-                  <span className="text-[11px] font-mono font-semibold hidden sm:inline">⌘K</span>
+                  <span className="text-xs font-mono font-semibold hidden sm:inline">⌘K</span>
                 </button>
 
                 {/* Audio FX Toggle */}
                 <button
                   onClick={toggleSound}
-                  className="p-2.5 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center"
+                  className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
                   aria-label="Toggle Sound Effects"
                 >
                   {isMuted ? (
-                    <SpeakerSlash size={15} className="text-rose-400" />
+                    <SpeakerSlash size={16} className="text-rose-400" />
                   ) : (
-                    <SpeakerHigh size={15} className="text-[var(--accent)]" />
+                    <SpeakerHigh size={16} className="text-[var(--accent)]" />
                   )}
                 </button>
 
@@ -316,22 +321,25 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   duration={500}
                   theme={theme}
                   onThemeChange={(newTheme) => setTheme(newTheme)}
-                  className="p-2.5 rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] hover:border-[var(--accent)] text-[var(--text-primary)] text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center"
+                  className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 />
 
-                <a
-                  href="mailto:bagasa020@gmail.com"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
+                <button
+                  onClick={() => {
+                    soundFx.playSweep();
+                    window.dispatchEvent(new CustomEvent("open-contact-modal"));
+                  }}
+                  className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[38px] rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[var(--accent)] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >
                   <span>Contact ↗</span>
-                </a>
+                </button>
 
                 <button
                   onClick={() => setMenuOpen(true)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm"
+                  className="flex h-10 w-10 min-w-[40px] min-h-[40px] items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   aria-label="Toggle Fullscreen Menu"
                 >
-                  <Menu size={16} />
+                  <Menu size={18} />
                 </button>
               </div>
             </header>

@@ -40,7 +40,7 @@ const BLANK_PIXEL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
 const CARD_GLB_PATH = '/assets/lanyard/card.glb';
-const LANYARD_TEXTURE_PATH = '/assets/lanyard/lanyard.webp';
+const LANYARD_TEXTURE_PATH = '/assets/lanyard/lanyard.png';
 
 useGLTF.preload(CARD_GLB_PATH);
 useTexture.preload(LANYARD_TEXTURE_PATH);
@@ -428,6 +428,7 @@ function Band({
     const cloned = rawTexture.clone();
     cloned.wrapS = THREE.RepeatWrapping;
     cloned.wrapT = THREE.RepeatWrapping;
+    cloned.colorSpace = THREE.SRGBColorSpace;
     cloned.needsUpdate = true;
     return cloned;
   }, [rawTexture]);
@@ -502,12 +503,17 @@ function Band({
     [0, 1.907, 0],
   ]);
 
+  const hasTriggeredRef = useRef(false);
+
   const triggerDropAnimation = useCallback(() => {
+    if (hasTriggeredRef.current) return;
     if (!card.current || !j1.current || !j2.current || !j3.current || !fixed.current) return;
 
     try {
       const fixTrans = fixed.current.translation();
       if (!fixTrans || isNaN(fixTrans.x)) return;
+
+      hasTriggeredRef.current = true;
 
       const fx = fixTrans.x;
       const fy = fixTrans.y;
@@ -542,23 +548,18 @@ function Band({
   }, []);
 
   useEffect(() => {
-    let triggered = false;
-
     const handleCurtainLift = () => {
       setTimeout(() => {
         triggerDropAnimation();
-        triggered = true;
-      }, 100);
+      }, 80);
     };
 
     window.addEventListener('preloader-curtain-lift', handleCurtainLift);
 
-    // Initial timeout fallback in case preloader is disabled or already completed
+    // Safety fallback: only if preloader curtain lift was NOT received after 2000ms
     const timer = setTimeout(() => {
-      if (!triggered) {
-        triggerDropAnimation();
-      }
-    }, 600);
+      triggerDropAnimation();
+    }, 2000);
 
     return () => {
       window.removeEventListener('preloader-curtain-lift', handleCurtainLift);

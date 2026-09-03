@@ -185,39 +185,7 @@ class ElegantSoundManager {
     });
   }
 
-  // ── 11. ALARM KLAXON — peringatan darurat self-destruct ──
-  public playAlarmKlaxon() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    [880, 440, 880, 440].forEach((freq, i) => {
-      this.playTone(freq, now + i * 0.14, 0.07, 0.1, 0.008);
-    });
-  }
-
-  // ── 12. GLASS CRACK — retakan kaca presisi ──
-  public playGlassCrack() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    this.playWhoosh(now, 0.06, 0.12, 3200);
-    this.playTone(1760, now + 0.01, 0.04, 0.06, 0.002);
-  }
-
-  // ── 13. SYSTEM REBOOT — suara booting pemulihan terminal ──
-  public playSystemReboot() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    [440, 554.37, 659.25, 880].forEach((freq, i) => {
-      this.playTone(freq, now + i * 0.06, 0.06, 0.18, 0.005);
-    });
-  }
-
-  // ── 14. MECHANICAL KEY CLICK — ketikan keyboard mekanik linear yang sangat halus ──
+  // ── 11. MECHANICAL KEY CLICK — ketikan keyboard mekanik linear yang sangat halus ──
   public playKeyClick() {
     if (this.isMuted) return;
     const ctx = this.initContext();

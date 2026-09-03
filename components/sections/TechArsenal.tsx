@@ -206,9 +206,9 @@ export default function TechArsenal() {
   return (
     <section
       id="skills"
-      className="w-full bg-[var(--bg-main)] py-20 sm:py-24 px-4 sm:px-6 md:px-16 border-t border-[var(--border-subtle)] transition-colors duration-300 overflow-hidden"
+      className="w-full bg-[var(--bg-main)] py-20 sm:py-24 3xl:py-28 px-4 sm:px-6 md:px-16 3xl:px-24 border-t border-[var(--border-subtle)] transition-colors duration-300 overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto space-y-8 sm:space-y-10">
+      <div className="max-w-6xl 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto space-y-8 sm:space-y-10 3xl:space-y-14">
         {/* ── Section Header ── */}
         <FadeBlurIn>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
@@ -237,7 +237,7 @@ export default function TechArsenal() {
               </div>
 
               {/* Desktop View: Standard Display Typography */}
-              <h2 className="hidden sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
+              <h2 className="hidden sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold tracking-tight text-[var(--text-primary)]">
                 Technology Arsenal<span className="text-[#FACC15]">.</span>
               </h2>
             </div>
@@ -291,7 +291,7 @@ export default function TechArsenal() {
                 <span>{pill.icon}</span>
                 <span>{pill.label}</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  className={`text-xs font-mono px-2 py-0.5 rounded-full font-bold ${
                     isActive
                       ? "bg-[var(--bg-main)] text-[var(--text-primary)]"
                       : "bg-[var(--bg-main)] text-[var(--text-secondary)]"
@@ -315,7 +315,7 @@ export default function TechArsenal() {
                   <Compass size={14} weight="bold" />
                   <span>Domain Category</span>
                 </span>
-                <span className="text-[11px] font-mono text-[var(--text-secondary)] font-semibold">
+                <span className="text-xs font-mono text-[var(--text-secondary)] font-semibold">
                   {categoryPills.length} Domains
                 </span>
               </div>
@@ -345,9 +345,9 @@ export default function TechArsenal() {
                           {pill.icon}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs sm:text-sm font-bold tracking-tight truncate">{pill.label}</p>
+                          <p className="text-xs sm:text-sm font-bold tracking-tight truncate font-display">{pill.label}</p>
                           <p
-                            className={`text-[10px] font-mono truncate ${
+                            className={`text-xs font-mono truncate ${
                               isActive ? "text-[var(--bg-main)]/80" : "text-[var(--text-secondary)]"
                             }`}
                           >
@@ -357,7 +357,7 @@ export default function TechArsenal() {
                       </div>
 
                       <span
-                        className={`text-[11px] font-mono px-2 py-0.5 rounded-full font-bold shrink-0 ml-1.5 ${
+                        className={`text-xs font-mono px-2 py-0.5 rounded-full font-bold shrink-0 ml-1.5 ${
                           isActive
                             ? "bg-[var(--bg-main)] text-[var(--text-primary)]"
                             : "bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-subtle)]"
@@ -377,7 +377,7 @@ export default function TechArsenal() {
                 <CheckCircle size={14} weight="fill" />
                 <span>Active Domain Focus</span>
               </div>
-              <p className="text-xs sm:text-[13px] font-mono text-[var(--text-secondary)] leading-relaxed">
+              <p className="text-xs sm:text-sm font-sans text-[var(--text-secondary)] leading-relaxed">
                 {categoryPills[activeIndex]?.desc}
               </p>
             </div>
@@ -414,8 +414,8 @@ export default function TechArsenal() {
                         ref={(el) => { bgRefs.current[catIdx] = el; }}
                         className="tech-bg w-full h-full p-2.5 sm:p-4 lg:p-5 flex flex-col justify-center"
                       >
-                        {/* Responsive Grid of Cards (1 col small phone, 2 cols tablet, 3 cols desktop) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5 lg:gap-4">
+                        {/* Responsive Grid of Cards (1 col small phone, 2 cols tablet, 3 cols desktop, 4 cols 2K) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-2.5 sm:gap-3.5 lg:gap-4 3xl:gap-5">
                           {items.map((item) => (
                             <div
                               key={item.name}
@@ -432,10 +432,10 @@ export default function TechArsenal() {
 
                                 {/* Title & Category Subtitle */}
                                 <div className="min-w-0">
-                                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] tracking-tight font-mono truncate group-hover:text-[var(--accent)] transition-colors">
+                                  <h4 className="text-xs sm:text-sm 3xl:text-base font-bold text-[var(--text-primary)] tracking-tight font-display truncate group-hover:text-[var(--accent)] transition-colors">
                                     {item.name}
                                   </h4>
-                                  <p className="text-[10px] sm:text-[11px] font-mono text-[var(--text-secondary)] truncate">
+                                  <p className="text-xs font-mono text-[var(--text-secondary)] truncate">
                                     {item.categoryLabel}
                                   </p>
                                 </div>
@@ -454,22 +454,6 @@ export default function TechArsenal() {
             })}
           </div>
         </div>
-
-        {/* ── Bottom Section HUD Footer ── */}
-        <FadeBlurIn delay={0.2}>
-          <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[var(--text-secondary)] gap-2.5 sm:gap-3 text-center sm:text-left">
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-              <span>
-                Active Category: <strong className="text-[var(--text-primary)]">{categoryPills[activeIndex].label}</strong> ({categoryPills[activeIndex].count} tools)
-              </span>
-            </span>
-            <span className="text-[var(--accent)] font-semibold flex items-center gap-1.5">
-              <Sparkle size={13} weight="fill" />
-              <span>GSAP Dual-Parallax Curtain Engine</span>
-            </span>
-          </div>
-        </FadeBlurIn>
       </div>
     </section>
   );

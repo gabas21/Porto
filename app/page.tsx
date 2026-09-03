@@ -17,7 +17,7 @@ const TechArsenal = dynamic(() => import("@/components/sections/TechArsenal"), {
 const ExperienceTimeline = dynamic(() => import("@/components/sections/ExperienceTimeline"), { ssr: false });
 const CommandPalette = dynamic(() => import("@/components/ui/CommandPalette"), { ssr: false });
 const ResumePreviewModal = dynamic(() => import("@/components/modals/ResumePreviewModal"), { ssr: false });
-const SelfDestructOverlay = dynamic(() => import("@/components/effects/SelfDestructOverlay"), { ssr: false });
+const ContactModal = dynamic(() => import("@/components/modals/ContactModal"), { ssr: false });
 const AITwinFloatingButton = dynamic(() => import("@/components/ai-twin/AITwinFloatingButton"), { ssr: false });
 
 export default function Home() {
@@ -28,6 +28,7 @@ export default function Home() {
   const [showPreloader, setShowPreloader] = useState(true);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [cvOpen, setCvOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   const handlePreloaderComplete = useCallback(() => {
     setShowPreloader(false);
@@ -36,12 +37,24 @@ export default function Home() {
   useEffect(() => {
     const handleOpenCmd = () => setCmdOpen(true);
     const handleOpenCV = () => setCvOpen(true);
+    const handleOpenContact = () => setContactOpen(true);
 
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmdOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
     window.addEventListener("open-command-palette", handleOpenCmd);
     window.addEventListener("open-cv-modal", handleOpenCV);
+    window.addEventListener("open-contact-modal", handleOpenContact);
     return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
       window.removeEventListener("open-command-palette", handleOpenCmd);
       window.removeEventListener("open-cv-modal", handleOpenCV);
+      window.removeEventListener("open-contact-modal", handleOpenContact);
     };
   }, []);
 
@@ -85,9 +98,6 @@ export default function Home() {
         <Footer />
       </main>
 
-      {/* 💥 Interactive Self-Destruct Breakdown & Golden Rebirth Engine 💣 */}
-      <SelfDestructOverlay />
-
       {/* 🤖 Bagas AI Twin Floating Terminal & Voice Assistant 💬 */}
       <AITwinFloatingButton />
 
@@ -105,6 +115,12 @@ export default function Home() {
       <ResumePreviewModal
         isOpen={cvOpen}
         onClose={() => setCvOpen(false)}
+      />
+
+      {/* Interactive Contact & Inquiry Modal */}
+      <ContactModal
+        isOpen={contactOpen}
+        onClose={() => setContactOpen(false)}
       />
     </>
   );
