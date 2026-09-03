@@ -3,6 +3,7 @@ import { Outfit, Space_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import BubbleCursor from "@/components/animations/BubbleCursor";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -44,20 +45,37 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Bagas Aditya Anugrah Ramadhan", url: "https://portfolio-bagas.vercel.app" }],
   creator: "Bagas Aditya Anugrah Ramadhan",
+  alternates: {
+    canonical: "https://portfolio-bagas.vercel.app",
+    languages: {
+      "id-ID": "https://portfolio-bagas.vercel.app?lang=id",
+      "en-US": "https://portfolio-bagas.vercel.app?lang=en",
+    },
+  },
   openGraph: {
     title: "Bagas Aditya Anugrah Ramadhan | Frontend Developer & Creative UI Engineer",
     description:
       "Crafting high-performance web applications, interactive 3D physics interfaces, and enterprise dashboard architectures.",
-    type: "website",
+    type: "profile",
     locale: "id_ID",
+    alternateLocale: ["en_US"],
     url: "https://portfolio-bagas.vercel.app",
     siteName: "Bagas Aditya Portfolio",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Bagas Aditya Anugrah Ramadhan — Frontend Developer & Creative UI Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bagas Aditya Anugrah Ramadhan | Frontend Developer",
     description:
       "Frontend developer portfolio featuring interactive 3D physics, STAR case studies, and modern web engineering.",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -74,31 +92,77 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Bagas Aditya Anugrah Ramadhan",
-  jobTitle: "Frontend Developer & Creative UI Engineer",
-  url: "https://portfolio-bagas.vercel.app",
-  email: "bagasaditya2411@gmail.com",
-  telephone: "+6285250485906",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Samarinda",
-    addressRegion: "Kalimantan Timur",
-    addressCountry: "ID",
-  },
-  knowsAbout: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Tailwind CSS",
-    "Three.js",
-    "GSAP",
-    "Web Performance Optimization",
-    "Playwright E2E Testing",
-  ],
-  sameAs: [
-    "https://github.com/gabas21",
-    "https://linkedin.com/in/bagas-aditya-anugrah-ramadhan",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://portfolio-bagas.vercel.app/#website",
+      url: "https://portfolio-bagas.vercel.app",
+      name: "Bagas Aditya Anugrah Ramadhan Portfolio",
+      description:
+        "Official Portfolio of Bagas Aditya Anugrah Ramadhan — Frontend Developer & Creative UI Engineer",
+      inLanguage: ["id-ID", "en-US"],
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://portfolio-bagas.vercel.app/#profilepage",
+      url: "https://portfolio-bagas.vercel.app",
+      name: "Bagas Aditya Anugrah Ramadhan | Frontend Developer Profile",
+      isPartOf: {
+        "@id": "https://portfolio-bagas.vercel.app/#website",
+      },
+      mainEntity: {
+        "@id": "https://portfolio-bagas.vercel.app/#person",
+      },
+    },
+    {
+      "@type": "Person",
+      "@id": "https://portfolio-bagas.vercel.app/#person",
+      name: "Bagas Aditya Anugrah Ramadhan",
+      alternateName: ["Bagas Aditya", "gabas21"],
+      jobTitle: "Frontend Developer & Creative UI Engineer",
+      description:
+        "Frontend Developer specializing in high-performance web applications, interactive 3D physics interfaces, and enterprise government systems.",
+      url: "https://portfolio-bagas.vercel.app",
+      image: "https://portfolio-bagas.vercel.app/bagas.jpg",
+      email: "bagasaditya2411@gmail.com",
+      telephone: "+6285250485906",
+      alumniOf: {
+        "@type": "EducationalOrganization",
+        name: "STMIK Widya Cipta Dharma",
+        sameAs: "https://wicida.ac.id",
+      },
+      worksFor: [
+        {
+          "@type": "Organization",
+          name: "Bappelitbangda Kota Samarinda",
+        },
+        {
+          "@type": "Organization",
+          name: "Inspektorat Daerah",
+        },
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Samarinda",
+        addressRegion: "Kalimantan Timur",
+        addressCountry: "ID",
+      },
+      knowsAbout: [
+        "Next.js",
+        "React 19",
+        "TypeScript",
+        "Tailwind CSS",
+        "Three.js WebGL",
+        "GSAP",
+        "Web Performance Optimization",
+        "Playwright E2E Testing",
+        "Fullstack Web Architecture",
+      ],
+      sameAs: [
+        "https://github.com/gabas21",
+        "https://linkedin.com/in/bagas-aditya-anugrah-ramadhan",
+      ],
+    },
   ],
 };
 
@@ -126,10 +190,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-300">
-        <SmoothScroll>
-          <BubbleCursor />
-          {children}
-        </SmoothScroll>
+        <LanguageProvider>
+          <SmoothScroll>
+            <BubbleCursor />
+            {children}
+          </SmoothScroll>
+        </LanguageProvider>
       </body>
 
 

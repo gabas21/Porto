@@ -20,8 +20,10 @@ import { Meteors } from "@/components/ui/meteors";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function BioIntroSection() {
+  const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const bouncyContainerRef = useRef<HTMLDivElement>(null);
   const bouncyPathRef = useRef<SVGPathElement>(null);
@@ -136,15 +138,23 @@ export default function BioIntroSection() {
           <div className="space-y-4 max-w-4xl 3xl:max-w-5xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono uppercase tracking-widest text-[#FACC15] backdrop-blur-md shadow-sm">
               <Sparkle size={14} weight="fill" />
-              <span>About Me &bull; Profile Story</span>
+              <span>{language === "id" ? "Tentang Saya • Profil & Filosofi" : "About Me • Profile Story"}</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold leading-[1.15] tracking-tight text-white font-display">
-              I&apos;m Bagas &mdash; a Frontend Developer
+              {language === "id" ? "Saya Bagas — Frontend & Web Developer" : "I'm Bagas — a Frontend Developer"}
             </h2>
 
             <p className="text-xl sm:text-2xl md:text-3xl 3xl:text-4xl font-normal text-zinc-400 leading-relaxed max-w-3xl 3xl:max-w-4xl font-sans">
-              based in Samarinda, dedicated to turning digital concepts into tangible, <span className="font-serif italic font-normal text-[#FACC15]">pixel-perfect</span> reality<span className="text-[#FACC15]">.</span>
+              {language === "id" ? (
+                <>
+                  berdomisili di Samarinda, berdedikasi mentransformasikan konsep digital menjadi kenyataan yang tangguh dan <span className="font-display font-bold text-[#FACC15]">presisi piksel</span>.
+                </>
+              ) : (
+                <>
+                  based in Samarinda, dedicated to turning digital concepts into tangible, <span className="font-display font-bold text-[#FACC15]">pixel-perfect</span> reality.
+                </>
+              )}
             </p>
           </div>
         </FadeBlurIn>
@@ -269,22 +279,18 @@ export default function BioIntroSection() {
                   <h3 className="text-base sm:text-lg 3xl:text-xl font-bold text-white tracking-tight flex items-center gap-2 font-display">
                     <span>STMIK Widya Cipta Dharma</span>
                     <span className="text-xs px-2 py-0.5 rounded bg-[#FACC15]/10 text-[#FACC15] font-mono font-normal border border-[#FACC15]/20">
-                      S1 Informatika
+                      {t.about.degree}
                     </span>
                   </h3>
 
                   <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-[65ch]">
-                    Fokus pada rekayasa antarmuka modern, arsitektur frontend modular, semantic design system, dan integrasi API performa tinggi untuk sistem instansi dan web aplikasi.
+                    {t.about.degreeDesc}
                   </p>
                 </div>
 
                 {/* Key Competency Micro-Pills */}
                 <div className="mt-4 pt-4 border-t border-white/[0.06] flex flex-wrap items-center gap-2">
-                  {[
-                    "Semantic UI / UX",
-                    "Modular Architecture",
-                    "State & Motion Engineering",
-                  ].map((pill) => (
+                  {t.about.pills.map((pill) => (
                     <span
                       key={pill}
                       className="px-3 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-zinc-300 group-hover:border-white/10 transition-colors"
@@ -305,12 +311,12 @@ export default function BioIntroSection() {
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#38BDF8]/20 bg-[#38BDF8]/10 text-[#38BDF8]">
                       <Buildings size={16} weight="bold" />
                     </div>
-                    <span>PRODUCTION DELIVERABLES</span>
+                    <span>{t.about.deliverablesTitle}</span>
                   </div>
 
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs font-mono text-emerald-400 font-semibold">
                     <CheckCircle size={11} weight="fill" />
-                    <span>Gov. Verified</span>
+                    <span>{t.about.govVerifiedBadge}</span>
                   </span>
                 </div>
 
@@ -318,21 +324,21 @@ export default function BioIntroSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-[#38BDF8]/30 transition-colors">
                     <div className="flex items-center justify-between text-xs font-bold text-white mb-1">
-                      <span>BAPPELITBANGDA</span>
-                      <span className="text-xs font-mono text-[#FACC15]">Mahakam Ulu</span>
+                      <span>{t.about.bappelitbangdaTitle}</span>
+                      <span className="text-xs font-mono text-[#FACC15]">{t.about.bappelitbangdaRegion}</span>
                     </div>
                     <p className="text-xs font-mono text-zinc-400 leading-snug">
-                      Portal resmi perencanaan &amp; data pembangunan daerah.
+                      {t.about.bappelitbangdaDesc}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-[#38BDF8]/30 transition-colors">
                     <div className="flex items-center justify-between text-xs font-bold text-white mb-1">
-                      <span>INSPEKTORAT</span>
-                      <span className="text-xs font-mono text-[#38BDF8]">Kab. Mahulu</span>
+                      <span>{t.about.inspektoratTitle}</span>
+                      <span className="text-xs font-mono text-[#38BDF8]">{t.about.inspektoratRegion}</span>
                     </div>
                     <p className="text-xs font-mono text-zinc-400 leading-snug">
-                      Platform portal pengawasan &amp; sistem layanan audit internal.
+                      {t.about.inspektoratDesc}
                     </p>
                   </div>
                 </div>
@@ -340,7 +346,7 @@ export default function BioIntroSection() {
                 {/* Tech Stack Strip */}
                 <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-2">
                   <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">
-                    Core Arsenal:
+                    {t.about.coreArsenalLabel}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {["Tailwind CSS", "Next.js", "Laravel Blade", "TypeScript"].map((t) => (

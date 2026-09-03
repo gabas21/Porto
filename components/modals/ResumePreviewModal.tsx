@@ -20,6 +20,7 @@ import {
   GithubLogo,
 } from "@phosphor-icons/react";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ResumePreviewModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ interface ResumePreviewModalProps {
 }
 
 export default function ResumePreviewModal({ isOpen, onClose }: ResumePreviewModalProps) {
+  const { language } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -150,10 +152,18 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
 
             <div className="space-y-1.5">
               <h4 className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary)] font-bold">
-                Ringkasan Profesional
+                {language === "id" ? "Ringkasan Profesional" : "Professional Summary"}
               </h4>
               <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed font-sans">
-                Mahasiswa Teknik Informatika di <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong> dengan fokus keahlian pada Frontend Web Development dan ekosistem modern Laravel. Berpengalaman menerjemahkan rancangan desain UI/UX berbasis Figma menjadi antarmuka web yang modular, semantik, responsif, dan teroptimasi lintas perangkat menggunakan Tailwind CSS, Blade Templating, dan Next.js. Berhasil merancang antarmuka sistem informasi yang diadopsi dan diimplementasikan secara resmi oleh instansi pemerintah daerah (Bapelitbangda Mahakam Ulu), serta berpengalaman dalam integrasi RESTful API, dynamic state management, dan alur kerja kolaboratif Git.
+                {language === "id" ? (
+                  <>
+                    Mahasiswa Teknik Informatika di <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong> dengan fokus keahlian pada Frontend Web Development dan ekosistem modern Laravel. Berpengalaman menerjemahkan rancangan desain UI/UX berbasis Figma menjadi antarmuka web yang modular, semantik, responsif, dan teroptimasi lintas perangkat menggunakan Tailwind CSS, Blade Templating, dan Next.js. Berhasil merancang antarmuka sistem informasi yang diadopsi dan diimplementasikan secara resmi oleh instansi pemerintah daerah (Bapelitbangda Mahakam Ulu), serta berpengalaman dalam integrasi RESTful API, dynamic state management, dan alur kerja kolaboratif Git.
+                  </>
+                ) : (
+                  <>
+                    Computer Science student at <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong> specializing in Frontend Web Architecture and modern web engineering. Proven track record translating Figma design specifications into modular, semantic, and high-performance web interfaces across viewports using Next.js, TypeScript, and Tailwind CSS. Successfully architected regional government systems adopted by regional planning agencies (Bapelitbangda Mahakam Ulu), with deep competence in RESTful API integration, dynamic state management, and Git workflows.
+                  </>
+                )}
               </p>
             </div>
 
@@ -177,7 +187,7 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
           <div className="space-y-3">
             <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-2">
               <Briefcase size={15} className="text-[var(--accent)]" />
-              Pengalaman Kerja &amp; Magang
+              {language === "id" ? "Pengalaman Kerja & Magang" : "Work Experience & Internships"}
             </h4>
 
             <div className="p-4 rounded-2xl bg-[var(--surface-card)] border border-[var(--border-subtle)] space-y-2.5">
@@ -359,12 +369,12 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
             {copied ? (
               <>
                 <Check size={16} weight="bold" className="text-emerald-400" />
-                <span>Summary Tersalin!</span>
+                <span>{language === "id" ? "Summary Tersalin!" : "Summary Copied!"}</span>
               </>
             ) : (
               <>
                 <Copy size={16} />
-                <span>Salin Ringkasan Profil</span>
+                <span>{language === "id" ? "Salin Ringkasan Profil" : "Copy Profile Summary"}</span>
               </>
             )}
           </button>

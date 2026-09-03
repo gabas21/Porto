@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Sparkle, Cpu, Layout, Database, Wrench, SquaresFour, ArrowLeft, ArrowRight, CheckCircle, Compass } from "@phosphor-icons/react";
+import { Cpu, Layout, Database, Wrench, SquaresFour, ArrowLeft, ArrowRight, CheckCircle, Compass } from "@phosphor-icons/react";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
 import StrokeText from "@/components/reactbits/StrokeText";
 import gsap from "gsap";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   NextjsLogo,
   ReactLogo,
@@ -72,16 +73,62 @@ const techItems: TechItem[] = [
   { name: "NPM & Node.js", category: "tools", categoryLabel: "Package Manager", icon: <NodejsLogo size={22} /> },
 ];
 
-const categoryPills: { id: CategoryId; label: string; count: number; icon: React.ReactNode; desc: string; focus: string }[] = [
-  { id: "all", label: "All Arsenal", count: techItems.length, icon: <SquaresFour size={16} weight="bold" />, desc: "Complete production-ready frontend, design, backend, and AI toolchain verified across enterprise deployments.", focus: "Full-Stack & Architecture" },
-  { id: "frontend", label: "Frontend Core", count: techItems.filter((i) => i.category === "frontend").length, icon: <Cpu size={16} weight="bold" />, desc: "Modern React 19 & Next.js 16 architectures with type-safe styling engines and high-framerate rendering.", focus: "Client Architecture & Motion" },
-  { id: "design", label: "UI/UX & Systems", count: techItems.filter((i) => i.category === "design").length, icon: <Layout size={16} weight="bold" />, desc: "Figma component systems, fluid layout viewports, design tokens, and kinetic interactive prototyping.", focus: "Design Systems & Tokens" },
-  { id: "backend", label: "Backend & DB", count: techItems.filter((i) => i.category === "backend").length, icon: <Database size={16} weight="bold" />, desc: "Robust Laravel 11 APIs, Supabase real-time infrastructure, and relational SQL database architectures.", focus: "Server & REST API" },
-  { id: "tools", label: "Tools & AI", count: techItems.filter((i) => i.category === "tools").length, icon: <Wrench size={16} weight="bold" />, desc: "High-speed Vite bundling, Git version control, Postman API testing, and AI-accelerated dev workflow.", focus: "Workflow Automation" },
-];
-
 export default function TechArsenal() {
+  const { t, language } = useLanguage();
   const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  const categoryPills: { id: CategoryId; label: string; count: number; icon: React.ReactNode; desc: string; focus: string }[] = [
+    {
+      id: "all",
+      label: t.skills.categoryAll,
+      count: techItems.length,
+      icon: <SquaresFour size={16} weight="bold" />,
+      desc: language === "id"
+        ? "Koleksi lengkap teknologi frontend, desain, backend, dan AI siap produksi yang teruji dalam implementasi nyata."
+        : "Complete production-ready frontend, design, backend, and AI toolchain verified across enterprise deployments.",
+      focus: language === "id" ? "Full-Stack & Arsitektur" : "Full-Stack & Architecture",
+    },
+    {
+      id: "frontend",
+      label: t.skills.categoryFrontend,
+      count: techItems.filter((i) => i.category === "frontend").length,
+      icon: <Cpu size={16} weight="bold" />,
+      desc: language === "id"
+        ? "Arsitektur modern React 19 & Next.js 16 dengan styling type-safe dan rendering berkecepatan tinggi."
+        : "Modern React 19 & Next.js 16 architectures with type-safe styling engines and high-framerate rendering.",
+      focus: language === "id" ? "Arsitektur Klien & Motion" : "Client Architecture & Motion",
+    },
+    {
+      id: "design",
+      label: t.skills.categoryDesign,
+      count: techItems.filter((i) => i.category === "design").length,
+      icon: <Layout size={16} weight="bold" />,
+      desc: language === "id"
+        ? "Sistem komponen Figma, fluid viewport, token desain, dan prototipe interaktif kinetik."
+        : "Figma component systems, fluid layout viewports, design tokens, and kinetic interactive prototyping.",
+      focus: language === "id" ? "Sistem Desain & Token" : "Design Systems & Tokens",
+    },
+    {
+      id: "backend",
+      label: t.skills.categoryBackend,
+      count: techItems.filter((i) => i.category === "backend").length,
+      icon: <Database size={16} weight="bold" />,
+      desc: language === "id"
+        ? "API tangguh Laravel 11, infrastruktur realtime Supabase, dan basis data SQL relasional."
+        : "Robust Laravel 11 APIs, Supabase real-time infrastructure, and relational SQL database architectures.",
+      focus: language === "id" ? "Server & REST API" : "Server & REST API",
+    },
+    {
+      id: "tools",
+      label: t.skills.categoryTools,
+      count: techItems.filter((i) => i.category === "tools").length,
+      icon: <Wrench size={16} weight="bold" />,
+      desc: language === "id"
+        ? "Bundler Vite cepat, kontrol versi Git, pengujian API Postman, dan alur kerja AI terakselerasi."
+        : "High-speed Vite bundling, Git version control, Postman API testing, and AI-accelerated dev workflow.",
+      focus: language === "id" ? "Otomasi Alur Kerja" : "Workflow Automation",
+    },
+  ];
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
   const outerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -213,14 +260,10 @@ export default function TechArsenal() {
         <FadeBlurIn>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
             <div className="space-y-2.5 sm:space-y-3 text-left">
-              <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
-                <Sparkle size={14} weight="fill" />
-                <span>Capabilities &amp; Tech Arsenal</span>
-              </div>
               {/* Mobile View: Dynamic Kinetic StrokeText */}
               <div className="sm:hidden w-full max-w-full">
                 <StrokeText
-                  text="Technology Arsenal."
+                  text={`${t.skills.headingMain} ${t.skills.headingHighlight}.`}
                   strokeColor="var(--text-primary)"
                   fillColor="var(--text-primary)"
                   strokeWidth={1.0}
@@ -238,7 +281,9 @@ export default function TechArsenal() {
 
               {/* Desktop View: Standard Display Typography */}
               <h2 className="hidden sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold tracking-tight text-[var(--text-primary)]">
-                Technology Arsenal<span className="text-[#FACC15]">.</span>
+                {t.skills.headingMain}{" "}
+                <span className="text-[#FACC15]">{t.skills.headingHighlight}</span>
+                <span className="text-black dark:text-white">.</span>
               </h2>
             </div>
 
@@ -247,7 +292,7 @@ export default function TechArsenal() {
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-secondary)] shadow-sm">
                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>
-                  <strong className="text-[var(--text-primary)] font-bold">{techItems.length}</strong> Technologies
+                  <strong className="text-[var(--text-primary)] font-bold">{techItems.length}</strong> {language === "id" ? "Teknologi Teruji" : "Technologies"}
                 </span>
               </div>
 

@@ -19,6 +19,7 @@ import {
 } from "@phosphor-icons/react";
 import { projects } from "@/data/projects";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CommandItem {
   id: string;
@@ -37,6 +38,7 @@ interface CommandPaletteProps {
 }
 
 export default function CommandPalette({ isOpen, onClose, onOpenCV }: CommandPaletteProps) {
+  const { t, language, toggleLanguage } = useLanguage();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -198,12 +200,25 @@ export default function CommandPalette({ isOpen, onClose, onOpenCV }: CommandPal
       },
     },
     {
-      id: "act-sound",
-      title: isMuted ? "Unmute Tactile Sound FX" : "Mute Tactile Sound FX",
+      id: "act-toggle-lang",
+      title: language === "id" ? "Ganti Bahasa (Switch to English)" : "Switch Language (Ubah ke Bahasa Indonesia)",
       category: "Actions",
-      subtitle: isMuted ? "Aktifkan efek audio web sintetis" : "Matikan audio sintetis",
+      subtitle: language === "id" ? "Aktifkan bahasa Inggris di seluruh halaman" : "Enable Indonesian across all sections",
+      badge: language.toUpperCase(),
+      icon: <Sparkle size={18} weight="duotone" className="text-emerald-400" />,
+      action: () => {
+        toggleLanguage();
+        onClose();
+        soundFx.playPop();
+      },
+    },
+    {
+      id: "act-toggle-sound",
+      title: isMuted ? "Aktifkan Efek Suara (Unmute)" : "Matikan Efek Suara (Mute)",
+      category: "Actions",
+      subtitle: "Web Audio API haptic synthesis",
       badge: isMuted ? "Muted" : "Active",
-      icon: isMuted ? <SpeakerSlash size={18} weight="duotone" className="text-rose-400" /> : <SpeakerHigh size={18} weight="duotone" className="text-[var(--accent)]" />,
+      icon: isMuted ? <SpeakerSlash size={18} weight="duotone" className="text-rose-400" /> : <SpeakerHigh size={18} weight="duotone" className="text-emerald-400" />,
       action: handleToggleSound,
     },
 

@@ -14,93 +14,22 @@ import {
 } from "@phosphor-icons/react";
 import FadeBlurIn from "@/components/reactbits/FadeBlurIn";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
-interface ServicePillar {
-  number: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  icon: typeof Code;
-  accentColor: string;
-  deliverables: string[];
-  technologies: string[];
-  highlight: string;
-}
-
-const services: ServicePillar[] = [
-  {
-    number: "01",
-    title: "Frontend Web Architecture",
-    subtitle: "Enterprise Next.js, React 19 & Strict TypeScript",
-    description:
-      "Membangun arsitektur frontend berskala produksi dengan performa optimal, struktur atomic modular, type safety menyeluruh, dan skor Lighthouse 95+.",
-    icon: Code,
-    accentColor: "#EAB308",
-    deliverables: [
-      "Atomic Component Architecture",
-      "SSR / SSG / ISR Hybrid Rendering",
-      "Lighthouse 95+ Performance & Core Web Vitals",
-      "Strict End-to-End Type Safety",
-    ],
-    technologies: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Turbopack"],
-    highlight: "Skalabilitas & Kecepatan",
-  },
-  {
-    number: "02",
-    title: "Creative & 3D WebGL Interactions",
-    subtitle: "Three.js, Rapier Physics & Kinetic GSAP Motion",
-    description:
-      "Mentransformasikan halaman web statis menjadi pengalaman 3D interaktif yang hidup dengan simulasi fisika hardware-accelerated, custom shaders, dan koreografi scroll halus.",
-    icon: Cube,
-    accentColor: "#0284C7",
-    deliverables: [
-      "3D Physics & RigidBody Simulation",
-      "Custom GLSL Shader & MeshLine Effects",
-      "GSAP ScrollTrigger Pinned Choreography",
-      "GPU-Accelerated 60fps Motion Dynamics",
-    ],
-    technologies: ["Three.js", "R3F (@react-three/fiber)", "Rapier.js", "GSAP", "Motion"],
-    highlight: "Imersif & Visual Wow",
-  },
-  {
-    number: "03",
-    title: "High-Conversion UI/UX Engineering",
-    subtitle: "Design Systems, Micro-Interactions & WCAG A11y",
-    description:
-      "Menjembatani presisi desain Figma menjadi kode antarmuka responsif dengan umpan balik taktil (haptic feel), transisi tema mulus, dan standar aksesibilitas inklusif.",
-    icon: Layout,
-    accentColor: "#16A34A",
-    deliverables: [
-      "Design Token Systems & UI Libraries",
-      "Haptic & Micro-Delight Audio-Visual FX",
-      "View Transitions API & Seamless Theming",
-      "WCAG AA Compliant & Mobile-First Layouts",
-    ],
-    technologies: ["Design Systems", "Radix UI", "Phosphor Icons", "Figma-to-Code", "Web Audio"],
-    highlight: "Taktil & Konversi Tinggi",
-  },
-  {
-    number: "04",
-    title: "API Integration & State Architecture",
-    subtitle: "RESTful APIs, WebSockets & Resilient Data Flow",
-    description:
-      "Merancang alur data klien yang tangguh, caching pintar, sinkronisasi event real-time, dan optimistic UI updates tanpa layout thrashing atau glitching.",
-    icon: PlugsConnected,
-    accentColor: "#DB2777",
-    deliverables: [
-      "Optimistic UI & Smart Server Caching",
-      "Real-time WebSockets & Event Streaming",
-      "Global State Management (Zustand / Context)",
-      "Resilient Error Boundaries & Fallbacks",
-    ],
-    technologies: ["TanStack Query", "Zustand", "WebSockets / SSE", "REST APIs", "Web Workers"],
-    highlight: "Real-Time & Andal",
-  },
-];
+const serviceIcons = [Code, Cube, Layout, PlugsConnected];
+const accentColors = ["#EAB308", "#0284C7", "#16A34A", "#DB2777"];
 
 export default function ServicesGrid() {
+  const { t } = useLanguage();
   const [activeIdx, setActiveIdx] = useState(0);
-  const activeService = services[activeIdx];
+
+  const services = t.services.items.map((item, idx) => ({
+    ...item,
+    icon: serviceIcons[idx] || Code,
+    accentColor: accentColors[idx] || "#EAB308",
+  }));
+
+  const activeService = services[activeIdx] || services[0];
   const ActiveIcon = activeService.icon;
 
   const handleSelectService = (idx: number, isHover = false) => {
@@ -123,16 +52,17 @@ export default function ServicesGrid() {
       <FadeBlurIn className="max-w-3xl 3xl:max-w-5xl space-y-3 mb-10 sm:mb-14 3xl:mb-16">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-card)] border border-[var(--border-subtle)] text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-          What I Bring to the Table
+          {t.services.badge}
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-5xl 3xl:text-6xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12] font-display">
-          Crafting High-Performance{" "}
-          <span className="text-[var(--accent)] font-serif italic font-normal">Digital Experiences</span> with Substance.
+          {t.services.titleMain}{" "}
+          <span className="text-[var(--accent)] font-display font-bold">{t.services.titleHighlight}</span>
+          <span className="text-black dark:text-white">.</span>
         </h2>
 
         <p className="text-sm sm:text-base 3xl:text-lg text-[var(--text-secondary)] font-sans leading-relaxed max-w-[65ch]">
-          Semua pilar layanan arsitektur frontend dalam satu tampilan terpadu.
+          {t.services.subtitle}
         </p>
       </FadeBlurIn>
 
@@ -248,7 +178,7 @@ export default function ServicesGrid() {
                   <div className="flex items-center justify-between gap-4 pb-5 border-b border-[var(--border-subtle)]">
                     <div className="flex items-center gap-2.5">
                       <span className="font-mono text-xs font-bold text-[var(--accent)] tracking-widest">
-                        CAPABILITY STAGE // {activeService.number}
+                        {t.services.capabilityStage} {activeService.number}
                       </span>
                       <span className="h-3 w-px bg-[var(--border-subtle)]" />
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-semibold">
@@ -289,7 +219,7 @@ export default function ServicesGrid() {
                   {/* Key Deliverables Grid (2-Columns for Compact Clarity) */}
                   <div className="mt-6 pt-5 border-t border-[var(--border-subtle)] space-y-3">
                     <p className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] font-semibold">
-                      Key Deliverables &amp; Output:
+                      {t.services.deliverablesLabel}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {activeService.deliverables.map((item, idx) => (
@@ -314,7 +244,7 @@ export default function ServicesGrid() {
                 <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span className="text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider mr-1">
-                      Stack:
+                      {t.services.stackLabel}
                     </span>
                     {activeService.technologies.map((tech, tIdx) => (
                       <span
@@ -333,7 +263,7 @@ export default function ServicesGrid() {
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-mono font-semibold bg-[var(--surface-card-hover)] hover:bg-[var(--accent)] hover:text-black border border-[var(--border-subtle)] text-[var(--text-primary)] transition-all shadow-sm active:scale-95 cursor-pointer shrink-0"
                   >
                     <ChatCircleText size={14} weight="bold" />
-                    <span>Diskusikan</span>
+                    <span>{t.services.ctaDiscuss}</span>
                   </a>
                 </div>
 

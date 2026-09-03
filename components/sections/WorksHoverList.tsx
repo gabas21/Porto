@@ -9,6 +9,7 @@ import StrokeText from "@/components/reactbits/StrokeText";
 import ProjectDeepDive from "@/components/ProjectDeepDive";
 import YellowCurtainTransition from "@/components/animations/YellowCurtainTransition";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowUpRight,
   Eye,
@@ -26,6 +27,7 @@ type CategoryFilter = "All" | "Government" | "AI & WebApp" | "Corporate";
 type ViewMode = "grid" | "list";
 
 export default function WorksHoverList() {
+  const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("All");
   const [activeTechFilter, setActiveTechFilter] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -169,7 +171,7 @@ export default function WorksHoverList() {
                       {/* Mobile View: Dynamic Kinetic StrokeText */}
                       <div className="sm:hidden w-full max-w-full">
                         <StrokeText
-                          text="Featured Projects."
+                          text={`${t.works.heading}.`}
                           strokeColor="var(--text-primary)"
                           fillColor="var(--text-primary)"
                           strokeWidth={1.0}
@@ -187,7 +189,7 @@ export default function WorksHoverList() {
 
                       {/* Desktop View: Standard Display Typography */}
                       <h2 className="hidden sm:block text-3xl sm:text-5xl md:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold text-[var(--text-primary)] tracking-tight">
-                        Featured Projects<span className="text-[var(--accent)]">.</span>
+                        {t.works.heading}<span className="text-[var(--accent)]">.</span>
                       </h2>
                     </div>
                   </FadeBlurIn>
@@ -219,6 +221,7 @@ export default function WorksHoverList() {
                       <div className="flex items-center p-1.5 rounded-full bg-[var(--bg-main)] border border-[var(--border-subtle)] overflow-x-auto max-w-full gap-1">
                         {categories.map((cat) => {
                           const isActive = selectedCategory === cat && !activeTechFilter;
+                          const label = cat === "All" ? t.works.filterAll : cat === "Corporate" ? (language === "id" ? "Korporat" : "Corporate") : cat;
                           return (
                             <button
                               key={cat}
@@ -240,7 +243,7 @@ export default function WorksHoverList() {
                                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                 />
                               )}
-                              <span className="relative z-10">{cat}</span>
+                              <span className="relative z-10">{label}</span>
                             </button>
                           );
                         })}
@@ -338,7 +341,7 @@ export default function WorksHoverList() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
                                   <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-white text-xs font-mono flex items-center gap-1.5 border border-white/20">
                                     <Eye size={12} weight="bold" />
-                                    <span>Kajian STAR</span>
+                                    <span>{t.works.deepDiveCTA}</span>
                                   </span>
 
                                   {project.liveUrl && (
@@ -350,7 +353,7 @@ export default function WorksHoverList() {
                                       className="px-3 py-1 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] text-xs font-mono font-semibold flex items-center gap-1 shadow-lg hover:opacity-90 transition-opacity"
                                     >
                                       <Globe size={12} weight="bold" />
-                                      <span>Buka Web Asli</span>
+                                      <span>{t.works.openLiveCTA}</span>
                                       <ArrowUpRight size={12} weight="bold" />
                                     </a>
                                   )}

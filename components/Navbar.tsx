@@ -8,6 +8,8 @@ import { motion, useScroll, useSpring } from "motion/react";
 import GlassSurface from "./reactbits/GlassSurface";
 import FullscreenMenu from "./layout/FullscreenMenu";
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
+import { LanguageToggle } from "./ui/LanguageToggle";
+import { useLanguage } from "@/context/LanguageContext";
 import { soundFx } from "@/lib/audio-fx";
 
 interface NavbarProps {
@@ -16,6 +18,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -110,11 +113,11 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
   }, []);
 
   const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Works", href: "#works" },
-    { name: "Skills", href: "#skills" },
-    { name: "Experience", href: "#experience" },
+    { name: t.nav.about, href: "#about" },
+    { name: t.nav.services, href: "#services" },
+    { name: t.nav.works, href: "#works" },
+    { name: t.nav.skills, href: "#skills" },
+    { name: t.nav.experience, href: "#experience" },
   ];
 
   return (
@@ -227,6 +230,8 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     )}
                   </button>
 
+                  <LanguageToggle />
+
                   <AnimatedThemeToggler
                     variant="circle"
                     duration={500}
@@ -242,7 +247,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     }}
                     className="hidden sm:inline-flex items-center gap-1.5 px-4.5 py-2 min-h-[38px] rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                   >
-                    <span>Contact</span>
+                    <span>{t.nav.contact}</span>
                     <ArrowUpRight size={13} weight="bold" />
                   </button>
 
@@ -316,6 +321,8 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   )}
                 </button>
 
+                <LanguageToggle />
+
                 <AnimatedThemeToggler
                   variant="circle"
                   duration={500}
@@ -331,7 +338,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   }}
                   className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[38px] rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[var(--accent)] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >
-                  <span>Contact ↗</span>
+                  <span>{t.nav.contact} ↗</span>
                 </button>
 
                 <button

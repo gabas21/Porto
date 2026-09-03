@@ -19,6 +19,7 @@ import ClickSpark from "./reactbits/ClickSpark";
 import FadeBlurIn from "./reactbits/FadeBlurIn";
 import PixelTransition from "./reactbits/PixelTransition";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Dynamic import of 3D Lanyard (Three.js / Rapier Physics)
 const Lanyard = dynamic(() => import("@/components/Lanyard"), {
@@ -27,6 +28,7 @@ const Lanyard = dynamic(() => import("@/components/Lanyard"), {
 });
 
 export default function Hero() {
+  const { t, language } = useLanguage();
   const [copied, setCopied] = React.useState(false);
   const [isDark, setIsDark] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
@@ -116,7 +118,7 @@ export default function Hero() {
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
                     <span className="text-xs font-mono font-semibold text-[var(--accent)] uppercase tracking-wider">
-                      Available for Work
+                      {language === "id" ? "Terbuka untuk Kerja" : "Available for Work"}
                     </span>
                     <span className="text-[var(--text-secondary)] opacity-40 font-mono text-xs">•</span>
                     <span className="text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">
@@ -185,7 +187,15 @@ export default function Hero() {
             {/* Clean & Concise Bio (Ergonomic Reading Flow - Max 65ch & Sans font) */}
             <FadeBlurIn delay={0.3}>
               <p className="text-sm sm:text-base 3xl:text-lg text-[var(--text-secondary)] font-sans leading-relaxed max-w-[65ch]">
-                Mahasiswa Teknik Informatika di <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong>. Berpengalaman merancang antarmuka web yang modular, semantik, dan interaktif menggunakan Tailwind CSS, Laravel, dan Next.js untuk instansi pemerintah dan bisnis.
+                {language === "id" ? (
+                  <>
+                    Mahasiswa Teknik Informatika di <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong>. Berpengalaman merancang antarmuka web yang modular, semantik, dan interaktif menggunakan Tailwind CSS, Laravel, dan Next.js untuk instansi pemerintah dan bisnis.
+                  </>
+                ) : (
+                  <>
+                    Computer Science student at <strong className="text-[var(--text-primary)] font-medium">STMIK Widya Cipta Dharma</strong>. Experienced in engineering modular, semantic, and high-performance web interfaces with Tailwind CSS, Laravel, and Next.js for government agencies and enterprise clients.
+                  </>
+                )}
               </p>
             </FadeBlurIn>
 
@@ -220,7 +230,7 @@ export default function Hero() {
                         href="#works"
                         className="flex items-center justify-center gap-2 w-full sm:w-auto min-h-[46px] sm:min-h-[48px] px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[var(--accent)] text-black font-bold text-xs sm:text-sm tracking-tight transition-all active:scale-[0.98] shadow-md shadow-[var(--accent)]/20 hover:shadow-lg hover:shadow-[var(--accent)]/30 hover:opacity-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                       >
-                        <span>Lihat Proyek</span>
+                        <span>{language === "id" ? "Lihat Proyek" : "View Projects"}</span>
                         <ArrowDown size={15} weight="bold" />
                       </a>
                     </MagnetButton>
@@ -267,7 +277,7 @@ export default function Hero() {
                     title="Buka Formulir Kontak & Kirim Pesan"
                   >
                     <EnvelopeSimple size={15} weight="bold" className="text-[var(--accent)]" />
-                    <span>Kirim Pesan</span>
+                    <span>{t.common.sendMessage}</span>
                   </button>
 
                   <a

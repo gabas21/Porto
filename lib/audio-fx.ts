@@ -106,6 +106,14 @@ class ElegantSoundManager {
     this.playTone(1400, ctx.currentTime, 0.025, 0.015, 0.003);
   }
 
+  // ── 2b. POP — nada pop akustik renyah untuk pills & toggle ──
+  public playPop() {
+    if (this.isMuted) return;
+    const ctx = this.initContext();
+    if (!ctx) return;
+    this.playTone(1050, ctx.currentTime, 0.05, 0.04, 0.003);
+  }
+
   // ── 3. SUCCESS — interval kuint bersih, 2 nada ──
   public playSuccess() {
     if (this.isMuted) return;

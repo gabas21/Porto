@@ -21,6 +21,7 @@ import {
 } from "@phosphor-icons/react";
 import FadeBlurIn from "./reactbits/FadeBlurIn";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectDeepDiveProps {
   project: Project;
@@ -28,6 +29,7 @@ interface ProjectDeepDiveProps {
 }
 
 export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProps) {
+  const { language } = useLanguage();
   const gallery = project.gallery && project.gallery.length > 0 ? project.gallery : [project.image];
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -69,7 +71,7 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
             className="inline-flex items-center gap-2 px-4 py-2 min-h-[38px] rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-primary)] hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             <ArrowLeft size={16} weight="bold" />
-            <span>Kembali ke Portofolio</span>
+            <span>{language === "id" ? "Kembali ke Portofolio" : "Back to Projects"}</span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -106,7 +108,7 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] font-semibold text-xs transition-all active:scale-[0.98] shadow-md hover:opacity-90 cursor-pointer"
                 >
                   <Globe size={16} weight="bold" />
-                  <span>Buka Live Website (Vercel)</span>
+                  <span>{language === "id" ? "Buka Live Website" : "Launch Live Website"}</span>
                   <ArrowUpRight size={16} weight="bold" />
                 </a>
               )}
@@ -166,7 +168,7 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
                   className="inline-flex items-center gap-1 text-[var(--accent)] hover:underline font-semibold shrink-0 ml-1.5"
                   title="Buka Website Asli di Tab Baru"
                 >
-                  <span className="hidden sm:inline">Kunjungi</span>
+                  <span className="hidden sm:inline">{language === "id" ? "Kunjungi" : "Visit"}</span>
                   <ArrowUpRight size={12} weight="bold" />
                 </a>
               )}
@@ -308,12 +310,12 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         {/* STAR Framework Deep Dive (Asymmetric Bento Cards) */}
         <div className="space-y-6 pt-4">
           <div className="space-y-1.5 text-left">
-            <div className="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent)] uppercase tracking-wider font-semibold">
-              <Lightning size={16} weight="bold" />
-              <span>Kajian Metodologi STAR</span>
+            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent)] font-semibold">
+              <Sparkle size={14} weight="fill" />
+              <span>{language === "id" ? "Kajian Arsitektur Mendalam (Metode STAR)" : "Architecture Case Study (STAR Method)"}</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-bold text-[var(--text-primary)] tracking-tight">
-              Tantangan, Keputusan Teknis, dan Dampak Nyata
+              {language === "id" ? "Tantangan, Keputusan Teknis, dan Dampak Nyata" : "Challenges, Engineering Decisions & Real Impact"}
             </h2>
           </div>
 
@@ -362,7 +364,7 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         {/* Architecture Highlights & Key Decisions */}
         <div className="space-y-5 pt-4 text-left">
           <h3 className="text-lg sm:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
-            Keputusan Arsitektur &amp; Praktik Rekayasa Frontend
+            {language === "id" ? "Keputusan Arsitektur & Praktik Rekayasa Frontend" : "Architecture Decisions & Frontend Engineering Practices"}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -383,7 +385,7 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         {/* Tech Stack Breakdown */}
         <div className="space-y-4 pt-4 text-left">
           <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)]">
-            Stack &amp; Perangkat yang Digunakan
+            {language === "id" ? "Stack & Perangkat yang Digunakan" : "Technologies & Core Arsenal"}
           </h3>
           <div className="flex flex-wrap gap-2">
             {project.techStack.map((tech) => (

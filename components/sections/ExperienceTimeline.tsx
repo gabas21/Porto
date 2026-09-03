@@ -2,9 +2,10 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import { journeys } from "@/data/journey";
+import { journeys, getJourneys } from "@/data/journey";
 import { Briefcase, GraduationCap } from "@phosphor-icons/react";
 import StrokeText from "@/components/reactbits/StrokeText";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ─── Color Tokens (Clean Solid Line, Zero Glow) ────────────────────────────────
 const LINE_COLOR = "#FACC15"; // Clean solid yellow
@@ -135,9 +136,11 @@ function ExperienceEntry({ item, index, count, pathProgress }: EntryProps) {
 
 // ─── Main Section Component ───────────────────────────────────────────────────
 export default function ExperienceTimeline() {
+  const { t, language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
 
-  const count = journeys.length;
+  const activeJourneys = getJourneys(language);
+  const count = activeJourneys.length;
   const { pathD, totalH } = buildHarmonicTimelinePath(count);
 
   const { scrollYProgress } = useScroll({
@@ -191,7 +194,7 @@ export default function ExperienceTimeline() {
             {/* Mobile View: Dynamic Kinetic StrokeText */}
             <div className="sm:hidden w-full max-w-full">
               <StrokeText
-                text="Explore my journey."
+                text={`${language === "id" ? "Linimasa Pengalaman" : "Explore my journey"}.`}
                 strokeColor="var(--text-primary)"
                 fillColor="var(--text-primary)"
                 strokeWidth={1.0}
@@ -209,7 +212,7 @@ export default function ExperienceTimeline() {
 
             {/* Desktop View: Standard Display Typography */}
             <h2 className="hidden sm:block text-3xl sm:text-5xl lg:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold tracking-tight text-[var(--text-primary)]">
-              Explore my journey<span className="text-[var(--accent)]">.</span>
+              {language === "id" ? "Linimasa Pengalaman" : "Explore my journey"}<span className="text-[var(--accent)]">.</span>
             </h2>
           </div>
         </div>
@@ -228,7 +231,7 @@ export default function ExperienceTimeline() {
           </div>
 
           <div className="space-y-6 md:space-y-2 pl-4 sm:pl-6 md:pl-0">
-            {journeys.map((item, idx) => (
+            {activeJourneys.map((item, idx) => (
               <ExperienceEntry
                 key={idx}
                 item={item}

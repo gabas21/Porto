@@ -5,24 +5,27 @@ import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { X, ArrowUpRight } from "lucide-react";
 import { soundFx } from "@/lib/audio-fx";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageToggle } from "../ui/LanguageToggle";
 
 interface MenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const navLinks = [
-  { num: "01", title: "Home", href: "/", tag: "Return to Top & Overview" },
-  { num: "02", title: "About", href: "#about", tag: "Engineering Story & Philosophy" },
-  { num: "03", title: "Services", href: "#services", tag: "Core Pillars & What I Bring" },
-  { num: "04", title: "Works", href: "#works", tag: "Selected Projects & Case Studies" },
-  { num: "05", title: "Skills", href: "#skills", tag: "Technical Arsenal & Tools" },
-  { num: "06", title: "Experience", href: "#experience", tag: "Career Timeline & Production Roles" },
-  { num: "07", title: "Contact", href: "mailto:bagasa020@gmail.com", tag: "Get in Touch & Inquiries" },
-];
-
 export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
+  const { t, language } = useLanguage();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const menuLinks = [
+    { num: "01", title: language === "id" ? "Beranda" : "Home", href: "/", tag: language === "id" ? "Kembali ke Atas & Gambaran Umum" : "Return to Top & Overview" },
+    { num: "02", title: t.nav.about, href: "#about", tag: language === "id" ? "Filosofi Rekayasa & Rekam Jejak" : "Engineering Story & Philosophy" },
+    { num: "03", title: t.nav.services, href: "#services", tag: language === "id" ? "Pilar Layanan & Kapabilitas Teknis" : "Core Pillars & What I Bring" },
+    { num: "04", title: t.nav.works, href: "#works", tag: language === "id" ? "Karya Pilihan & Kajian STAR" : "Selected Projects & Case Studies" },
+    { num: "05", title: t.nav.skills, href: "#skills", tag: language === "id" ? "Persenjataan Teknologi & Alat Kerja" : "Technical Arsenal & Tools" },
+    { num: "06", title: t.nav.experience, href: "#experience", tag: language === "id" ? "Linimasa Karier & Riwayat Produksi" : "Career Timeline & Production Roles" },
+    { num: "07", title: t.nav.contact, href: "mailto:bagasa020@gmail.com", tag: language === "id" ? "Mulai Komunikasi & Diskusi Proyek" : "Get in Touch & Inquiries" },
+  ];
 
   const handleClose = () => {
     soundFx.playClick();
@@ -55,14 +58,17 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
                 </span>
               </div>
 
-              <button
-                onClick={handleClose}
-                className="group flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
-                aria-label="Close menu"
-              >
-                <span className="text-xs font-mono font-medium hidden sm:inline">ESC // Close</span>
-                <X size={16} />
-              </button>
+              <div className="flex items-center gap-3">
+                <LanguageToggle />
+                <button
+                  onClick={handleClose}
+                  className="group flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
+                  aria-label="Close menu"
+                >
+                  <span className="text-xs font-mono font-medium hidden sm:inline">ESC // Close</span>
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Menu Links with Magnetic Pill Hover & Kinetic Typography */}
@@ -70,7 +76,7 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
               className="flex flex-col space-y-1.5 sm:space-y-2 my-6 sm:my-8"
               onMouseLeave={() => setHoveredIdx(null)}
             >
-              {navLinks.map((link, idx) => {
+              {menuLinks.map((link, idx) => {
                 const isHovered = hoveredIdx === idx;
                 return (
                   <motion.div

@@ -12,38 +12,26 @@ import {
   type Variants,
 } from "motion/react";
 
-/**
- * Unified BubbleCursor & True Optical Magnifier Lens Component
- *
- * Menggabungkan Bubble Cursor dengan Kaca Pembesar (Magnifying Loupe)
- * menjadi 1 BULATAN TUNGGAL yang kohesif:
- * - Saat di atas teks: Berubah menjadi 1 kaca pembesar utuh (diameter 60px / radius 30px)
- *   dengan ring optik emas di pinggirannya dan teks di dalamnya ter-zoom 1.38x secara tajam.
- * - Menghapus backdrop-blur penyebab teks buram/kabur.
- * - Menutup teks asli di balik lensa untuk mencegah tulisan dobel (ghosting).
- * - Saat tidak di atas teks: Menjadi Liquid Glass Bubble Orb yang mengambang mulus dengan fisika pegas.
- */
-
 interface BubbleCursorProps {
   /** Warna aksen ring kaca pembesar & hover (default: Golden Glow) */
   accentColor?: string;
   /** Ukuran dasar bubble diameter (px) */
   baseSize?: number;
-  /** Faktor pembesar teks di dalam lensa (default: 1.38x) */
+  /** Faktor pembesar teks di dalam lensa (default: 1.3x) */
   zoomFactor?: number;
 }
 
-const LENS_RADIUS = 30; // Radius lensa pembesar (diameter 60px)
+const LENS_RADIUS = 36; // Radius lensa pembesar (diameter 72px)
 
 /**
  * Cari elemen teks di bawah koordinat (x, y).
  */
 function findTextEl(x: number, y: number): HTMLElement | null {
+  if (x < 0 || y < 0) return null;
   const all = document.elementsFromPoint(x, y) as HTMLElement[];
   for (const el of all) {
     if (el.hasAttribute("data-cursor-lens")) continue;
     if (el.matches("canvas,svg,img,video,iframe,html,body")) continue;
-    // Cek apakah ada teks langsung yang bukan spasi kosong
     const hasDirectText = Array.from(el.childNodes).some(
       (n) => n.nodeType === Node.TEXT_NODE && (n.textContent?.trim().length ?? 0) > 0
     );
@@ -53,25 +41,40 @@ function findTextEl(x: number, y: number): HTMLElement | null {
 }
 
 /**
- * Cari elemen visual pembungkus terdekat yang memiliki background nyata (mis: chip, badge, button).
+ * Cari background warna nyata dari elemen ke atas DOM tree.
  */
-function findVisualUnit(textEl: HTMLElement): { el: HTMLElement; hasBg: boolean } {
+function findRealBg(el: HTMLElement): string {
+  let curr: HTMLElement | null = el;
+  while (curr && curr !== document.documentElement) {
+    const bg = window.getComputedStyle(curr).backgroundColor;
+    if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") {
+      return bg;
+    }
+    curr = curr.parentElement;
+  }
+  return "var(--bg-main)";
+}
+
+/**
+ * Cari elemen visual pembungkus terdekat yang memiliki background atau batas sendiri.
+ */
+function findVisualUnit(textEl: HTMLElement): HTMLElement {
   let el: HTMLElement = textEl;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     const bg = window.getComputedStyle(el).backgroundColor;
     if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") {
-      return { el, hasBg: true };
+      return el;
     }
     if (!el.parentElement || el.parentElement.matches("html,body")) break;
     el = el.parentElement as HTMLElement;
   }
-  return { el: textEl, hasBg: false };
+  return textEl;
 }
 
 export default function BubbleCursor({
   accentColor = "rgba(250, 204, 21, 0.9)",
-  baseSize = 52,
-  zoomFactor = 1.38,
+  baseSize = 48,
+  zoomFactor = 1.3,
 }: BubbleCursorProps) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -90,13 +93,14 @@ export default function BubbleCursor({
   const currentRectRef = useRef<DOMRect | null>(null);
   const visibleRef = useRef(false);
   const rafRef = useRef<number>(0);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mousePosRef = useRef({ x: -500, y: -500 });
 
   // ── 1. POSISI MOUSE & SPRING PHYSICS UNTUK BUBBLE BIASA ──────────
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  const springConfig = { stiffness: 440, damping: 28, mass: 0.5 };
+  const springConfig = { stiffness: 450, damping: 28, mass: 0.5 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
@@ -117,7 +121,25 @@ export default function BubbleCursor({
     return Math.max(1 - speed * 0.00015, 0.85);
   });
 
-  // ── 2. LOOP UPDATE MAGNIFIER LENS DENGAN FAST-PATH CACHING ─────────
+  // ── 2. RESET MAGNIFIER FUNCTION ─────────────────────────────────
+  const resetMagnifier = useCallback(() => {
+    setIsMagnifying(false);
+    activeElementRef.current = null;
+    currentUnitRef.current = null;
+    currentCloneRef.current = null;
+    currentRectRef.current = null;
+    if (overlayRef.current) {
+      overlayRef.current.style.clipPath = "circle(0px at -500px -500px)";
+    }
+    if (lensRingRef.current) {
+      lensRingRef.current.style.opacity = "0";
+    }
+    if (cloneRootRef.current) {
+      cloneRootRef.current.innerHTML = "";
+    }
+  }, []);
+
+  // ── 3. UPDATE MAGNIFIER LENS DENGAN FAST-PATH CACHING ───────────
   const updateMagnifier = useCallback(() => {
     const { x: mx, y: my } = mousePosRef.current;
     const overlay = overlayRef.current;
@@ -125,10 +147,12 @@ export default function BubbleCursor({
     const lensRing = lensRingRef.current;
 
     if (!overlay || !cloneRoot || !lensRing) return;
+    if (mx < 0 || my < 0) {
+      resetMagnifier();
+      return;
+    }
 
-    // Fast-path: jika kursor masih berada di dalam bounding rect elemen yang sama,
-    // TIDAK PERLU jalankan elementsFromPoint, getComputedStyle, atau cloneNode!
-    // Ini menghemat 95%+ beban CPU & menghilangkan forced layout reflow.
+    // Fast-path: jika kursor masih di dalam bounding rect elemen aktif
     const activeRect = currentRectRef.current;
     const activeClone = currentCloneRef.current;
     const activeUnit = currentUnitRef.current;
@@ -150,33 +174,22 @@ export default function BubbleCursor({
       return;
     }
 
-    // Slow-path: kursor berpindah ke teks lain, cari elemen teks baru
+    // Slow-path: cari elemen teks baru
     const textEl = findTextEl(mx, my);
 
     if (!textEl) {
-      if (overlay.style.clipPath !== "circle(0px at -500px -500px)") {
-        overlay.style.clipPath = "circle(0px at -500px -500px)";
-        lensRing.style.opacity = "0";
-        cloneRoot.innerHTML = "";
-        currentUnitRef.current = null;
-        currentCloneRef.current = null;
-        currentRectRef.current = null;
-        setIsMagnifying(false);
-      }
+      resetMagnifier();
       return;
     }
 
     setIsMagnifying(true);
 
-    // Ambil unit visual (badge/button/paragraph)
-    const { el: unit, hasBg } = findVisualUnit(textEl);
+    const unit = findVisualUnit(textEl);
     const rect = unit.getBoundingClientRect();
     const st = window.getComputedStyle(unit);
+    const realBg = findRealBg(unit);
 
-    // Background overlay menutup teks asli di dalam lingkaran untuk mencegah tulisan dobel
-    overlay.style.backgroundColor = hasBg ? st.backgroundColor : "var(--bg-main)";
-
-    // Clone elemen teks dengan format visual aslinya
+    overlay.style.backgroundColor = realBg;
     cloneRoot.innerHTML = "";
     const clone = unit.cloneNode(true) as HTMLElement;
 
@@ -226,15 +239,12 @@ export default function BubbleCursor({
     currentCloneRef.current = clone;
     currentRectRef.current = rect;
 
-    // Update clipping lingkaran 1 kursor
     overlay.style.clipPath = `circle(${LENS_RADIUS}px at ${mx}px ${my}px)`;
-
-    // Update posisi ring kaca pembesar tunggal persis di batas clip
     lensRing.style.transform = `translate3d(${mx - LENS_RADIUS}px, ${my - LENS_RADIUS}px, 0)`;
     lensRing.style.opacity = "1";
-  }, [zoomFactor]);
+  }, [zoomFactor, resetMagnifier]);
 
-  // ── 3. LISTENER EVENT MOUSE ───────────────────────────────────────
+  // ── 4. LISTENER EVENT MOUSE & SCROLL (FIX STUCK ON SCROLL BUG) ──
   const handlePointerMove = useCallback(
     (e: MouseEvent) => {
       if (!visibleRef.current) {
@@ -258,13 +268,8 @@ export default function BubbleCursor({
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return;
 
-    // Nonaktifkan pada touch device / reduced motion / spek sangat rendah
     if (window.matchMedia("(hover: none)").matches) return;
-    const nav = navigator as Navigator & { deviceMemory?: number };
-    const memory = nav.deviceMemory ?? 8;
-    const cores = navigator.hardwareConcurrency ?? 4;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced || memory < 4 || cores < 4) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -294,44 +299,48 @@ export default function BubbleCursor({
     const handleMouseLeave = () => {
       setIsVisible(false);
       setIsHovered(false);
-      setIsMagnifying(false);
-      activeElementRef.current = null;
-      currentUnitRef.current = null;
-      currentCloneRef.current = null;
-      currentRectRef.current = null;
-      if (overlayRef.current) {
-        overlayRef.current.style.clipPath = "circle(0px at -500px -500px)";
-      }
-      if (lensRingRef.current) {
-        lensRingRef.current.style.opacity = "0";
-      }
-      if (cloneRootRef.current) {
-        cloneRootRef.current.innerHTML = "";
-      }
+      resetMagnifier();
     };
     const handleMouseEnter = () => setIsVisible(true);
+
+    // ── CRITICAL FIX: RESET SAAT SCROLL AGAR TEKS TIDAK NYANGKUT ──
+    const handleScroll = () => {
+      // Segera reset pembesar saat halaman discroll
+      resetMagnifier();
+
+      // Saat scroll berhenti, cek kembali teks di posisi mouse terkini
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        if (mousePosRef.current.x >= 0 && mousePosRef.current.y >= 0) {
+          updateMagnifier();
+        }
+      }, 120);
+    };
 
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     window.addEventListener("mouseover", handleMouseOver, { passive: true });
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       window.removeEventListener("mousemove", handlePointerMove);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [mounted, handlePointerMove]);
+  }, [mounted, handlePointerMove, resetMagnifier, updateMagnifier]);
 
   if (!mounted) return null;
 
-  // ── 4. VARIAN ANIMASI BUBBLE BIASA (NON-MAGNIFYING) ───────────────
+  // ── 5. VARIAN ANIMASI BUBBLE BIASA (NON-MAGNIFYING) ───────────────
   const currentAnimateState = isClicking ? "clicking" : isHovered ? "hover" : "default";
 
   const bubbleVariants: Variants = {
@@ -354,8 +363,8 @@ export default function BubbleCursor({
     },
     hover: {
       scale: 1.15,
-      width: cursorText ? 104 : baseSize,
-      height: cursorText ? 42 : baseSize,
+      width: cursorText ? 104 : baseSize + 6,
+      height: cursorText ? 42 : baseSize + 6,
       borderRadius: cursorText ? "22px" : "9999px",
       border: `1.5px solid ${accentColor}`,
       boxShadow: [
@@ -373,10 +382,9 @@ export default function BubbleCursor({
     },
   };
 
-  // Render semua elemen kursor via Portal langsung ke document.body
   return createPortal(
     <>
-      {/* ── LAYER 1: OVERLAY CLIPPED MAGNIFIER LENS (Z-INDEX 9994) ─── */}
+      {/* ── LAYER 1: OVERLAY CLIPPED MAGNIFIER LENS ─── */}
       <div
         ref={overlayRef}
         data-cursor-lens="overlay"
@@ -394,8 +402,7 @@ export default function BubbleCursor({
         />
       </div>
 
-      {/* ── LAYER 2: SATU RING KACA PEMBESAR TUNGGAL (Z-INDEX 9996) ── */}
-      {/* Ring ini tepat berada di sekeliling area zoom tanpa bulatan lain di belakangnya */}
+      {/* ── LAYER 2: RING KACA PEMBESAR TUNGGAL ── */}
       <div
         ref={lensRingRef}
         data-cursor-lens="ring"
@@ -413,9 +420,7 @@ export default function BubbleCursor({
         }}
       />
 
-      {/* ── LAYER 3: BUBBLE KURSOR BIASA (HANYA MUNCUL SAAT TIDAK MAGNIFYING) ── */}
-      {/* Saat sedang zoom teks (isMagnifying === true), bubble ini otomatis sembunyi 
-          sehingga HANYA ADA 1 BULATAN (Kaca Pembesar). Tidak akan ada 2 bulatan! */}
+      {/* ── LAYER 3: BUBBLE KURSOR BIASA (HANYA MUNCUL SAAT TIDAK ZOOM) ── */}
       {!isMagnifying && (
         <>
           {/* Halo Glow Ambient */}

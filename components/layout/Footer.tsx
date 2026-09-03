@@ -14,8 +14,10 @@ import {
   Copy,
   Check,
 } from "@phosphor-icons/react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
+  const { t, language } = useLanguage();
   const [witaTime, setWitaTime] = useState<string>("");
   const [copiedEmail, setCopiedEmail] = useState(false);
   const email = "bagasa020@gmail.com";
@@ -80,13 +82,13 @@ export default function Footer() {
               <div className="space-y-3 max-w-2xl text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-main)]/80 border border-[var(--border-subtle)] text-xs font-mono text-[var(--accent)]">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Siap Memulai Proyek Baru</span>
+                  <span>{t.footer.statusAvailable}</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--text-primary)] font-display leading-[1.15]">
-                  Punya ide proyek atau ingin berkolaborasi?
+                  {t.footer.ctaHeadline}
                 </h2>
                 <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
-                  Terbuka untuk pembuatan website instansi pemerintah, sistem informasi, aplikasi web interaktif modern, maupun diskusi peluang kerja profesional.
+                  {t.footer.ctaDescription}
                 </p>
               </div>
 
@@ -98,7 +100,7 @@ export default function Footer() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 rounded-full bg-[var(--accent)] text-black font-bold text-sm tracking-tight shadow-md hover:shadow-lg hover:shadow-[var(--accent)]/20 hover:opacity-95 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >
                   <EnvelopeSimple size={18} weight="bold" />
-                  <span>Kirim Pesan</span>
+                  <span>{t.footer.sendDirectMessage}</span>
                 </button>
 
                 <button
@@ -107,7 +109,7 @@ export default function Footer() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[48px] px-6 py-3.5 rounded-full bg-[var(--surface-card-hover)] hover:bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent)]/40 font-semibold text-sm transition-all active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 >
                   <FileText size={17} weight="bold" className="text-[var(--accent)]" />
-                  <span>Preview CV</span>
+                  <span>{t.footer.previewCV}</span>
                 </button>
 
                 <a
@@ -144,7 +146,7 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed max-w-md font-sans">
-              Mahasiswa Teknik Informatika STMIK Widya Cipta Dharma. Berdedikasi merancang antarmuka web yang terstruktur, semantik, berkinerja tinggi, dan responsif.
+              {t.footer.brandBio}
             </p>
 
             {/* Live WITA Local Clock Pill */}
@@ -155,7 +157,7 @@ export default function Footer() {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
                 <span className="text-xs font-mono text-[var(--text-secondary)]">
-                  Samarinda:
+                  {t.footer.localTimeLabel}
                 </span>
                 <span className="text-xs font-mono font-bold text-[var(--text-primary)]">
                   {witaTime || "Loading..."}
@@ -167,32 +169,32 @@ export default function Footer() {
           {/* Col 2: Navigation Sitemap (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-3">
             <p className="text-xs font-mono uppercase font-bold tracking-wider text-[var(--text-primary)]">
-              Navigasi
+              {t.footer.navigationTitle}
             </p>
             <ul className="space-y-2.5 text-sm font-sans text-[var(--text-secondary)]">
               <li>
                 <a href="#about" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
-                  <span>Tentang</span>
+                  <span>{t.nav.about}</span>
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
-                  <span>Layanan</span>
+                  <span>{t.nav.services}</span>
                 </a>
               </li>
               <li>
                 <a href="#works" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
-                  <span>Karya Proyek</span>
+                  <span>{t.nav.works}</span>
                 </a>
               </li>
               <li>
                 <a href="#skills" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
-                  <span>Tech Arsenal</span>
+                  <span>{t.nav.skills}</span>
                 </a>
               </li>
               <li>
                 <a href="#experience" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
-                  <span>Pengalaman</span>
+                  <span>{t.nav.experience}</span>
                 </a>
               </li>
             </ul>
@@ -201,7 +203,7 @@ export default function Footer() {
           {/* Col 3: Socials & Connect (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-3">
             <p className="text-xs font-mono uppercase font-bold tracking-wider text-[var(--text-primary)]">
-              Jaringan
+              {t.footer.connectTitle}
             </p>
             <ul className="space-y-2.5 text-sm font-sans text-[var(--text-secondary)]">
               <li>
@@ -246,7 +248,7 @@ export default function Footer() {
           {/* Col 4: Quick Contact & Copy (3 cols on lg) */}
           <div className="lg:col-span-3 space-y-3">
             <p className="text-xs font-mono uppercase font-bold tracking-wider text-[var(--text-primary)]">
-              Kontak Langsung
+              {language === "id" ? "Kontak Langsung" : "Direct Contact"}
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2 p-2 rounded-xl bg-[var(--surface-card)] border border-[var(--border-subtle)]">
@@ -273,7 +275,7 @@ export default function Footer() {
         {/* ── 3. BOTTOM BAR & BACK TO TOP ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--text-secondary)] text-center sm:text-left pt-2">
           <div>
-            &copy; {new Date().getFullYear()} Bagas Aditya Anugrah Ramadhan. All rights reserved.
+            &copy; {new Date().getFullYear()} Bagas Aditya Anugrah Ramadhan. {t.footer.copyright}
           </div>
 
           <div className="flex items-center gap-4">
@@ -286,9 +288,9 @@ export default function Footer() {
               type="button"
               onClick={scrollToTop}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] hover:border-[var(--accent)]/40 text-[var(--text-primary)] transition-all cursor-pointer active:scale-95 shadow-sm"
-              title="Kembali ke Bagian Paling Atas"
+              title={t.footer.backToTop}
             >
-              <span>Atas</span>
+              <span>{language === "id" ? "Atas" : "Top"}</span>
               <ArrowUp size={12} weight="bold" className="text-[var(--accent)]" />
             </button>
           </div>
