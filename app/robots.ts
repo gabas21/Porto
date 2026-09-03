@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://portfolio-bagas.vercel.app/sitemap.xml",
+    sitemap: "https://porto-bagas-app.vercel.app/sitemap.xml",
   };
 }

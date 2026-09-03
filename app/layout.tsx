@@ -26,7 +26,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio-bagas.vercel.app"),
+  metadataBase: new URL("https://porto-bagas-app.vercel.app"),
   title: "Bagas Aditya Anugrah Ramadhan | Frontend Developer & Creative UI Engineer",
   description:
     "Official Portfolio of Bagas Aditya Anugrah Ramadhan — Frontend Developer specializing in high-performance web applications, 3D interactive physics, and modern UI engineering.",
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
     "Portfolio Frontend Indonesia",
     "Samarinda Developer",
   ],
-  authors: [{ name: "Bagas Aditya Anugrah Ramadhan", url: "https://portfolio-bagas.vercel.app" }],
+  authors: [{ name: "Bagas Aditya Anugrah Ramadhan", url: "https://porto-bagas-app.vercel.app" }],
   creator: "Bagas Aditya Anugrah Ramadhan",
   alternates: {
-    canonical: "https://portfolio-bagas.vercel.app",
+    canonical: "https://porto-bagas-app.vercel.app",
     languages: {
-      "id-ID": "https://portfolio-bagas.vercel.app?lang=id",
-      "en-US": "https://portfolio-bagas.vercel.app?lang=en",
+      "id-ID": "https://porto-bagas-app.vercel.app?lang=id",
+      "en-US": "https://porto-bagas-app.vercel.app?lang=en",
     },
   },
   openGraph: {
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     type: "profile",
     locale: "id_ID",
     alternateLocale: ["en_US"],
-    url: "https://portfolio-bagas.vercel.app",
+    url: "https://porto-bagas-app.vercel.app",
     siteName: "Bagas Aditya Portfolio",
     images: [
       {
@@ -95,8 +95,8 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://portfolio-bagas.vercel.app/#website",
-      url: "https://portfolio-bagas.vercel.app",
+      "@id": "https://porto-bagas-app.vercel.app/#website",
+      url: "https://porto-bagas-app.vercel.app",
       name: "Bagas Aditya Anugrah Ramadhan Portfolio",
       description:
         "Official Portfolio of Bagas Aditya Anugrah Ramadhan — Frontend Developer & Creative UI Engineer",
@@ -104,26 +104,26 @@ const jsonLd = {
     },
     {
       "@type": "ProfilePage",
-      "@id": "https://portfolio-bagas.vercel.app/#profilepage",
-      url: "https://portfolio-bagas.vercel.app",
+      "@id": "https://porto-bagas-app.vercel.app/#profilepage",
+      url: "https://porto-bagas-app.vercel.app",
       name: "Bagas Aditya Anugrah Ramadhan | Frontend Developer Profile",
       isPartOf: {
-        "@id": "https://portfolio-bagas.vercel.app/#website",
+        "@id": "https://porto-bagas-app.vercel.app/#website",
       },
       mainEntity: {
-        "@id": "https://portfolio-bagas.vercel.app/#person",
+        "@id": "https://porto-bagas-app.vercel.app/#person",
       },
     },
     {
       "@type": "Person",
-      "@id": "https://portfolio-bagas.vercel.app/#person",
+      "@id": "https://porto-bagas-app.vercel.app/#person",
       name: "Bagas Aditya Anugrah Ramadhan",
       alternateName: ["Bagas Aditya", "gabas21"],
       jobTitle: "Frontend Developer & Creative UI Engineer",
       description:
         "Frontend Developer specializing in high-performance web applications, interactive 3D physics interfaces, and enterprise government systems.",
-      url: "https://portfolio-bagas.vercel.app",
-      image: "https://portfolio-bagas.vercel.app/bagas.jpg",
+      url: "https://porto-bagas-app.vercel.app",
+      image: "https://porto-bagas-app.vercel.app/bagas.jpg",
       email: "bagasaditya2411@gmail.com",
       telephone: "+6285250485906",
       alumniOf: {
