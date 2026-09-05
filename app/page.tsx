@@ -8,6 +8,7 @@ import SideSocialDock from "@/components/layout/SideSocialDock";
 import Hero from "@/components/Hero";
 import MarqueeRibbon from "@/components/sections/MarqueeRibbon";
 import Footer from "@/components/layout/Footer";
+import "@/lib/animation-config";
 
 // Lazy-load komponen berat — hanya dimuat saat dibutuhkan
 const BioIntroSection = dynamic(() => import("@/components/sections/BioIntroSection"), { ssr: false });

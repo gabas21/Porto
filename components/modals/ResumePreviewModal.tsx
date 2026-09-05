@@ -65,7 +65,7 @@ Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan fokus keahlian p
   const handleDownload = () => {
     soundFx.playClick();
     const link = document.createElement("a");
-    link.href = encodeURI("/CV Bagas Aditya Anugrah Ramadhan  (1).pdf");
+    link.href = "/cv.pdf";
     link.download = "CV_Bagas_Aditya_Anugrah_Ramadhan_Frontend_Developer.pdf";
     link.target = "_blank";
     document.body.appendChild(link);

@@ -39,7 +39,7 @@ export const id = {
     titleSuffix: "dengan Presisi Tinggi.",
     description:
       "Mengkhususkan diri dalam rekayasa frontend berskala instansi, sistem informasi modern, dan antarmuka web interaktif yang cepat, aksesibel, serta andal.",
-    verifiedBadge: "TERVERIFIKASI // INSTANSI PEMERINTAH",
+    verifiedBadge: "TERVERIFIKASI • INSTANSI PEMERINTAH",
     ctaPrimary: "Mulai Diskusi Proyek",
     ctaSecondary: "Buka Resume Interaktif",
     copyEmail: "Salin Email",
@@ -51,8 +51,8 @@ export const id = {
     headingMain: "Dedikasi Rekayasa Perangkat Lunak",
     headingHighlight: "Berorientasi Solusi",
     headingSuffix: "untuk Sistem Skala Nyata.",
-    statusBeacon: "TERVERIFIKASI // ID",
-    statusBadge: "TERSEDIA // SAMARINDA",
+    statusBeacon: "TERVERIFIKASI • ID",
+    statusBadge: "TERSEDIA • SAMARINDA",
     degree: "S1 Informatika",
     degreeDesc:
       "Fokus pada rekayasa antarmuka modern, arsitektur frontend modular, semantic design system, dan integrasi API performa tinggi untuk sistem instansi dan web aplikasi.",
@@ -76,7 +76,7 @@ export const id = {
     titleMain: "Merekayasa Pengalaman Digital Berperforma",
     titleHighlight: "Tinggi & Berbobot",
     subtitle: "Seluruh pilar layanan arsitektur frontend, interaksi 3D, dan integrasi data terpadu.",
-    capabilityStage: "PANGGUNG KAPABILITAS //",
+    capabilityStage: "PANGGUNG KAPABILITAS",
     deliverablesLabel: "Output & Luaran Nyata:",
     stackLabel: "Teknologi:",
     ctaDiscuss: "Konsultasikan Kebutuhan",

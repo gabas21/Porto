@@ -18,13 +18,21 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   const progressLineRef = useRef<HTMLDivElement>(null);
   const skipHintRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef(false);
+  const curtainLiftDispatchedRef = useRef(false);
+
+  const dispatchCurtainLift = () => {
+    if (curtainLiftDispatchedRef.current) return;
+    curtainLiftDispatchedRef.current = true;
+    if (typeof window !== "undefined") {
+      (window as any).__portoCurtainLifted = true;
+      window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
+    }
+  };
 
   const finish = () => {
     if (doneRef.current) return;
     doneRef.current = true;
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
-    }
+    dispatchCurtainLift();
     onComplete();
   };
 
@@ -32,28 +40,24 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     const curtain = curtainRef.current;
     if (!curtain) return;
 
-    // Honor prefers-reduced-motion or repeat visits in same session
+    // Honor prefers-reduced-motion
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const alreadyVisited = typeof window !== "undefined" && sessionStorage.getItem("porto_preloader_seen") === "true";
 
-    if (reducedMotion || alreadyVisited) {
-      // Jika sudah pernah melihat preloader di sesi ini, angkat tirai instan
+    if (reducedMotion) {
+      // Jika user mengaktifkan prefers-reduced-motion, angkat tirai instan
       gsap.to(curtain, {
         yPercent: -102,
         duration: 0.35,
         ease: "power3.inOut",
-        onStart: () => {
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
-          }
-        },
+        onStart: dispatchCurtainLift,
         onComplete: finish,
       });
       return;
     }
 
-    // Tandai sudah melihat preloader
-    sessionStorage.setItem("porto_preloader_seen", "true");
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("porto_preloader_seen");
+    }
 
     // Safety fallback: 3 detik max
     const safetyTimer = setTimeout(() => {
@@ -155,11 +159,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
           yPercent: -102,
           duration: 0.55,
           ease: "expo.inOut",
-          onStart: () => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
-            }
-          },
+          onStart: dispatchCurtainLift,
         },
         "-=0.06"
       );
@@ -176,9 +176,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   const handleSkip = () => {
     const curtain = curtainRef.current;
     if (!curtain) { finish(); return; }
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("preloader-curtain-lift"));
-    }
+    dispatchCurtainLift();
     gsap.to(curtain, {
       yPercent: -102,
       duration: 0.55,

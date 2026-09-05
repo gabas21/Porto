@@ -41,7 +41,7 @@ export const en: TranslationDictionary = {
     titleSuffix: "Web Systems.",
     description:
       "Specializing in mission-critical frontend architectures, modern institutional platforms, and high-performance interactive interfaces engineered with precision.",
-    verifiedBadge: "VERIFIED // GOVERNMENT IMPLEMENTATION",
+    verifiedBadge: "VERIFIED • GOVERNMENT IMPLEMENTATION",
     ctaPrimary: "Initiate Collaboration",
     ctaSecondary: "Explore Interactive CV",
     copyEmail: "Copy Direct Email",
@@ -53,8 +53,8 @@ export const en: TranslationDictionary = {
     headingMain: "Dedicated Software Engineering",
     headingHighlight: "Driven by Impact",
     headingSuffix: "for Real-World Scale.",
-    statusBeacon: "VERIFIED // ID",
-    statusBadge: "ACTIVE // SAMARINDA",
+    statusBeacon: "VERIFIED • ID",
+    statusBadge: "ACTIVE • SAMARINDA",
     degree: "B.S. in Computer Science",
     degreeDesc:
       "Specializing in modern interface engineering, modular frontend architecture, semantic design systems, and high-throughput API integrations for government and enterprise web applications.",
@@ -78,7 +78,7 @@ export const en: TranslationDictionary = {
     titleMain: "Crafting High-Performance",
     titleHighlight: "Digital Experiences with Substance",
     subtitle: "Complete frontend architecture, 3D WebGL interactions, and unified data integration pillars.",
-    capabilityStage: "CAPABILITY STAGE //",
+    capabilityStage: "CAPABILITY STAGE",
     deliverablesLabel: "Key Deliverables & Output:",
     stackLabel: "Tech Stack:",
     ctaDiscuss: "Discuss Project Scope",

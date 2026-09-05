@@ -9,12 +9,16 @@ const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
 });
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
+  preload: false,
+  fallback: ["monospace", "courier"],
 });
 
 const instrumentSerif = Instrument_Serif({
@@ -22,7 +26,9 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
-  display: "swap",
+  display: "optional",
+  preload: false,
+  fallback: ["Georgia", "serif"],
 });
 
 export const metadata: Metadata = {
@@ -179,6 +185,8 @@ export default function RootLayout({
       className={`${outfit.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} scroll-smooth antialiased`}
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var s=localStorage.getItem("theme");var t=s==="dark"?"dark":"light";document.documentElement.setAttribute("data-theme",t);if(t==="dark"){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,

@@ -163,15 +163,15 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
               greenOffset={2}
               blueOffset={4}
               mixBlendMode="difference"
-              className="py-1.5 px-3 sm:px-4"
+              className="py-1 px-2 sm:py-1.5 sm:px-4"
             >
-              <div className="w-full flex items-center justify-between gap-3 sm:gap-4 px-1">
+              <div className="w-full flex items-center justify-between gap-1.5 sm:gap-4 px-0.5 sm:px-1">
                 {/* Brand Logo - High Contrast (Black in Light, Crisp White in Dark) */}
                 <Link
                   href="/"
-                  className="group flex items-center gap-1.5 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-2 shrink-0"
+                  className="group flex items-center gap-1 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
                 >
-                  <span className="text-sm sm:text-base uppercase tracking-tighter font-display">
+                  <span className="text-xs sm:text-sm md:text-base uppercase tracking-tighter font-display whitespace-nowrap">
                     Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
                   </span>
                 </Link>
@@ -204,11 +204,11 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                 </nav>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                  {/* Command Palette Trigger */}
+                <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                  {/* Command Palette Trigger - Desktop/Tablet */}
                   <button
                     onClick={openCmdPalette}
-                    className="flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     title="Buka Command Menu (Ctrl+K / ⌘K)"
                     aria-label="Command Menu"
                   >
@@ -216,10 +216,10 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     <span className="text-xs font-mono font-semibold hidden md:inline">⌘K</span>
                   </button>
 
-                  {/* Audio FX Toggle */}
+                  {/* Audio FX Toggle - Desktop/Tablet */}
                   <button
                     onClick={toggleSound}
-                    className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
                     aria-label="Toggle Sound Effects"
                   >
@@ -237,7 +237,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     duration={500}
                     theme={theme}
                     onThemeChange={(newTheme) => setTheme(newTheme)}
-                    className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
                   />
 
                   <button
@@ -251,9 +251,10 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                     <ArrowUpRight size={13} weight="bold" />
                   </button>
 
+                  {/* Menu Button - Always visible and accessible on all screens */}
                   <button
                     onClick={() => setMenuOpen(true)}
-                    className="flex h-10 w-10 min-w-[40px] min-h-[40px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
                     aria-label="Toggle Fullscreen Menu"
                   >
                     <Menu size={17} />
@@ -263,13 +264,13 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
             </GlassSurface>
           ) : (
             /* ── Top Full-Width Hero Navbar State ── */
-            <header className="w-full flex items-center justify-between gap-4 py-3 px-3 sm:px-6 bg-transparent">
+            <header className="w-full flex items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-3 px-2 sm:px-6 bg-transparent">
               {/* Brand Logo - Crisp White in Dark Mode */}
               <Link
                 href="/"
-                className="group flex items-center gap-2 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
+                className="group flex items-center gap-1 sm:gap-2 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
               >
-                <span className="text-lg sm:text-xl uppercase tracking-tighter font-display">
+                <span className="text-base sm:text-lg md:text-xl uppercase tracking-tighter font-display whitespace-nowrap">
                   Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
                 </span>
               </Link>
@@ -295,11 +296,11 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
               </nav>
 
               {/* Theme Switcher, Contact & Menu CTA */}
-              <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                {/* Command Palette Trigger */}
+              <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+                {/* Command Palette Trigger - Desktop/Tablet */}
                 <button
                   onClick={openCmdPalette}
-                  className="flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   title="Buka Command Menu (Ctrl+K / ⌘K)"
                   aria-label="Command Menu"
                 >
@@ -307,10 +308,10 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   <span className="text-xs font-mono font-semibold hidden sm:inline">⌘K</span>
                 </button>
 
-                {/* Audio FX Toggle */}
+                {/* Audio FX Toggle - Desktop/Tablet */}
                 <button
                   onClick={toggleSound}
-                  className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
                   aria-label="Toggle Sound Effects"
                 >
@@ -328,7 +329,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   duration={500}
                   theme={theme}
                   onThemeChange={(newTheme) => setTheme(newTheme)}
-                  className="w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
                 />
 
                 <button
@@ -341,9 +342,10 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
                   <span>{t.nav.contact} ↗</span>
                 </button>
 
+                {/* Menu Button - Always visible and accessible on all screens */}
                 <button
                   onClick={() => setMenuOpen(true)}
-                  className="flex h-10 w-10 min-w-[40px] min-h-[40px] items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
                   aria-label="Toggle Fullscreen Menu"
                 >
                   <Menu size={18} />

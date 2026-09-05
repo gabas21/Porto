@@ -13,7 +13,6 @@ import {
   FileText,
   EnvelopeSimple,
 } from "@phosphor-icons/react";
-import CloudVideoBackground from "./ui/CloudVideoBackground";
 import MagnetButton from "./reactbits/MagnetButton";
 import ClickSpark from "./reactbits/ClickSpark";
 import FadeBlurIn from "./reactbits/FadeBlurIn";
@@ -81,16 +80,23 @@ export default function Hero() {
       id="about"
       className="relative min-h-[92dvh] sm:min-h-[95dvh] lg:min-h-[100dvh] flex flex-col justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-28 pb-6 sm:pb-10 lg:pb-16 px-4 sm:px-6 3xl:px-16 4xl:px-24 overflow-hidden bg-[var(--bg-main)]"
     >
-      {/* ── Seamless Cinematic Cloud Video Background (Hardware-Accelerated Decoding) ── */}
-      <div className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-700 opacity-95 dark:opacity-90">
-        <CloudVideoBackground
-          className="w-full h-full"
-          src="/clouds.mp4?v=v2"
-          poster="/clouds-poster.webp?v=v2"
-          playbackRate={1.0}
+      {/* ── Custom Sky Wallpaper Background ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <Image
+          src="/sky_background_fullhd_compressed.webp"
+          alt="Sky and Cloud Wallpaper"
+          fill
+          priority
+          quality={90}
+          sizes="100vw"
+          className="object-cover object-center w-full h-full contrast-[1.04] saturate-[1.02] dark:brightness-[0.65] dark:contrast-[1.18] dark:saturate-[0.82] transition-all duration-700"
         />
 
-        {/* Soft Left Vignette (Protects Text Contrast while Letting 3D Clouds Shine) */}
+        {/* Dark Mode Atmospheric Night Tint */}
+        <div className="absolute inset-0 bg-[#050811]/25 dark:bg-[#070b18]/45 mix-blend-multiply opacity-0 dark:opacity-100 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-transparent to-[var(--bg-main)]/35 opacity-0 dark:opacity-75 transition-opacity duration-700" />
+
+        {/* Soft Left Vignette (Protects Text Contrast while Letting Sleeping Cloud in Center Shine) */}
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-main)]/85 via-[var(--bg-main)]/30 to-transparent w-full lg:w-1/2" />
 
         {/* Soft Bottom Fade into Content */}
@@ -144,7 +150,7 @@ export default function Hero() {
                         alt="Bagas Aditya"
                         fill
                         sizes="(max-width: 640px) 350px, 450px"
-                        quality={95}
+                        quality={80}
                         className="object-cover object-top"
                         priority
                       />
@@ -157,7 +163,7 @@ export default function Hero() {
                         alt="Special Highlight"
                         fill
                         sizes="(max-width: 640px) 350px, 450px"
-                        quality={95}
+                        quality={80}
                         className="object-cover scale-[1.95] origin-[43%_48%]"
                         priority
                       />

@@ -33,7 +33,7 @@ export function LanguageToggle({ className = "" }: LanguageToggleProps) {
             type="button"
             onClick={() => handleSelect(lang)}
             aria-pressed={isActive}
-            className={`relative px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider rounded-full transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+            className={`relative px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider rounded-full transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
               isActive
                 ? "text-black dark:text-black"
                 : "text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white"

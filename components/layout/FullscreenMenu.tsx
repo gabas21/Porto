@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { X, ArrowUpRight } from "lucide-react";
+import { SpeakerHigh, SpeakerSlash, Command } from "@phosphor-icons/react";
 import { soundFx } from "@/lib/audio-fx";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "../ui/LanguageToggle";
@@ -16,6 +17,27 @@ interface MenuProps {
 export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
   const { t, language } = useLanguage();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    setIsMuted(soundFx.getIsMuted());
+    const handleSoundToggle = (e: Event) => {
+      const custom = e as CustomEvent<{ isMuted: boolean }>;
+      setIsMuted(custom.detail.isMuted);
+    };
+    window.addEventListener("porto-sound-toggle", handleSoundToggle);
+    return () => window.removeEventListener("porto-sound-toggle", handleSoundToggle);
+  }, []);
+
+  const toggleSound = () => {
+    const nextMuted = soundFx.toggleMute();
+    setIsMuted(nextMuted);
+  };
+
+  const openCmdPalette = () => {
+    handleClose();
+    window.dispatchEvent(new CustomEvent("open-command-palette"));
+  };
 
   const menuLinks = [
     { num: "01", title: language === "id" ? "Beranda" : "Home", href: "/", tag: language === "id" ? "Kembali ke Atas & Gambaran Umum" : "Return to Top & Overview" },
@@ -24,12 +46,20 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
     { num: "04", title: t.nav.works, href: "#works", tag: language === "id" ? "Karya Pilihan & Kajian STAR" : "Selected Projects & Case Studies" },
     { num: "05", title: t.nav.skills, href: "#skills", tag: language === "id" ? "Persenjataan Teknologi & Alat Kerja" : "Technical Arsenal & Tools" },
     { num: "06", title: t.nav.experience, href: "#experience", tag: language === "id" ? "Linimasa Karier & Riwayat Produksi" : "Career Timeline & Production Roles" },
-    { num: "07", title: t.nav.contact, href: "mailto:bagasa020@gmail.com", tag: language === "id" ? "Mulai Komunikasi & Diskusi Proyek" : "Get in Touch & Inquiries" },
+    { num: "07", title: t.nav.contact, href: "#contact", tag: language === "id" ? "Mulai Komunikasi & Diskusi Proyek" : "Get in Touch & Inquiries" },
   ];
 
   const handleClose = () => {
     soundFx.playClick();
     onClose();
+  };
+
+  const handleLinkClick = (e: React.MouseEvent, href: string) => {
+    handleClose();
+    if (href === "#contact") {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent("open-contact-modal"));
+    }
   };
 
   return (
@@ -40,32 +70,57 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 dark:bg-black/85 backdrop-blur-2xl p-4 sm:p-6"
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 dark:bg-black/85 backdrop-blur-2xl p-3 sm:p-6"
         >
           <motion.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 20, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative w-full max-w-3xl rounded-3xl bg-[var(--surface-card)] border border-[var(--border-subtle)] p-6 sm:p-10 md:p-12 flex flex-col justify-between shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] overflow-hidden"
+            className="relative w-full max-w-3xl max-h-[92dvh] sm:max-h-[88dvh] overflow-y-auto rounded-3xl bg-[var(--surface-card)] border border-[var(--border-subtle)] p-4 sm:p-8 md:p-10 flex flex-col justify-between shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] scrollbar-none"
           >
             {/* Header / Close Button */}
-            <div className="flex items-center justify-between pb-5 border-b border-[var(--border-subtle)]">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-[var(--accent)] animate-pulse" />
-                <span className="text-xs font-mono tracking-widest uppercase text-[var(--text-secondary)]">
+                <span className="text-[11px] sm:text-xs font-mono tracking-widest uppercase text-[var(--text-secondary)]">
                   Navigation Menu &bull; Directory
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                {/* Mobile Quick Action: Audio Toggle */}
+                <button
+                  onClick={toggleSound}
+                  className="sm:hidden w-8 h-8 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent)] flex items-center justify-center transition-all cursor-pointer"
+                  title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
+                  aria-label="Toggle Sound Effects"
+                >
+                  {isMuted ? (
+                    <SpeakerSlash size={14} className="text-rose-400" />
+                  ) : (
+                    <SpeakerHigh size={14} className="text-[var(--accent)]" />
+                  )}
+                </button>
+
+                {/* Mobile Quick Action: Command Palette */}
+                <button
+                  onClick={openCmdPalette}
+                  className="sm:hidden w-8 h-8 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent)] flex items-center justify-center transition-all cursor-pointer"
+                  title="Buka Command Menu (Ctrl+K)"
+                  aria-label="Command Menu"
+                >
+                  <Command size={14} className="text-[var(--accent)]" />
+                </button>
+
                 <LanguageToggle />
+
                 <button
                   onClick={handleClose}
-                  className="group flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
+                  className="group flex items-center gap-1.5 py-1 px-3 sm:py-1.5 sm:px-3.5 rounded-full bg-[var(--surface-card-hover)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
                   aria-label="Close menu"
                 >
-                  <span className="text-xs font-mono font-medium hidden sm:inline">ESC // Close</span>
+                  <span className="text-xs font-mono font-medium hidden sm:inline">ESC • Close</span>
                   <X size={16} />
                 </button>
               </div>
@@ -73,7 +128,7 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
 
             {/* Menu Links with Magnetic Pill Hover & Kinetic Typography */}
             <div
-              className="flex flex-col space-y-1.5 sm:space-y-2 my-6 sm:my-8"
+              className="flex flex-col space-y-1 sm:space-y-2 my-4 sm:my-8"
               onMouseLeave={() => setHoveredIdx(null)}
             >
               {menuLinks.map((link, idx) => {
@@ -92,11 +147,11 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
                   >
                     <Link
                       href={link.href}
-                      onClick={handleClose}
-                      className="group relative z-10 flex items-center justify-between py-2.5 sm:py-3.5 px-4 sm:px-5 rounded-2xl transition-all duration-300"
+                      onClick={(e) => handleLinkClick(e, link.href)}
+                      className="group relative z-10 flex items-center justify-between py-2 sm:py-3.5 px-3 sm:px-5 rounded-2xl transition-all duration-300"
                     >
                       {/* Left: Number + Title + Subtitle */}
-                      <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="flex items-center gap-3 sm:gap-6">
                         <span
                           className={`text-xs sm:text-sm font-mono transition-all duration-300 ${
                             isHovered
@@ -109,7 +164,7 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
 
                         <div className="flex flex-col">
                           <span
-                            className={`text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight transition-all duration-300 ${
+                            className={`text-xl sm:text-4xl md:text-5xl font-bold tracking-tight transition-all duration-300 ${
                               isHovered
                                 ? "text-[var(--accent)] translate-x-2"
                                 : "text-[var(--text-primary)]"
@@ -125,20 +180,20 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
                                 : "opacity-0 h-0 overflow-hidden"
                             }`}
                           >
-                            // {link.tag}
+                            {link.tag}
                           </span>
                         </div>
                       </div>
 
                       {/* Right: Interactive 3D Arrow Action Pill */}
                       <div
-                        className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+                        className={`flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-full border transition-all duration-300 ${
                           isHovered
                             ? "bg-[var(--accent)] text-black border-[var(--accent)] scale-110 rotate-45 shadow-[0_0_16px_rgba(191,255,4,0.4)]"
                             : "bg-transparent text-[var(--text-secondary)] border-[var(--border-subtle)]"
                         }`}
                       >
-                        <ArrowUpRight size={18} />
+                        <ArrowUpRight size={16} />
                       </div>
                     </Link>
 
@@ -156,7 +211,7 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
             </div>
 
             {/* Footer Information */}
-            <div className="pt-5 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row justify-between items-center text-xs font-mono text-[var(--text-secondary)] gap-3">
+            <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row justify-between items-center text-[11px] sm:text-xs font-mono text-[var(--text-secondary)] gap-2 sm:gap-3">
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 Bagas Aditya Anugrah Ramadhan &mdash; Samarinda, ID

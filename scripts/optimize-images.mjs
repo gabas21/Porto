@@ -3,7 +3,7 @@ import path from "path";
 import sharp from "sharp";
 
 const PUBLIC_DIR = path.resolve("public");
-const MAX_DIMENSION = 1600;
+const MAX_DIMENSION = 1200;
 
 async function getLargeFiles(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

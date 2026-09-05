@@ -204,11 +204,11 @@ export default function BioIntroSection() {
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                         </span>
-                        <span className="text-xs font-mono text-zinc-200 font-semibold tracking-wider">VERIFIED // ID</span>
+                        <span className="text-xs font-mono text-zinc-200 font-semibold tracking-wider">{t.about.statusBeacon || "VERIFIED • ID"}</span>
                       </div>
 
                       <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-xs font-mono text-zinc-400">
-                        <span>WITA // SAMARINDA</span>
+                        <span>{t.about.statusBadge || "WITA • SAMARINDA"}</span>
                       </div>
                     </div>
 

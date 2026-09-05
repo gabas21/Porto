@@ -84,7 +84,7 @@ function renderFrontBadge(
 
   ctx.fillStyle = '#94A3B8';
   ctx.font = `bold ${Math.round(rw * 0.032)}px monospace, monospace`;
-  ctx.fillText('DEV ACCESS PASS // 2026', rw * 0.14, topBarY + rw * 0.012);
+  ctx.fillText('DEV ACCESS PASS • 2026', rw * 0.14, topBarY + rw * 0.012);
 
   ctx.fillStyle = '#475569';
   ctx.font = `bold ${Math.round(rw * 0.028)}px monospace, monospace`;
@@ -168,7 +168,7 @@ function renderFrontBadge(
   // Footer Tagline
   ctx.fillStyle = '#64748B';
   ctx.font = `600 ${Math.round(rw * 0.024)}px monospace, monospace`;
-  ctx.fillText('VERIFIED AUTHENTIC // WITA STANDARD', rw * 0.11, rh * 0.94);
+  ctx.fillText('VERIFIED AUTHENTIC • WITA STANDARD', rw * 0.11, rh * 0.94);
 
   ctx.restore();
 }
@@ -250,7 +250,7 @@ function renderBackBadge(
   // 6. Security Microtext & Contact Info
   ctx.fillStyle = '#64748B';
   ctx.font = `500 ${Math.round(rw * 0.024)}px monospace, monospace`;
-  ctx.fillText('STMIK WIDYA CIPTA DHARMA // SAMARINDA', rw * 0.1, rh * 0.86);
+  ctx.fillText('STMIK WIDYA CIPTA DHARMA • SAMARINDA', rw * 0.1, rh * 0.86);
   ctx.fillText('FRONTEND SYSTEM INTEGRITY VERIFIED', rw * 0.1, rh * 0.91);
 
   ctx.restore();
@@ -314,6 +314,34 @@ export default function Lanyard({
     : position;
   const responsiveAnchorY = isMobile ? 4.3 : anchorY;
 
+  const [isCurtainLifted, setIsCurtainLifted] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return Boolean((window as any).__portoCurtainLifted);
+  });
+
+  useEffect(() => {
+    if (isCurtainLifted) return;
+
+    let timer: NodeJS.Timeout | null = null;
+
+    const handleCurtainLift = () => {
+      if (timer) clearTimeout(timer);
+      setIsCurtainLifted(true);
+    };
+
+    window.addEventListener('preloader-curtain-lift', handleCurtainLift, { once: true });
+
+    // Safety fallback: in case curtain lift event was missed
+    timer = setTimeout(() => {
+      setIsCurtainLifted(true);
+    }, 2200);
+
+    return () => {
+      window.removeEventListener('preloader-curtain-lift', handleCurtainLift);
+      if (timer) clearTimeout(timer);
+    };
+  }, [isCurtainLifted]);
+
   return (
     <div ref={wrapperRef} className={className}>
       <Canvas
@@ -325,7 +353,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI * 1.1} />
         <Suspense fallback={null}>
-          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
+          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!isCurtainLifted}>
             <Band
               isMobile={isMobile}
               frontImage={frontImage}
@@ -335,6 +363,7 @@ export default function Lanyard({
               lanyardWidth={lanyardWidth}
               anchorY={responsiveAnchorY}
               groupX={actualGroupX}
+              isCurtainLifted={isCurtainLifted}
             />
           </Physics>
           <Environment blur={0.75}>
@@ -384,6 +413,7 @@ interface BandProps {
   lanyardWidth?: number;
   anchorY?: number;
   groupX?: number;
+  isCurtainLifted?: boolean;
 }
 
 function Band({
@@ -397,6 +427,7 @@ function Band({
   lanyardWidth = 1,
   anchorY = 6.8,
   groupX = 0,
+  isCurtainLifted = true,
 }: BandProps) {
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
@@ -505,67 +536,41 @@ function Band({
 
   const hasTriggeredRef = useRef(false);
 
-  const triggerDropAnimation = useCallback(() => {
-    if (hasTriggeredRef.current) return;
-    if (!card.current || !j1.current || !j2.current || !j3.current || !fixed.current) return;
-
-    try {
-      const fixTrans = fixed.current.translation();
-      if (!fixTrans || isNaN(fixTrans.x)) return;
-
-      hasTriggeredRef.current = true;
-
-      const fx = fixTrans.x;
-      const fy = fixTrans.y;
-      const fz = fixTrans.z || 0;
-
-      // Wake up all rigid bodies in the physics engine
-      [fixed, j1, j2, j3, card].forEach((ref) => ref.current?.wakeUp());
-
-      // Lift rope segments and card up and slightly to the right/forward
-      // When gravity acts, it produces a realistic elastic drop & swing motion
-      j1.current.setTranslation({ x: fx + 0.6, y: fy - 0.5, z: fz + 0.3 }, true);
-      j1.current.setLinvel({ x: -0.4, y: -0.8, z: -0.1 }, true);
-
-      j2.current.setTranslation({ x: fx + 1.2, y: fy - 1.1, z: fz + 0.6 }, true);
-      j2.current.setLinvel({ x: -0.8, y: -1.6, z: -0.2 }, true);
-
-      j3.current.setTranslation({ x: fx + 1.8, y: fy - 1.7, z: fz + 0.9 }, true);
-      j3.current.setLinvel({ x: -1.2, y: -2.4, z: -0.4 }, true);
-
-      card.current.setTranslation({ x: fx + 2.4, y: fy - 2.4, z: fz + 1.3 }, true);
-      card.current.setLinvel({ x: -2.2, y: -3.8, z: -0.6 }, true);
-      card.current.setAngvel({ x: 0.2, y: 1.5, z: -0.8 }, true);
-
-      // Reset lerped positions so the mesh curve doesn't have an initial visual glitch
-      if (j1.current) j1.current.lerped = new THREE.Vector3(fx + 0.6, fy - 0.5, fz + 0.3);
-      if (j2.current) j2.current.lerped = new THREE.Vector3(fx + 1.2, fy - 1.1, fz + 0.6);
-
-      soundFx.playLanyardDrop();
-    } catch {
-      // Ignore if called before physics graph is fully initialized
-    }
-  }, []);
-
   useEffect(() => {
-    const handleCurtainLift = () => {
-      setTimeout(() => {
-        triggerDropAnimation();
-      }, 80);
-    };
+    if (!isCurtainLifted || hasTriggeredRef.current) return;
+    hasTriggeredRef.current = true;
 
-    window.addEventListener('preloader-curtain-lift', handleCurtainLift);
-
-    // Safety fallback: only if preloader curtain lift was NOT received after 2000ms
+    // Apply gentle velocity impulse on release so it swings naturally with character
     const timer = setTimeout(() => {
-      triggerDropAnimation();
-    }, 2000);
+      if (!card.current || !j1.current || !j2.current || !j3.current || !fixed.current) return;
+      try {
+        const fixTrans = fixed.current.translation();
+        const fx = fixTrans?.x || 0;
+        const fy = fixTrans?.y || 0;
+        const fz = fixTrans?.z || 0;
 
-    return () => {
-      window.removeEventListener('preloader-curtain-lift', handleCurtainLift);
-      clearTimeout(timer);
-    };
-  }, [triggerDropAnimation]);
+        if (j1.current && !j1.current.lerped) {
+          j1.current.lerped = new THREE.Vector3(fx + 0.6, fy - 0.5, fz + 0.3);
+        }
+        if (j2.current && !j2.current.lerped) {
+          j2.current.lerped = new THREE.Vector3(fx + 1.2, fy - 1.1, fz + 0.6);
+        }
+
+        [fixed, j1, j2, j3, card].forEach((ref) => ref.current?.wakeUp());
+        card.current.setLinvel({ x: -2.2, y: -3.8, z: -0.6 }, true);
+        card.current.setAngvel({ x: 0.2, y: 1.5, z: -0.8 }, true);
+
+        if (typeof window !== 'undefined' && !(window as any).__portoDropSoundPlayed) {
+          (window as any).__portoDropSoundPlayed = true;
+          soundFx.playLanyardDrop();
+        }
+      } catch {
+        // frame safety
+      }
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [isCurtainLifted]);
 
   useEffect(() => {
     if (hovered) {
