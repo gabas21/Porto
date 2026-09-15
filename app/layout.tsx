@@ -97,6 +97,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "gxa2dSEBdeHgJNWHEXQevrF1Jdo-IC-lkkGeBjT2k4M",
+  },
 };
 
 const jsonLd = {
@@ -358,6 +361,10 @@ export default function RootLayout({
       className={`${outfit.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} scroll-smooth antialiased`}
     >
       <head>
+        <meta
+          name="google-site-verification"
+          content="gxa2dSEBdeHgJNWHEXQevrF1Jdo-IC-lkkGeBjT2k4M"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
