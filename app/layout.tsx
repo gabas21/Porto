@@ -99,6 +99,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "gxa2dSEBdeHgJNWHEXQevrF1Jdo-IC-lkkGeBjT2k4M",
+    other: {
+      "msvalidate.01": "EBEB7246A1ADC77E5ECF133A80293A6A",
+    },
   },
 };
 
@@ -364,6 +367,10 @@ export default function RootLayout({
         <meta
           name="google-site-verification"
           content="gxa2dSEBdeHgJNWHEXQevrF1Jdo-IC-lkkGeBjT2k4M"
+        />
+        <meta
+          name="msvalidate.01"
+          content="EBEB7246A1ADC77E5ECF133A80293A6A"
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
