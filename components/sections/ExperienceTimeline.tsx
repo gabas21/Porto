@@ -192,7 +192,7 @@ export default function ExperienceTimeline() {
         <div className="relative z-10 max-w-7xl 3xl:max-w-[1700px] 4xl:max-w-[2000px] mx-auto px-6 md:px-16 3xl:px-24 pt-16 pb-8 text-left">
           <div className="space-y-3">
             {/* Mobile View: Dynamic Kinetic StrokeText */}
-            <div className="sm:hidden w-full max-w-full">
+            <div className="sm:hidden w-full max-w-full" aria-hidden="true">
               <StrokeText
                 text={`${language === "id" ? "Linimasa Pengalaman" : "Explore my journey"}.`}
                 strokeColor="var(--text-primary)"
@@ -210,8 +210,8 @@ export default function ExperienceTimeline() {
               />
             </div>
 
-            {/* Desktop View: Standard Display Typography */}
-            <h2 className="hidden sm:block text-3xl sm:text-5xl lg:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold tracking-tight text-[var(--text-primary)]">
+            {/* Heading (Always present in accessibility tree, desktop styled) */}
+            <h2 className="sr-only sm:not-sr-only sm:block text-3xl sm:text-5xl lg:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold tracking-tight text-[var(--text-primary)]">
               {language === "id" ? "Linimasa Pengalaman" : "Explore my journey"}<span className="text-[var(--accent)]">.</span>
             </h2>
           </div>

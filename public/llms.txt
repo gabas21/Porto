@@ -1,0 +1,32 @@
+# Bagas Aditya Anugrah Ramadhan
+
+> Frontend Developer & Creative UI Engineer berbasis di Samarinda, Kalimantan Timur, Indonesia. Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma, aktif freelance mengerjakan proyek untuk instansi pemerintah dan bisnis.
+
+## Ringkasan Profil & Entitas
+- **Nama Lengkap**: Bagas Aditya Anugrah Ramadhan (dikenal sebagai Bagas Aditya / gabas21)
+- **Peran**: Frontend Developer & Creative UI Engineer
+- **Lokasi**: Samarinda, Kalimantan Timur, Indonesia (WITA)
+- **Institusi Pendidikan**: S1 Teknik Informatika di STMIK Widya Cipta Dharma (WICIDA)
+- **Klien & Rekam Jejak**: Bappelitbangda Kabupaten Mahakam Ulu, Inspektorat Daerah, AK Kreatif Digital Agency, dan berbagai UMKM / instansi daerah.
+
+## Keahlian Utama & Arsitektur
+- **TALL Stack**: Tailwind CSS, Alpine.js, Laravel, Livewire
+- **Modern JavaScript & TypeScript**: Next.js 15/16, React 19, TypeScript, Turbopack
+- **Creative WebGL & Motion**: Three.js, Rapier Physics 3D, GSAP (ScrollTrigger, Flip), WebGL Shaders
+- **Backend & Database**: Go (Echo), PostgreSQL, MySQL, RESTful APIs, WebSockets
+- **Kualitas & Standar**: Core Web Vitals Optimization (Lighthouse 95+), WCAG AA Accessibility, Playwright E2E Testing
+
+## Halaman Penting
+- [Tentang](https://porto-bagas-app.vercel.app/#about): Latar belakang, profil akademis, dan rekam jejak sistem instansi
+- [Layanan](https://porto-bagas-app.vercel.app/#services): Solusi arsitektur web, 3D WebGL, UI/UX systems, dan integrasi API
+- [Karya](https://porto-bagas-app.vercel.app/#works): Studi kasus STAR mendalam proyek pemerintah dan aplikasi web produksi
+- [Keahlian](https://porto-bagas-app.vercel.app/#skills): Persenjataan teknologi dan perkakas rekayasa teruji
+- [Pengalaman](https://porto-bagas-app.vercel.app/#experience): Linimasa karier, pendidikan formal, dan keterlibatan organisasi
+- [FAQ](https://porto-bagas-app.vercel.app/#faq): Pertanyaan umum seputar keahlian teknis, TALL Stack, dan kerja sama
+- [Resume / CV](https://porto-bagas-app.vercel.app/cv.pdf): Berkas curriculum vitae resmi format PDF
+
+## Kontak & Media Sosial
+- **Email**: bagasa020@gmail.com
+- **WhatsApp**: https://wa.me/6282159888947 (+62-821-5988-8947)
+- **GitHub**: https://github.com/gabas21
+- **LinkedIn**: https://linkedin.com/in/bagasaditya

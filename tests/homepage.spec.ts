@@ -150,4 +150,22 @@ test.describe("Portfolio End-to-End Suite", () => {
     const projectCard = page.getByTestId("project-card").first();
     await expect(projectCard).toBeVisible({ timeout: 10000 });
   });
+
+  test("9. SEO & GEO: Hierarki heading tunggal h1 dan JSON-LD terpasang", async ({ page }) => {
+    // Pastikan hanya ada tepat satu tag h1 di seluruh halaman
+    const h1Count = await page.locator("h1").count();
+    expect(h1Count).toBe(1);
+
+    // Pastikan section FAQ terpasang di DOM
+    const faqSection = page.locator("#faq");
+    await expect(faqSection).toBeAttached();
+
+    // Verifikasi script structured data JSON-LD di head
+    const jsonLdScript = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdScript).toBeAttached();
+    const jsonLdContent = await jsonLdScript.textContent();
+    expect(jsonLdContent).toContain("Bagas Aditya Anugrah Ramadhan");
+    expect(jsonLdContent).toContain("FAQPage");
+  });
 });
+

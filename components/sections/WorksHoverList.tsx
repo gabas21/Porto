@@ -169,7 +169,7 @@ export default function WorksHoverList() {
                   <FadeBlurIn>
                     <div className="space-y-2.5">
                       {/* Mobile View: Dynamic Kinetic StrokeText */}
-                      <div className="sm:hidden w-full max-w-full">
+                      <div className="sm:hidden w-full max-w-full" aria-hidden="true">
                         <StrokeText
                           text={`${t.works.heading}.`}
                           strokeColor="var(--text-primary)"
@@ -187,8 +187,8 @@ export default function WorksHoverList() {
                         />
                       </div>
 
-                      {/* Desktop View: Standard Display Typography */}
-                      <h2 className="hidden sm:block text-3xl sm:text-5xl md:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold text-[var(--text-primary)] tracking-tight">
+                      {/* Heading (Always present in accessibility tree, desktop styled) */}
+                      <h2 className="sr-only sm:not-sr-only sm:block text-3xl sm:text-5xl md:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold text-[var(--text-primary)] tracking-tight">
                         {t.works.heading}<span className="text-[var(--accent)]">.</span>
                       </h2>
                     </div>

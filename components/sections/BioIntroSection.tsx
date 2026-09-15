@@ -156,6 +156,19 @@ export default function BioIntroSection() {
                 </>
               )}
             </p>
+
+            {/* Explicit AI-Citable Contextual Narrative Chunk */}
+            <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-3xl 3xl:max-w-4xl pt-1">
+              {language === "id" ? (
+                <>
+                  <strong className="text-white font-semibold">Bagas Aditya Anugrah Ramadhan</strong> adalah pengembang frontend dan creative UI engineer berbasis di <span className="text-[#FACC15] font-medium">Samarinda, Kalimantan Timur</span>. Mengkhususkan diri pada rekayasa arsitektur modern menggunakan <strong className="text-white font-medium">TALL Stack</strong> (Tailwind CSS, Alpine.js, Laravel, Livewire) dan <strong className="text-white font-medium">Next.js / React 19</strong>, ia telah merancang dan membangun sistem informasi web berstandar produksi untuk instansi pemerintah daerah, BUMD energi, dan ekosistem agensi perangkat lunak.
+                </>
+              ) : (
+                <>
+                  <strong className="text-white font-semibold">Bagas Aditya Anugrah Ramadhan</strong> is a frontend developer and creative UI engineer based in <span className="text-[#FACC15] font-medium">Samarinda, East Kalimantan, Indonesia</span>. Specializing in modern architecture engineering using the <strong className="text-white font-medium">TALL Stack</strong> (Tailwind CSS, Alpine.js, Laravel, Livewire) and <strong className="text-white font-medium">Next.js / React 19</strong>, he has engineered production web systems for regional government agencies, state-owned enterprises (BUMD), and software ecosystems.
+                </>
+              )}
+            </p>
           </div>
         </FadeBlurIn>
 

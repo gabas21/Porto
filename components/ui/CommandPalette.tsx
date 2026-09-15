@@ -154,6 +154,14 @@ export default function CommandPalette({ isOpen, onClose, onOpenCV }: CommandPal
       action: () => scrollToSection("works"),
     },
     {
+      id: "nav-faq",
+      title: "Frequently Asked Questions (FAQ)",
+      category: "Navigation",
+      subtitle: "Common inquiries, stack rationale & project collaboration",
+      icon: <Compass size={18} weight="duotone" className="text-[var(--accent)]" />,
+      action: () => scrollToSection("faq"),
+    },
+    {
       id: "nav-contact",
       title: "Contact & Footer",
       category: "Navigation",

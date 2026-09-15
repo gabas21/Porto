@@ -205,9 +205,9 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
             className="inline-block w-2.5 h-2.5 rounded-full bg-[#FACC15] flex-shrink-0"
             style={{ willChange: "transform, opacity" }}
           />
-          <h1 className="font-mono text-2xl sm:text-[2.25rem] md:text-5xl font-light tracking-tight text-white leading-none">
+          <div role="status" aria-live="polite" className="font-mono text-2xl sm:text-[2.25rem] md:text-5xl font-light tracking-tight text-white leading-none">
             <span ref={textRef}>{greetings[0].text}</span>
-          </h1>
+          </div>
         </div>
 
         {/* Region subtitle */}

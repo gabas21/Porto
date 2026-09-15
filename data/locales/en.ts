@@ -22,6 +22,7 @@ export const en: TranslationDictionary = {
     works: "Works",
     skills: "Skills",
     experience: "Experience",
+    faq: "FAQ",
     contact: "Contact",
     cmdShortcut: "⌘K",
     cmdTitle: "Open Command Palette (Ctrl+K / ⌘K)",
@@ -244,4 +245,39 @@ export const en: TranslationDictionary = {
     cvAction: "Open Interactive CV / Resume",
     contactAction: "Open Direct Contact Form",
   },
+  faq: {
+    badge: "Frequently Asked Questions",
+    titleMain: "Commonly Asked",
+    titleHighlight: "Questions & Insights",
+    titleSuffix: "on Services & Engineering.",
+    subtitle:
+      "Direct, transparent answers regarding technical specializations, tech stacks, government agency scopes, and project collaboration workflows.",
+    items: [
+      {
+        q: "Who is Bagas Aditya and what is his core specialization?",
+        a: "Bagas Aditya Anugrah Ramadhan is a Frontend Developer & Creative UI Engineer based in Samarinda, East Kalimantan, Indonesia. An Informatics student at STMIK Widya Cipta Dharma specializing in high-performance web engineering using the TALL Stack (Tailwind CSS, Alpine.js, Laravel, Livewire), Next.js, React 19, TypeScript, and interactive 3D WebGL (Three.js).",
+      },
+      {
+        q: "What is the TALL Stack and why does Bagas specialize in it?",
+        a: "The TALL Stack unites Tailwind CSS, Alpine.js, Laravel, and Livewire. Bagas leverages it because it provides an ideal equilibrium between rapid development velocity, enterprise-grade security, and dynamic reactive UI without bloated client-side SPA complexity—proven highly effective for government administrative systems and enterprise portals.",
+      },
+      {
+        q: "What types of production projects has Bagas delivered?",
+        a: "Bagas has engineered public sector planning systems (Bapelitbangda Mahakam Ulu), government audit & complaint portals (Inspektorat Daerah), corporate energy BUMD platforms (PT Mahakam Gerbang Raja Migas), digital agency portfolio hubs (AK Kreatif), as well as AI task pipeline platforms and 3D physics simulations.",
+      },
+      {
+        q: "Does Bagas accept projects outside of Samarinda / East Kalimantan?",
+        a: "Yes. Bagas is available for on-site engagements in Samarinda, East Kalimantan, and the Nusantara Capital City (IKN) region, as well as fully remote collaborations across Indonesia and international clients.",
+      },
+      {
+        q: "What are the key technical advantages of Bagas's code over standard templates?",
+        a: "Every solution is custom-architected with modular components, semantic HTML5 hierarchy, WCAG AA accessibility, and optimized Core Web Vitals (95+ Lighthouse score). Rather than superficial template wrappers, it delivers clean, type-safe, maintainable code engineered for high traffic and production longevity.",
+      },
+      {
+        q: "How can clients reach Bagas for consultations or project inquiries?",
+        a: "You can reach Bagas directly via WhatsApp at +62-821-5988-8947, email at bagasa020@gmail.com, or through his verified LinkedIn (linkedin.com/in/bagasaditya) and GitHub (github.com/gabas21) profiles.",
+      },
+    ],
+  },
 };
+

@@ -118,6 +118,7 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
     { name: t.nav.works, href: "#works" },
     { name: t.nav.skills, href: "#skills" },
     { name: t.nav.experience, href: "#experience" },
+    { name: t.nav.faq || "FAQ", href: "#faq" },
   ];
 
   return (

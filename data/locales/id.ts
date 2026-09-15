@@ -20,6 +20,7 @@ export const id = {
     works: "Karya",
     skills: "Keahlian",
     experience: "Pengalaman",
+    faq: "FAQ",
     contact: "Kontak",
     cmdShortcut: "⌘K",
     cmdTitle: "Buka Menu Perintah (Ctrl+K / ⌘K)",
@@ -242,6 +243,41 @@ export const id = {
     cvAction: "Buka Pratinjau Resume / CV",
     contactAction: "Buka Formulir Kontak",
   },
+  faq: {
+    badge: "Pertanyaan Umum & Jawaban Ringkas",
+    titleMain: "Pertanyaan yang",
+    titleHighlight: "Sering Diajukan",
+    titleSuffix: "seputar Layanan & Keahlian.",
+    subtitle:
+      "Informasi langsung dan transparan mengenai spesialisasi teknis, stack teknologi, cakupan layanan instansi, dan mekanisme kolaborasi kerja sama.",
+    items: [
+      {
+        q: "Siapa Bagas Aditya dan apa spesialisasinya?",
+        a: "Bagas Aditya Anugrah Ramadhan adalah Frontend Developer & Creative UI Engineer yang berbasis di Samarinda, Kalimantan Timur, Indonesia. Mahasiswa Teknik Informatika di STMIK Widya Cipta Dharma dengan spesialisasi pengembangan web modern berkinerja tinggi menggunakan TALL Stack (Tailwind CSS, Alpine.js, Laravel, Livewire), Next.js, React 19, TypeScript, dan simulasi 3D WebGL (Three.js).",
+      },
+      {
+        q: "Apa itu TALL Stack dan kenapa Bagas menggunakannya?",
+        a: "TALL Stack adalah gabungan Tailwind CSS, Alpine.js, Laravel, dan Livewire. Bagas menggunakannya karena memberikan keseimbangan ideal antara kecepatan pengembangan, keamanan enterprise, dan interaktivitas reaktif tanpa beban overhead arsitektur SPA yang berlebihan—sangat efektif untuk sistem administrasi instansi dan dashboard bisnis.",
+      },
+      {
+        q: "Jenis proyek apa saja yang pernah dikerjakan oleh Bagas?",
+        a: "Bagas telah merancang dan merekayasa sistem portal perencanaan daerah (Bapelitbangda Mahakam Ulu), sistem pengawasan dan pengaduan publik (Inspektorat Daerah), portal korporat BUMD energi (PT Mahakam Gerbang Raja Migas), ekosistem agensi digital (AK Kreatif), hingga platform otomasi AI dan simulasi interaktif 3D physics.",
+      },
+      {
+        q: "Apakah Bagas melayani pembuatan web untuk instansi pemerintah dan bisnis di luar Samarinda / Kalimantan Timur?",
+        a: "Ya, Bagas melayani kolaborasi proyek baik secara on-site di wilayah Samarinda dan Kalimantan Timur (termasuk kawasan Ibu Kota Nusantara / IKN) maupun jarak jauh (remote) untuk seluruh wilayah Indonesia dan klien global.",
+      },
+      {
+        q: "Apa keunggulan teknologi frontend yang dibangun Bagas dibandingkan template biasa?",
+        a: "Setiap antarmuka dibangun secara modular, semantik HTML5, aksesibel (WCAG AA), dan dioptimalkan khusus untuk Core Web Vitals (skor Lighthouse 95+). Bukan sekadar menempelkan tema siap pakai, melainkan rekayasa arsitektur kode yang bersih, type-safe, cepat, dan mudah dipelihara dalam jangka panjang.",
+      },
+      {
+        q: "Bagaimana cara menghubungi Bagas untuk kerja sama atau konsultasi teknis?",
+        a: "Anda dapat menghubungi Bagas langsung melalui WhatsApp di +62-821-5988-8947, email di bagasa020@gmail.com, atau melalui profil LinkedIn (linkedin.com/in/bagasaditya) dan GitHub (github.com/gabas21).",
+      },
+    ],
+  },
 };
 
 export type TranslationDictionary = typeof id;
+

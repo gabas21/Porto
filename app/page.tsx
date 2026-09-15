@@ -16,6 +16,7 @@ const ServicesGrid = dynamic(() => import("@/components/sections/ServicesGrid"),
 const WorksHoverList = dynamic(() => import("@/components/sections/WorksHoverList"), { ssr: false });
 const TechArsenal = dynamic(() => import("@/components/sections/TechArsenal"), { ssr: false });
 const ExperienceTimeline = dynamic(() => import("@/components/sections/ExperienceTimeline"), { ssr: false });
+const FAQSection = dynamic(() => import("@/components/sections/FAQSection"), { ssr: false });
 const CommandPalette = dynamic(() => import("@/components/ui/CommandPalette"), { ssr: false });
 const ResumePreviewModal = dynamic(() => import("@/components/modals/ResumePreviewModal"), { ssr: false });
 const ContactModal = dynamic(() => import("@/components/modals/ContactModal"), { ssr: false });
@@ -92,10 +93,13 @@ export default function Home() {
         {/* 6. Experience & Education Timeline */}
         <ExperienceTimeline />
 
-        {/* 7. Infinite Marquee Ribbon */}
+        {/* 7. FAQ Section (GEO & Strategic Inquiries) */}
+        <FAQSection />
+
+        {/* 8. Infinite Marquee Ribbon */}
         <MarqueeRibbon />
 
-        {/* 8. Editorial Giant Footer with Live Samarinda WITA Time */}
+        {/* 9. Editorial Giant Footer with Live Samarinda WITA Time */}
         <Footer />
       </main>
 

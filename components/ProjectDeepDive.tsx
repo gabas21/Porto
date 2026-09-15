@@ -90,9 +90,9 @@ export default function ProjectDeepDive({ project, onBack }: ProjectDeepDiveProp
         <FadeBlurIn>
           <div className="space-y-5 text-left">
             <div className="space-y-3">
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-tight">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-tight">
                 {project.title}
-              </h1>
+              </h2>
               <p className="text-base sm:text-lg font-mono text-[var(--text-secondary)] max-w-3xl">
                 {project.tagline}
               </p>

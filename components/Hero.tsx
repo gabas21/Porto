@@ -183,6 +183,7 @@ export default function Hero() {
             {/* Headline */}
             <FadeBlurIn delay={0.2}>
               <h1 className="text-3xl sm:text-4xl md:text-6xl 3xl:text-7xl 4xl:text-8xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.12] font-display">
+                <span className="sr-only">Bagas Aditya Anugrah Ramadhan — </span>
                 Frontend &amp;{" "}
                 <span className="bg-gradient-to-r from-[var(--accent)] via-amber-300 to-yellow-500 bg-clip-text text-transparent font-extrabold">
                   Web Developer

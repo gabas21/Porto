@@ -261,7 +261,7 @@ export default function TechArsenal() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
             <div className="space-y-2.5 sm:space-y-3 text-left">
               {/* Mobile View: Dynamic Kinetic StrokeText */}
-              <div className="sm:hidden w-full max-w-full">
+              <div className="sm:hidden w-full max-w-full" aria-hidden="true">
                 <StrokeText
                   text={`${t.skills.headingMain} ${t.skills.headingHighlight}.`}
                   strokeColor="var(--text-primary)"
@@ -279,8 +279,8 @@ export default function TechArsenal() {
                 />
               </div>
 
-              {/* Desktop View: Standard Display Typography */}
-              <h2 className="hidden sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold tracking-tight text-[var(--text-primary)]">
+              {/* Heading (Always present in accessibility tree, desktop styled) */}
+              <h2 className="sr-only sm:not-sr-only sm:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl font-bold tracking-tight text-[var(--text-primary)]">
                 {t.skills.headingMain}{" "}
                 <span className="text-[#FACC15]">{t.skills.headingHighlight}</span>
                 <span className="text-black dark:text-white">.</span>

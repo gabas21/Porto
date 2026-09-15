@@ -197,6 +197,11 @@ export default function Footer() {
                   <span>{t.nav.experience}</span>
                 </a>
               </li>
+              <li>
+                <a href="#faq" className="hover:text-[var(--accent)] transition-colors inline-flex items-center gap-1">
+                  <span>{t.nav.faq || "FAQ"}</span>
+                </a>
+              </li>
             </ul>
           </div>
 

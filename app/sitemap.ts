@@ -8,14 +8,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: currentDate,
-      changeFrequency: "monthly",
+      changeFrequency: "weekly",
       priority: 1.0,
       alternates: {
         languages: {
           id: `${baseUrl}?lang=id`,
           en: `${baseUrl}?lang=en`,
+          "x-default": baseUrl,
         },
       },
     },
+    {
+      url: `${baseUrl}/cv.pdf`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
 }
+

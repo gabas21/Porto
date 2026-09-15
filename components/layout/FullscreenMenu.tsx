@@ -46,7 +46,8 @@ export default function FullscreenMenu({ isOpen, onClose }: MenuProps) {
     { num: "04", title: t.nav.works, href: "#works", tag: language === "id" ? "Karya Pilihan & Kajian STAR" : "Selected Projects & Case Studies" },
     { num: "05", title: t.nav.skills, href: "#skills", tag: language === "id" ? "Persenjataan Teknologi & Alat Kerja" : "Technical Arsenal & Tools" },
     { num: "06", title: t.nav.experience, href: "#experience", tag: language === "id" ? "Linimasa Karier & Riwayat Produksi" : "Career Timeline & Production Roles" },
-    { num: "07", title: t.nav.contact, href: "#contact", tag: language === "id" ? "Mulai Komunikasi & Diskusi Proyek" : "Get in Touch & Inquiries" },
+    { num: "07", title: t.nav.faq || "FAQ", href: "#faq", tag: language === "id" ? "Pertanyaan Umum & Jawaban Ringkas" : "Frequently Asked Questions" },
+    { num: "08", title: t.nav.contact, href: "#contact", tag: language === "id" ? "Mulai Komunikasi & Diskusi Proyek" : "Get in Touch & Inquiries" },
   ];
 
   const handleClose = () => {
