@@ -215,10 +215,14 @@ body {
 
 .animate-marquee-left {
   animation: marqueeLeft 28s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .animate-marquee-right {
   animation: marqueeRight 28s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Aceternity Meteors Animation - Moving strictly along rotation axis */
@@ -241,6 +245,14 @@ body {
 
 .animate-meteor {
   animation: meteor 5s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Modern Performance: Skip layout & paint for off-screen sections until scrolled into view */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 750px;
 }
 
 /* Animated Theme Toggler View Transitions */
@@ -277,3 +289,5 @@ html[data-magicui-theme-direction="inward"]::view-transition-new(root) {
     cursor: default;
   }
 }
+
+

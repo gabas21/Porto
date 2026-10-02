@@ -43,6 +43,7 @@ export default function BioIntroSection() {
   });
 
   const curveHeight = useTransform(smoothProgress, [0, 1], [0, 160]);
+  const mobileCurveHeight = useTransform(smoothProgress, [0, 1], [0, 48]);
   const contentY = useTransform(smoothProgress, [0, 1], [30, 0]);
 
   // ── GSAP ScrollTrigger Elastic Jelly Bounce Transition (Bottom Boundary) ────
@@ -113,10 +114,10 @@ export default function BioIntroSection() {
       <div className="absolute top-20 left-10 w-[500px] h-[500px] bg-[#FACC15]/[0.025] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-24 right-10 w-[500px] h-[500px] bg-[#38BDF8]/[0.025] rounded-full blur-3xl pointer-events-none" />
 
-      {/* ── 1. Dynamic Scroll-Triggered Convex Dome Curve Transition (Top) ── */}
+      {/* ── 1. Desktop Only: Original Dynamic Scroll-Triggered Convex Dome Curve Transition (Top) ── */}
       <motion.div
         style={{ height: curveHeight }}
-        className="absolute top-0 left-0 right-0 -translate-y-[99%] w-full pointer-events-none overflow-hidden leading-none z-20"
+        className="hidden md:block absolute top-0 left-0 right-0 -translate-y-[99%] w-full pointer-events-none overflow-hidden leading-none z-20"
       >
         <svg
           viewBox="0 0 1440 200"
@@ -128,7 +129,22 @@ export default function BioIntroSection() {
         </svg>
       </motion.div>
 
-      {/* ── 2. Content Container ── */}
+      {/* ── 2. Mobile Only: Dynamic Scroll-Triggered Convex Arch Transition (Rises On Scroll, Seamless) ── */}
+      <motion.div
+        style={{ height: mobileCurveHeight }}
+        className="md:hidden absolute top-0 left-0 right-0 -translate-y-[calc(100%-1.5px)] w-full pointer-events-none overflow-hidden leading-none z-20"
+      >
+        <svg
+          viewBox="0 0 1000 100"
+          preserveAspectRatio="none"
+          className="w-full h-[calc(100%+2px)] text-[#0E0F12] fill-current block"
+          aria-hidden
+        >
+          <path d="M 0 100 Q 500 0 1000 100 L 1000 102 L 0 102 Z" />
+        </svg>
+      </motion.div>
+
+      {/* ── 3. Content Container ── */}
       <motion.div
         style={{ y: contentY }}
         className="relative z-10 max-w-6xl 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto px-6 md:px-12 3xl:px-20 space-y-12 3xl:space-y-16 pb-6 sm:pb-8"

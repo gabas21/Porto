@@ -353,7 +353,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI * 1.1} />
         <Suspense fallback={null}>
-          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!isCurtainLifted}>
+          <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!isCurtainLifted || !isInView}>
             <Band
               isMobile={isMobile}
               frontImage={frontImage}

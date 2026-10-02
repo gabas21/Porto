@@ -10,13 +10,14 @@ import MarqueeRibbon from "@/components/sections/MarqueeRibbon";
 import Footer from "@/components/layout/Footer";
 import "@/lib/animation-config";
 
-// Lazy-load komponen berat — hanya dimuat saat dibutuhkan
-const BioIntroSection = dynamic(() => import("@/components/sections/BioIntroSection"), { ssr: false });
-const ServicesGrid = dynamic(() => import("@/components/sections/ServicesGrid"), { ssr: false });
-const WorksHoverList = dynamic(() => import("@/components/sections/WorksHoverList"), { ssr: false });
-const TechArsenal = dynamic(() => import("@/components/sections/TechArsenal"), { ssr: false });
-const ExperienceTimeline = dynamic(() => import("@/components/sections/ExperienceTimeline"), { ssr: false });
-const FAQSection = dynamic(() => import("@/components/sections/FAQSection"), { ssr: false });
+import BioIntroSection from "@/components/sections/BioIntroSection";
+import ServicesGrid from "@/components/sections/ServicesGrid";
+import WorksHoverList from "@/components/sections/WorksHoverList";
+import TechArsenal from "@/components/sections/TechArsenal";
+import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
+import FAQSection from "@/components/sections/FAQSection";
+
+// Lazy-load komponen modal interaktif & floating bot — hanya dimuat di client saat dibutuhkan
 const CommandPalette = dynamic(() => import("@/components/ui/CommandPalette"), { ssr: false });
 const ResumePreviewModal = dynamic(() => import("@/components/modals/ResumePreviewModal"), { ssr: false });
 const ContactModal = dynamic(() => import("@/components/modals/ContactModal"), { ssr: false });

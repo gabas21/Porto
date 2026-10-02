@@ -131,6 +131,37 @@ export const projects: Project[] = [
     ]
   },
   {
+    id: 'porto-mobile',
+    title: 'Porto Mobile — Flutter Portfolio Native Showcase',
+    category: 'AI & WebApp',
+    tagline: 'Flutter 3.29, Riverpod & Cross-Platform Native Mobile Experience',
+    description: 'Versi mobile native dari ekosistem portofolio Bagas Aditya, dibangun dengan Flutter, Riverpod, GoRouter, dan Material 3 kustom yang menghadirkan performa 60 FPS, transisi Hero, haptic feedback, dan offline support.',
+    techStack: ['Flutter 3.29', 'Dart 3.7', 'Riverpod', 'GoRouter', 'Material 3', 'Shared Elements'],
+    image: '/projects/motion-ai.jpg',
+    role: 'Mobile Software Engineer',
+    timeline: '2026',
+    keyFeatures: [
+      'Arsitektur mobile native lintas platform (Android & Web) dengan state management Riverpod terisolasi',
+      'Animasi dinamis 60 FPS, transisi shared-element Hero widget, serta haptic feedback pada setiap interaksi penting',
+      'Dukungan bilingual (ID/EN) instan, toggle tema Gelap/Terang, dan integrasi WhatsApp one-tap'
+    ],
+    githubUrl: 'https://github.com/gabas21/porto',
+    liveUrl: 'https://bagasaditya.my.id',
+    situation: 'Dibutuhkan aplikasi mobile mandiri berbasis Flutter untuk membuktikan kemampuan rekayasa mobile native dengan pengalaman pengguna setara aplikasi produksi kelas atas.',
+    action: 'Menulis ulang seluruh konten portofolio ke dalam Flutter menggunakan Riverpod untuk manajemen state, GoRouter untuk navigasi deklaratif, dan Material 3 kustom yang mencerminkan palet desain web Porto.',
+    impact: 'Menghadirkan showcase portofolio mobile interaktif dengan performa 60 FPS yang siap dijalankan di Android maupun browser via Flutter Web.',
+    metrics: [
+      { label: 'Frame Rate', value: '60 FPS Solid' },
+      { label: 'Analisis Kode', value: '0 Warnings' },
+      { label: 'Arsitektur', value: 'Riverpod Clean' }
+    ],
+    architecturePoints: [
+      'State management reaktif menggunakan flutter_riverpod dengan NotifierProvider terisolasi',
+      'Deep linking & navigasi deklaratif berbasis go_router',
+      'Sistem desain semantik Dart murni merefleksikan token CSS web Porto'
+    ]
+  },
+  {
     id: 'pt-mgr-migas',
     title: 'Web Portal & Profil Perusahaan PT Mahakam Gerbang Raja Migas',
     category: 'Corporate',

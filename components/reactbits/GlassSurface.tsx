@@ -242,8 +242,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       return {
         ...baseStyles,
         background: isDarkMode
-          ? (backgroundOpacity > 0 ? `hsl(0 0% 12% / ${backgroundOpacity})` : 'rgba(18, 20, 28, 0.65)')
-          : (backgroundOpacity > 0 ? `hsl(0 0% 100% / ${backgroundOpacity})` : 'rgba(212, 212, 216, 0.55)'),
+          ? (backgroundOpacity > 0 ? `hsl(0 0% 12% / ${backgroundOpacity})` : 'rgba(18, 20, 28, 0.82)')
+          : (backgroundOpacity > 0 ? `hsl(0 0% 100% / ${backgroundOpacity})` : 'rgba(245, 245, 247, 0.82)'),
         backdropFilter: `url(#${filterId}) saturate(${saturation})`,
         border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.16)' : '1px solid rgba(0, 0, 0, 0.08)',
         boxShadow: isDarkMode

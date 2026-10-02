@@ -348,6 +348,54 @@ const jsonLd = {
         },
       ],
     },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://porto-bagas-app.vercel.app/#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Beranda",
+          item: "https://porto-bagas-app.vercel.app",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Tentang Profil",
+          item: "https://porto-bagas-app.vercel.app/#about",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Layanan Arsitektur Web",
+          item: "https://porto-bagas-app.vercel.app/#services",
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          name: "Studi Kasus & Portofolio",
+          item: "https://porto-bagas-app.vercel.app/#works",
+        },
+        {
+          "@type": "ListItem",
+          position: 5,
+          name: "Arsenal Teknologi",
+          item: "https://porto-bagas-app.vercel.app/#skills",
+        },
+        {
+          "@type": "ListItem",
+          position: 6,
+          name: "Linimasa Pengalaman",
+          item: "https://porto-bagas-app.vercel.app/#experience",
+        },
+        {
+          "@type": "ListItem",
+          position: 7,
+          name: "Pertanyaan Umum (FAQ)",
+          item: "https://porto-bagas-app.vercel.app/#faq",
+        },
+      ],
+    },
   ],
 };
 

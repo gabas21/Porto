@@ -47,7 +47,7 @@ export default function ServicesGrid() {
   return (
     <section
       id="services"
-      className="relative w-full bg-[var(--bg-main)] pt-4 sm:pt-6 md:pt-8 pb-16 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 3xl:px-20 4xl:px-32 max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto overflow-hidden text-left transition-colors duration-300"
+      className="relative w-full bg-[var(--bg-main)] pt-4 sm:pt-6 md:pt-8 pb-16 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 3xl:px-20 4xl:px-32 max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[1920px] mx-auto overflow-hidden text-left transition-colors duration-300 content-auto"
     >
       {/* Section Header */}
       <FadeBlurIn className="max-w-3xl 3xl:max-w-5xl space-y-3 mb-8 sm:mb-12 lg:mb-14 3xl:mb-16">

@@ -73,3 +73,7 @@ repomix-output.*
 *.tmp
 *.temp
 scripts/ui_audit_report.json
+scratch/
+porto_mobile/
+__pycache__/
+*.pyc

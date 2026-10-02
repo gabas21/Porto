@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowUpRight, SpeakerHigh, SpeakerSlash, Command, FileText } from "@phosphor-icons/react";
 import { Menu } from "lucide-react";
-import { motion, useScroll, useSpring } from "motion/react";
+import { motion, useScroll, useSpring, AnimatePresence } from "motion/react";
 import GlassSurface from "./reactbits/GlassSurface";
 import FullscreenMenu from "./layout/FullscreenMenu";
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
@@ -25,12 +25,22 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [isMuted, setIsMuted] = useState(false);
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 400,
     damping: 35,
     restDelta: 0.001,
   });
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const handleResize = () => setIsDesktop(mql.matches);
+    handleResize();
+    mql.addEventListener("change", handleResize);
+    return () => mql.removeEventListener("change", handleResize);
+  }, []);
 
   useEffect(() => {
     setIsMuted(soundFx.getIsMuted());
@@ -143,213 +153,271 @@ export default function Navbar({ onOpenCV, onOpenCommandPalette }: NavbarProps) 
             mass: 0.8,
           }}
           className={`pointer-events-auto w-full transition-all duration-300 ${
-            scrolled
-              ? "max-w-[1040px] 3xl:max-w-[1400px] 4xl:max-w-[1680px]"
-              : "max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[2000px]"
+            isDesktop
+              ? scrolled
+                ? "max-w-[1040px] 3xl:max-w-[1400px] 4xl:max-w-[1680px]"
+                : "max-w-[1240px] 3xl:max-w-[1600px] 4xl:max-w-[2000px]"
+              : "max-w-full"
           }`}
         >
-          {scrolled ? (
-            /* ── 3D Morphing Glass Surface Pill (Scrolled State) ── */
-            <GlassSurface
-              width="100%"
-              height="auto"
-              borderRadius={9999}
-              borderWidth={0.06}
-              brightness={50}
-              opacity={0.94}
-              blur={12}
-              displace={0}
-              distortionScale={-35}
-              redOffset={0}
-              greenOffset={2}
-              blueOffset={4}
-              mixBlendMode="difference"
-              className="py-1 px-2 sm:py-1.5 sm:px-4"
-            >
-              <div className="w-full flex items-center justify-between gap-1.5 sm:gap-4 px-0.5 sm:px-1">
-                {/* Brand Logo - High Contrast (Black in Light, Crisp White in Dark) */}
-                <Link
-                  href="/"
-                  className="group flex items-center gap-1 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
+          {isDesktop ? (
+            /* ═════════════════════════════════════════════════════════════════
+               DESKTOP VIEW: Unified 3D Morphing Glass Surface Pill (Enhanced 3D)
+               ═════════════════════════════════════════════════════════════════ */
+            <AnimatePresence mode="wait">
+              {scrolled ? (
+                <motion.div
+                  key="scrolled-glass-nav"
+                  initial={{ y: -12, opacity: 0, scale: 0.97, rotateX: 6 }}
+                  animate={{ y: 0, opacity: 1, scale: 1, rotateX: 0 }}
+                  exit={{ y: -12, opacity: 0, scale: 0.97, rotateX: -6 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 320,
+                    damping: 26,
+                    mass: 0.6,
+                  }}
+                  style={{
+                    perspective: 1200,
+                    transformStyle: "preserve-3d",
+                  }}
+                  className="w-full"
                 >
-                  <span className="text-xs sm:text-sm md:text-base uppercase tracking-tighter font-display whitespace-nowrap">
-                    Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
-                  </span>
-                </Link>
-
-                {/* Desktop Nav Items - Crisp High-Contrast Badges */}
-                <nav className="hidden md:flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.06] dark:border-white/15 rounded-full p-1 shadow-inner backdrop-blur-md">
-                  {navLinks.map((link) => {
-                    const isActive = activeSection === link.href.substring(1);
-                    return (
-                      <a
-                        key={link.name}
-                        href={link.href}
-                        className={`relative text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-                          isActive
-                            ? "text-black font-semibold"
-                            : "text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white"
-                        }`}
+                  <GlassSurface
+                    width="100%"
+                    height="auto"
+                    borderRadius={9999}
+                    borderWidth={0.06}
+                    brightness={52}
+                    opacity={0.94}
+                    blur={14}
+                    displace={0}
+                    distortionScale={-20}
+                    redOffset={0}
+                    greenOffset={1.5}
+                    blueOffset={3}
+                    mixBlendMode="difference"
+                    className="py-1 px-2 sm:py-1.5 sm:px-4 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.12),inset_0_1.5px_2px_rgba(255,255,255,0.35),inset_0_-1px_1.5px_rgba(0,0,0,0.2)]"
+                  >
+                    <div className="w-full flex items-center justify-between gap-1.5 sm:gap-4 px-0.5 sm:px-1">
+                      <Link
+                        href="/"
+                        className="group flex items-center gap-1 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
                       >
-                        {isActive && (
-                          <motion.span
-                            layoutId="active-nav-indicator"
-                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                            className="absolute inset-0 rounded-full bg-[var(--accent)] shadow-[0_2px_12px_rgba(250,204,21,0.4)] -z-10"
-                          />
-                        )}
-                        {link.name}
-                      </a>
-                    );
-                  })}
-                </nav>
+                        <span className="text-xs sm:text-sm md:text-base uppercase tracking-tighter font-display whitespace-nowrap">
+                          Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
+                        </span>
+                      </Link>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                  {/* Command Palette Trigger - Desktop/Tablet */}
-                  <button
-                    onClick={openCmdPalette}
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                    title="Buka Command Menu (Ctrl+K / ⌘K)"
-                    aria-label="Command Menu"
+                      <nav className="hidden md:flex items-center gap-1 bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.06] dark:border-white/15 rounded-full p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)] backdrop-blur-md">
+                        {navLinks.map((link) => {
+                          const isActive = activeSection === link.href.substring(1);
+                          return (
+                            <a
+                              key={link.name}
+                              href={link.href}
+                              className={`relative text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                                isActive
+                                ? "text-black font-semibold"
+                                : "text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white"
+                              }`}
+                            >
+                              {isActive && (
+                                <motion.span
+                                  layoutId="active-nav-indicator"
+                                  transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.8 }}
+                                  className="absolute inset-0 rounded-full bg-[var(--accent)] shadow-[0_3px_16px_rgba(250,204,21,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.8),inset_0_-1.5px_2px_rgba(0,0,0,0.25)] -z-10"
+                                />
+                              )}
+                              {link.name}
+                            </a>
+                          );
+                        })}
+                      </nav>
+
+                      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                        <button
+                          onClick={openCmdPalette}
+                          className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                          title="Buka Command Menu (Ctrl+K / ⌘K)"
+                          aria-label="Command Menu"
+                        >
+                          <Command size={14} className="text-[var(--accent)]" />
+                          <span className="text-xs font-mono font-semibold hidden md:inline">⌘K</span>
+                        </button>
+
+                        <button
+                          onClick={toggleSound}
+                          className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                          title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
+                          aria-label="Toggle Sound Effects"
+                        >
+                          {isMuted ? (
+                            <SpeakerSlash size={16} className="text-rose-400" />
+                          ) : (
+                            <SpeakerHigh size={16} className="text-[var(--accent)]" />
+                          )}
+                        </button>
+
+                        <LanguageToggle />
+
+                        <AnimatedThemeToggler
+                          variant="circle"
+                          duration={500}
+                          theme={theme}
+                          onThemeChange={(newTheme) => setTheme(newTheme)}
+                          className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                        />
+
+                        <button
+                          onClick={() => {
+                            soundFx.playSweep();
+                            window.dispatchEvent(new CustomEvent("open-contact-modal"));
+                          }}
+                          className="hidden sm:inline-flex items-center gap-1.5 px-4.5 py-2 min-h-[38px] rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+                        >
+                          <span>{t.nav.contact}</span>
+                          <ArrowUpRight size={13} weight="bold" />
+                        </button>
+
+                        <button
+                          onClick={() => setMenuOpen(true)}
+                          className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                          aria-label="Toggle Fullscreen Menu"
+                        >
+                          <Menu size={17} />
+                        </button>
+                      </div>
+                    </div>
+                  </GlassSurface>
+                </motion.div>
+              ) : (
+                <motion.header
+                  key="unscrolled-glass-nav"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full flex items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-3 px-2 sm:px-6 bg-transparent"
+                >
+                  <Link
+                    href="/"
+                    className="group flex items-center gap-1 sm:gap-2 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
                   >
-                    <Command size={14} className="text-[var(--accent)]" />
-                    <span className="text-xs font-mono font-semibold hidden md:inline">⌘K</span>
-                  </button>
+                    <span className="text-base sm:text-lg md:text-xl uppercase tracking-tighter font-display whitespace-nowrap">
+                      Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
+                    </span>
+                  </Link>
 
-                  {/* Audio FX Toggle - Desktop/Tablet */}
-                  <button
-                    onClick={toggleSound}
-                    className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                    title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
-                    aria-label="Toggle Sound Effects"
-                  >
-                    {isMuted ? (
-                      <SpeakerSlash size={16} className="text-rose-400" />
-                    ) : (
-                      <SpeakerHigh size={16} className="text-[var(--accent)]" />
-                    )}
-                  </button>
+                  <nav className="hidden md:flex items-center gap-1 bg-white/90 dark:bg-[var(--surface-card)]/90 border border-black/[0.08] dark:border-white/15 rounded-full px-3 py-1 shadow-sm backdrop-blur-md">
+                    {navLinks.map((link) => {
+                      const isActive = activeSection === link.href.substring(1);
+                      return (
+                        <a
+                          key={link.name}
+                          href={link.href}
+                          className={`text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                            isActive
+                              ? "bg-[#F0F0F2] text-black border border-black/5 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold"
+                              : "text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white"
+                          }`}
+                        >
+                          {link.name}
+                        </a>
+                      );
+                    })}
+                  </nav>
 
-                  <LanguageToggle />
+                  <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+                    <button
+                      onClick={openCmdPalette}
+                      className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                      title="Buka Command Menu (Ctrl+K / ⌘K)"
+                      aria-label="Command Menu"
+                    >
+                      <Command size={14} className="text-[var(--accent)]" />
+                      <span className="text-xs font-mono font-semibold hidden sm:inline">⌘K</span>
+                    </button>
 
-                  <AnimatedThemeToggler
-                    variant="circle"
-                    duration={500}
-                    theme={theme}
-                    onThemeChange={(newTheme) => setTheme(newTheme)}
-                    className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
-                  />
+                    <button
+                      onClick={toggleSound}
+                      className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                      title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
+                      aria-label="Toggle Sound Effects"
+                    >
+                      {isMuted ? (
+                        <SpeakerSlash size={16} className="text-rose-400" />
+                      ) : (
+                        <SpeakerHigh size={16} className="text-[var(--accent)]" />
+                      )}
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      soundFx.playSweep();
-                      window.dispatchEvent(new CustomEvent("open-contact-modal"));
-                    }}
-                    className="hidden sm:inline-flex items-center gap-1.5 px-4.5 py-2 min-h-[38px] rounded-full bg-[var(--accent)] text-black font-semibold text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_2px_12px_rgba(250,204,21,0.3)] hover:opacity-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
-                  >
-                    <span>{t.nav.contact}</span>
-                    <ArrowUpRight size={13} weight="bold" />
-                  </button>
+                    <LanguageToggle />
 
-                  {/* Menu Button - Always visible and accessible on all screens */}
-                  <button
-                    onClick={() => setMenuOpen(true)}
-                    className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
-                    aria-label="Toggle Fullscreen Menu"
-                  >
-                    <Menu size={17} />
-                  </button>
-                </div>
-              </div>
-            </GlassSurface>
+                    <AnimatedThemeToggler
+                      variant="circle"
+                      duration={500}
+                      theme={theme}
+                      onThemeChange={(newTheme) => setTheme(newTheme)}
+                      className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                    />
+
+                    <button
+                      onClick={() => {
+                        soundFx.playSweep();
+                        window.dispatchEvent(new CustomEvent("open-contact-modal"));
+                      }}
+                      className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[38px] rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[var(--accent)] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+                    >
+                      <span>{t.nav.contact} ↗</span>
+                    </button>
+
+                    <button
+                      onClick={() => setMenuOpen(true)}
+                      className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                      aria-label="Toggle Fullscreen Menu"
+                    >
+                      <Menu size={18} />
+                    </button>
+                  </div>
+                </motion.header>
+              )}
+            </AnimatePresence>
           ) : (
-            /* ── Top Full-Width Hero Navbar State ── */
-            <header className="w-full flex items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-3 px-2 sm:px-6 bg-transparent">
-              {/* Brand Logo - Crisp White in Dark Mode */}
+            /* ═════════════════════════════════════════════════════════════════
+               MOBILE VIEW (Khusus Perbaikan: Memanjang & Rapi Tanpa Distorsi)
+               ═════════════════════════════════════════════════════════════════ */
+            <header
+              className={`w-full flex items-center justify-between gap-1.5 transition-all duration-300 ${
+                scrolled
+                  ? "py-2 px-3.5 rounded-full bg-white/90 dark:bg-[#111319]/90 backdrop-blur-xl border border-black/[0.08] dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+                  : "py-2 px-2 bg-transparent border border-transparent"
+              }`}
+            >
               <Link
                 href="/"
-                className="group flex items-center gap-1 sm:gap-2 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 sm:pl-2 shrink-0"
+                className="group flex items-center gap-1 font-bold tracking-tight text-zinc-900 dark:text-white hover:text-[var(--accent)] transition-colors pl-1 shrink-0"
               >
-                <span className="text-base sm:text-lg md:text-xl uppercase tracking-tighter font-display whitespace-nowrap">
+                <span className="text-sm uppercase tracking-tighter font-display whitespace-nowrap">
                   Bagas Aditya<span className="text-[var(--accent)] font-mono">.</span>
                 </span>
               </Link>
 
-              {/* Desktop Navigation Floating Pill */}
-              <nav className="hidden md:flex items-center gap-1 bg-white/90 dark:bg-[var(--surface-card)]/90 border border-black/[0.08] dark:border-white/15 rounded-full px-3 py-1 shadow-sm backdrop-blur-md">
-                {navLinks.map((link) => {
-                  const isActive = activeSection === link.href.substring(1);
-                  return (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      className={`text-xs font-mono font-medium px-4 py-2 min-h-[36px] flex items-center justify-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-                        isActive
-                          ? "bg-[#F0F0F2] text-black border border-black/5 shadow-sm dark:bg-[#FACC15] dark:text-black dark:border-transparent font-semibold"
-                          : "text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white"
-                      }`}
-                    >
-                      {link.name}
-                    </a>
-                  );
-                })}
-              </nav>
-
-              {/* Theme Switcher, Contact & Menu CTA */}
-              <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
-                {/* Command Palette Trigger - Desktop/Tablet */}
-                <button
-                  onClick={openCmdPalette}
-                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-600 dark:text-zinc-200 hover:text-black dark:hover:text-white text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                  title="Buka Command Menu (Ctrl+K / ⌘K)"
-                  aria-label="Command Menu"
-                >
-                  <Command size={14} className="text-[var(--accent)]" />
-                  <span className="text-xs font-mono font-semibold hidden sm:inline">⌘K</span>
-                </button>
-
-                {/* Audio FX Toggle - Desktop/Tablet */}
-                <button
-                  onClick={toggleSound}
-                  className="hidden sm:flex w-9.5 h-9.5 min-w-[38px] min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                  title={isMuted ? "Aktifkan Efek Suara" : "Matikan Efek Suara"}
-                  aria-label="Toggle Sound Effects"
-                >
-                  {isMuted ? (
-                    <SpeakerSlash size={16} className="text-rose-400" />
-                  ) : (
-                    <SpeakerHigh size={16} className="text-[var(--accent)]" />
-                  )}
-                </button>
-
-                <LanguageToggle />
-
+              <div className="flex items-center gap-1.5 shrink-0">
+                <LanguageToggle size="sm" />
                 <AnimatedThemeToggler
                   variant="circle"
                   duration={500}
                   theme={theme}
                   onThemeChange={(newTheme) => setTheme(newTheme)}
-                  className="w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 min-w-[34px] min-h-[34px] sm:min-w-[38px] sm:min-h-[38px] rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                  className="w-8.5 h-8.5 min-w-[34px] min-h-[34px] rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 hover:border-[var(--accent)] text-zinc-700 dark:text-zinc-200 text-xs transition-all cursor-pointer shadow-sm flex items-center justify-center focus-visible:outline-none shrink-0"
                 />
-
-                <button
-                  onClick={() => {
-                    soundFx.playSweep();
-                    window.dispatchEvent(new CustomEvent("open-contact-modal"));
-                  }}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[38px] rounded-full bg-white hover:bg-gray-50 text-black border border-black/10 shadow-sm dark:bg-[var(--accent)] dark:text-black dark:border-transparent font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
-                >
-                  <span>{t.nav.contact} ↗</span>
-                </button>
-
-                {/* Menu Button - Always visible and accessible on all screens */}
                 <button
                   onClick={() => setMenuOpen(true)}
-                  className="flex h-8.5 w-8.5 sm:h-10 sm:w-10 min-w-[34px] min-h-[34px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-full bg-white dark:bg-[var(--surface-card)] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer hover:scale-105 active:scale-95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] shrink-0"
+                  className="flex h-8.5 w-8.5 min-w-[34px] min-h-[34px] items-center justify-center rounded-full bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/15 text-zinc-700 dark:text-zinc-200 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] transition-all cursor-pointer shadow-sm focus-visible:outline-none shrink-0"
                   aria-label="Toggle Fullscreen Menu"
                 >
-                  <Menu size={18} />
+                  <Menu size={17} />
                 </button>
               </div>
             </header>

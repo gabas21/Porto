@@ -77,7 +77,7 @@ export default function Hero() {
 
   return (
     <section
-      id="about"
+      id="hero"
       className="relative min-h-[92dvh] sm:min-h-[95dvh] lg:min-h-[100dvh] flex flex-col justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-28 pb-6 sm:pb-10 lg:pb-16 px-4 sm:px-6 3xl:px-16 4xl:px-24 overflow-hidden bg-[var(--bg-main)]"
     >
       {/* ── Custom Sky Wallpaper Background ── */}

@@ -19,7 +19,7 @@ export default function FAQSection() {
   return (
     <section
       id="faq"
-      className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 3xl:px-16 4xl:px-24 bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-300 overflow-hidden"
+      className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 3xl:px-16 4xl:px-24 bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-300 overflow-hidden content-auto"
     >
       {/* Ambient background glow */}
       <div className="absolute top-1/3 -left-40 w-96 h-96 bg-[var(--accent)]/5 rounded-full blur-3xl pointer-events-none" />
